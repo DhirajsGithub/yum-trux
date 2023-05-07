@@ -1,6 +1,8 @@
 import {
+  Keyboard,
   KeyboardAvoidingView,
   Platform,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -16,6 +18,8 @@ import colors from "../constants/colors";
 import ButtonComp from "../components/ButtonComp";
 
 const RegisterScreen = () => {
+  const [keyboardVisible, setKeyboardVisible] = useState(false);
+  const [wantMargin, setWantMargin] = useState(false);
   const navigation = useNavigation();
   useLayoutEffect(() => {
     navigation.setOptions({ headerShown: false });
@@ -53,46 +57,63 @@ const RegisterScreen = () => {
     navigation.navigate("login");
     // send http request
   };
+
+  const keyboardShowListener = Keyboard.addListener("keyboardDidShow", () => {
+    setKeyboardVisible(true);
+  });
+  const keyboardHideListener = Keyboard.addListener("keyboardDidHide", () => {
+    setKeyboardVisible(false);
+  });
   return (
     <View>
       <StatusBar style="auto" />
       <SafeAreaView>
-        <Text style={styles.heading}>Create profile</Text>
-        <View style={styles.inputFields}>
-          <InputComp
-            inputValue={handleEmailValue}
-            keyType="email-address"
-            placeholder="Email"
-          />
-          <InputComp
-            inputValue={handleUsernameValue}
-            keyType="default"
-            placeholder="Username"
-          />
-          <InputComp
-            inputValue={handlePasswordValue}
-            keyType="default"
-            placeholder="Password"
-          />
-          <InputComp
-            inputValue={handleConfirmPasswordValue}
-            keyType="default"
-            placeholder="Confirm password"
-          />
-        </View>
+        <ScrollView
+          style={{
+            marginTop: keyboardVisible && wantMargin ? -100 : 0,
+          }}
+        >
+          <Text style={styles.heading}>Create profile</Text>
+          <View style={styles.inputFields}>
+            <InputComp
+              inputValue={handleEmailValue}
+              keyType="email-address"
+              placeholder="Email"
+            />
+            <InputComp
+              inputValue={handleUsernameValue}
+              keyType="default"
+              placeholder="Username"
+            />
+            <InputComp
+              inputValue={handlePasswordValue}
+              keyType="default"
+              placeholder="Password"
+              handleOnBlur={() => setWantMargin(false)}
+              handleOnFocus={() => setWantMargin(true)}
+            />
+            <InputComp
+              inputValue={handleConfirmPasswordValue}
+              keyType="default"
+              placeholder="Confirm password"
+              handleOnBlur={() => setWantMargin(false)}
+              handleOnFocus={() => setWantMargin(true)}
+            />
+          </View>
 
-        <View style={styles.contentProfile}>
-          <Text style={styles.content}>Already have an account? &nbsp; </Text>
-          <TouchableOpacity onPress={handleLoginPress}>
-            <Text style={[styles.content, styles.createProfile]}>Login</Text>
-          </TouchableOpacity>
-        </View>
+          <View style={styles.contentProfile}>
+            <Text style={styles.content}>Already have an account? &nbsp; </Text>
+            <TouchableOpacity onPress={handleLoginPress}>
+              <Text style={[styles.content, styles.createProfile]}>Login</Text>
+            </TouchableOpacity>
+          </View>
 
-        <View style={styles.btn}>
-          <ButtonComp handleBtnPress={handleRegisterBtnPress}>
-            Register
-          </ButtonComp>
-        </View>
+          <View style={styles.btn}>
+            <ButtonComp handleBtnPress={handleRegisterBtnPress}>
+              Register
+            </ButtonComp>
+          </View>
+        </ScrollView>
       </SafeAreaView>
     </View>
   );
