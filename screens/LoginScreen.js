@@ -126,6 +126,8 @@ const styles = StyleSheet.create({
     marginBottom: "60%",
   },
   btn: {
-    bottom: "0%",
+    flex: 1,
+    flexDirection: "column",
+    justifyContent: "flex-end",
   },
 });

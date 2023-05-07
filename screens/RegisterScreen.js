@@ -1,4 +1,11 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  KeyboardAvoidingView,
+  Platform,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import React, { useLayoutEffect, useState } from "react";
 
 import { useNavigation } from "@react-navigation/native";
@@ -47,7 +54,7 @@ const RegisterScreen = () => {
     // send http request
   };
   return (
-    <View style={styles.container}>
+    <View>
       <StatusBar style="auto" />
       <SafeAreaView>
         <Text style={styles.heading}>Create profile</Text>

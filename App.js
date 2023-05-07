@@ -18,6 +18,7 @@ import { Octicons } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import PaymentMethodScreen from "./screens/PaymentMethodScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -37,7 +38,7 @@ const TabNavigator = () => {
     >
       <Tab.Screen
         name="trucks"
-        component={TrucksScreen}
+        component={PaymentMethodScreen}
         options={{
           headerShown: false,
           tabBarShowLabel: false,

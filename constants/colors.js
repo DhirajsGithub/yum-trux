@@ -4,6 +4,7 @@ const colors = {
   white: "#FFF",
   inputBg: "#C4C4C4",
   textColor: "#312F2E",
+  black: "#000",
 };
 
 export default colors;
