@@ -10,18 +10,41 @@ import { Image } from "react-native";
 import { EvilIcons } from "@expo/vector-icons";
 import { Fontisto } from "@expo/vector-icons";
 import colors from "../constants/colors";
-import ButtonComp from "./ButtonComp";
+import { AirbnbRating } from "react-native-ratings";
+import { useNavigation } from "@react-navigation/native";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
-const TruckOverviewCard = () => {
+const TruckOverviewCard = ({
+  truckName,
+  truckRatings,
+  truckTiming,
+  truckDescription,
+  truckId,
+  truckImg,
+  truckMenu,
+  truckAddress,
+}) => {
+  const navigation = useNavigation();
   const handleSchedulePress = () => {};
-  const handleTruckViewPress = () => {};
+  const handleTruckViewPress = () => {
+    navigation.navigate("truckDetail");
+    navigation.navigate("truckDetail", {
+      truckName,
+      truckRatings,
+      truckTiming,
+      truckDescription,
+      truckId,
+      truckImg,
+      truckMenu,
+      truckAddress,
+    });
+  };
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headTitle}>Vietnamese truck</Text>
+        <Text style={styles.headTitle}>{truckName} truck</Text>
         <TouchableOpacity onPress={handleSchedulePress} style={styles.schedule}>
           <Fontisto name="date" size={16} color={colors.white} />
           <Text style={styles.scheduleText}>Check schedule</Text>
@@ -30,7 +53,7 @@ const TruckOverviewCard = () => {
       <Image
         style={{ width: "100%", height: 175 }}
         source={{
-          uri: "https://media.istockphoto.com/id/1344654556/photo/young-people-buying-meal-from-street-food-truck-modern-business-and-take-away-concept.jpg?b=1&s=170667a&w=0&k=20&c=06G_9tSmRUVnpjZgkvAtP_fLmC47OF8r5--DfNt4R5A=",
+          uri: truckImg,
         }}
         resizeMode="cover"
       />
@@ -41,27 +64,27 @@ const TruckOverviewCard = () => {
             <EvilIcons name="location" size={20} color={colors.lightBlack} />
             <Text style={styles.footerHead}>
               Current at:{" "}
-              <Text style={styles.footerHeadBold}>92 Gerald Street</Text>
+              <Text style={styles.footerHeadBold}>{truckAddress}</Text>
             </Text>
           </View>
           <View>
-            <Text>rting</Text>
+            <AirbnbRating
+              size={15}
+              defaultRating={truckRatings}
+              showRating={false}
+              isDisabled={true}
+            />
           </View>
         </View>
 
         <View style={styles.section}>
           <EvilIcons name="clock" size={20} color={colors.lightBlack} />
           <Text style={styles.footerHead}>
-            Time: <Text style={styles.footerHeadBold}>10 AM - 10 PM</Text>
+            Time: <Text style={styles.footerHeadBold}>{truckTiming}</Text>
           </Text>
         </View>
         <View style={styles.contentView}>
-          <Text style={styles.content}>
-            Sed ut perspiciatis unde omnis iste natus error sit voluptatem
-            accusantium doloremque laudantium, totam rem aperiam, eaque ipsa
-            quae ab illo inventore veritatis et quasi architecto beatae vitae
-            dicta sunt explicabo.
-          </Text>
+          <Text style={styles.content}>{truckDescription}</Text>
         </View>
         <View style={styles.btnView}>
           <TouchableOpacity onPress={handleTruckViewPress} style={styles.btn}>
@@ -117,11 +140,14 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
+    flexWrap: "wrap",
   },
   section: {
     flexDirection: "row",
     alignItems: "center",
     marginTop: 3,
+    width: "60%",
+    marginRight: 8,
   },
   footer: {
     marginTop: 10,

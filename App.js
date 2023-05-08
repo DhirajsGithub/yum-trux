@@ -5,7 +5,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import LoginScreen from "./screens/LoginScreen";
 import RegisterScreen from "./screens/RegisterScreen";
 // import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
-import TrucksScreen from "./screens/Home/TrucksScreen";
+// import TrucksScreen from "./screens/Home/TrucksScreen";
 import ReviewScreen from "./screens/Review/ReviewScreen";
 import TruckOrders from "./screens/TruckOrders";
 import LocationScreen from "./screens/LocationScreen";
@@ -19,7 +19,7 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import PaymentMethodScreen from "./screens/PaymentMethodScreen";
-import HomeScreen from "./screens/Home/HomeScreen";
+import TrucksMainScreen from "./screens/Trucks/TrucksMainScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -39,7 +39,7 @@ const TabNavigator = () => {
     >
       <Tab.Screen
         name="trucks"
-        component={HomeScreen}
+        component={TrucksMainScreen}
         options={{
           headerShown: false,
           tabBarShowLabel: false,

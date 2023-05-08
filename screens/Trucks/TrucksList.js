@@ -6,6 +6,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import HeaderComp from "../../components/HeaderComp";
 import ListComp from "../../components/ListComp";
 import colors from "../../constants/colors";
+import { trucksList } from "../../data/trucks";
 
 const TrucksList = () => {
   const navigation = useNavigation();
@@ -20,7 +21,7 @@ const TrucksList = () => {
           <HeaderComp />
         </View>
 
-        <ListComp />
+        <ListComp trucksList={trucksList} />
       </SafeAreaView>
     </View>
   );

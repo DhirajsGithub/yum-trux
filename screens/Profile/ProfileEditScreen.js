@@ -143,8 +143,8 @@ export default ProfileEditScreen;
 
 const styles = StyleSheet.create({
   container: {
-    // paddingHorizontal: 30,
-    // marginHorizontal: 30,
+    flex: 1,
+    // backgroundColor: "white",
     paddingVertical: 20,
   },
   iconView: {

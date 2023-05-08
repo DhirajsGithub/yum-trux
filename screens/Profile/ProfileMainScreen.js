@@ -151,6 +151,8 @@ const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 30,
     paddingVertical: 40,
+    flex: 1,
+    // backgroundColor: "white",
   },
   editProfile: {
     flexDirection: "row",
