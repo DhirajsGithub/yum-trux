@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
     height: 60,
     paddingTop: 10,
     paddingHorizontal: 25,
-    marginHorizontal: 30,
+    // marginHorizontal: 30,
     marginVertical: 10,
     minWidth: 280,
   },
@@ -55,6 +55,6 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: "20%",
     zIndex: 200,
-    left: "15%",
+    left: "10%",
   },
 });

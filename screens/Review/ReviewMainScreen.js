@@ -1,4 +1,5 @@
 import {
+  Dimensions,
   ScrollView,
   StyleSheet,
   Text,
@@ -16,6 +17,8 @@ import { Image } from "react-native";
 import { Rating, AirbnbRating } from "react-native-ratings";
 import ButtonComp from "../../components/ButtonComp";
 const WATER_IMAGE = require("../../assets/Images/water.png");
+
+const height = Dimensions.get("window").height;
 
 const ReviewMainScreen = () => {
   const navigation = useNavigation();
@@ -37,7 +40,7 @@ const ReviewMainScreen = () => {
     <View style={styles.container}>
       <StatusBar style="auto" />
       <SafeAreaView>
-        <ScrollView>
+        <ScrollView showsVerticalScrollIndicator={false}>
           <TouchableOpacity onPress={handleSkipPress} style={styles.header}>
             <Text style={styles.headText}>Skip</Text>
             <Entypo name="cross" size={25} color={colors.textColor} />
@@ -57,6 +60,7 @@ const ReviewMainScreen = () => {
               will get your rating
             </Text>
           </View>
+
           <View style={styles.ratings}>
             <AirbnbRating
               defaultRating={5}
@@ -69,8 +73,10 @@ const ReviewMainScreen = () => {
               unSelectedColor="#B3B3B3"
             />
           </View>
-          <View>
-            <ButtonComp handleBtnPress={handleSendBtnPress}>SEND</ButtonComp>
+          <View style={styles.btn}>
+            <ButtonComp height={52} handleBtnPress={handleSendBtnPress}>
+              SEND
+            </ButtonComp>
           </View>
         </ScrollView>
       </SafeAreaView>
@@ -81,11 +87,15 @@ const ReviewMainScreen = () => {
 export default ReviewMainScreen;
 
 const styles = StyleSheet.create({
+  container: {
+    paddingHorizontal: 30,
+    flex: 1,
+  },
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    margin: 30,
+    marginTop: 30,
   },
   headText: {
     color: colors.textColor,
@@ -115,5 +125,8 @@ const styles = StyleSheet.create({
   },
   ratings: {
     marginBottom: "52%",
+  },
+  btn: {
+    marginBottom: "25%",
   },
 });

@@ -99,12 +99,13 @@ const TruckDetailScreen = () => {
               </Text>
             </View>
           </View>
+          <Text style={styles.menuName}>Menu</Text>
         </View>
-        <View style={styles.menuView}>
-          <Text style={styles.truckName}>Menu</Text>
-        </View>
-
-        <MenuList menuList={truckData?.truckMenu} />
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <View style={styles.menuView}>
+            <MenuList menuList={truckData?.truckMenu} />
+          </View>
+        </ScrollView>
       </SafeAreaView>
     </View>
   );
@@ -126,7 +127,7 @@ const styles = StyleSheet.create({
     zIndex: 200,
     left: "2%",
     top: "2%",
-    opacity: 0.75,
+    opacity: 1,
   },
   nameRat: {
     flexDirection: "row",
@@ -175,6 +176,12 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   menuView: {
+    // marginTop: 30,
+  },
+  menuName: {
+    fontSize: 24,
+    fontWeight: "700",
+    color: colors.textColor,
     marginTop: 30,
   },
 });

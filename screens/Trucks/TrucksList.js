@@ -13,12 +13,21 @@ const TrucksList = () => {
   useLayoutEffect(() => {
     navigation.setOptions({ headerShown: false });
   }, []);
+  const handleFilterPress = () => {
+    console.log("filter");
+    navigation.navigate("trucksFilter");
+  };
+  const handleSearchPress = () => {};
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
       <SafeAreaView>
         <View style={{ marginHorizontal: 8 }}>
-          <HeaderComp />
+          <HeaderComp
+            handleSearchPress={handleSearchPress}
+            handleFilterPress={handleFilterPress}
+            isTrucksList={true}
+          />
         </View>
 
         <ListComp trucksList={trucksList} />

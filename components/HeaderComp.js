@@ -11,11 +11,12 @@ import { Feather } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import colors from "../constants/colors";
 
-const HeaderComp = ({}) => {
-  const isTrucksList = true;
-  const handleSettingPress = () => {};
-  const handleSearchPress = () => {};
-  const handleFilterPress = () => {};
+const HeaderComp = ({
+  isTrucksList,
+  handleSearchPress,
+  handleFilterPress,
+  handleSettingPress,
+}) => {
   return (
     <View style={styles.container}>
       <View style={styles.commonView}>

@@ -65,10 +65,11 @@ const RegisterScreen = () => {
     setKeyboardVisible(false);
   });
   return (
-    <View>
+    <View style={styles.container}>
       <StatusBar style="auto" />
       <SafeAreaView>
         <ScrollView
+          showsVerticalScrollIndicator={false}
           style={{
             marginTop: keyboardVisible && wantMargin ? -100 : 0,
           }}
@@ -109,7 +110,7 @@ const RegisterScreen = () => {
           </View>
 
           <View style={styles.btn}>
-            <ButtonComp handleBtnPress={handleRegisterBtnPress}>
+            <ButtonComp height={60} handleBtnPress={handleRegisterBtnPress}>
               Register
             </ButtonComp>
           </View>
@@ -122,12 +123,16 @@ const RegisterScreen = () => {
 export default RegisterScreen;
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingHorizontal: 30,
+  },
   heading: {
     color: colors.textColor,
     fontSize: 25,
     fontWeight: "700",
     textAlign: "center",
-    // marginVertical: "23%",
+
     marginTop: "23%",
     marginBottom: "18%",
   },
@@ -144,5 +149,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     marginBottom: "20%",
+  },
+  btn: {
+    marginBottom: "15%",
   },
 });

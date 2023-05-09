@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 import React from "react";
 //-------
 
@@ -17,8 +17,11 @@ const InitialScreen = () => {
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
+
       <SafeAreaView>
-        <Text>Register Screen</Text>
+        <ScrollView>
+          <Text>Register Screen</Text>
+        </ScrollView>
       </SafeAreaView>
     </View>
   );

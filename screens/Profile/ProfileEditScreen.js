@@ -130,8 +130,10 @@ const ProfileEditScreen = () => {
               handleOnFocus={() => setWantMargin(true)}
             />
           </View>
-          <View>
-            <ButtonComp handleBtnPress={handleSavePress}>SAVE</ButtonComp>
+          <View style={styles.btn}>
+            <ButtonComp height={52} handleBtnPress={handleSavePress}>
+              SAVE
+            </ButtonComp>
           </View>
         </ScrollView>
       </SafeAreaView>
@@ -146,9 +148,9 @@ const styles = StyleSheet.create({
     flex: 1,
     // backgroundColor: "white",
     paddingVertical: 20,
+    paddingHorizontal: 30,
   },
   iconView: {
-    marginHorizontal: 30,
     flexDirection: "row",
   },
   imgEdit: {
@@ -174,5 +176,8 @@ const styles = StyleSheet.create({
   inputFields: {
     marginVertical: 20,
     marginBottom: "40%",
+  },
+  btn: {
+    marginBottom: "15%",
   },
 });

@@ -68,7 +68,7 @@ const LoginScreen = () => {
     <View style={styles.container}>
       <StatusBar style="auto" />
       <SafeAreaView style={styles.alignment}>
-        <ScrollView>
+        <ScrollView showsVerticalScrollIndicator={false}>
           <Text style={styles.heading}>Login</Text>
           <View>
             <InputComp
@@ -93,7 +93,9 @@ const LoginScreen = () => {
             </TouchableOpacity>
           </View>
           <View style={styles.btn}>
-            <ButtonComp handleBtnPress={handleLoginBtnPress}>Login</ButtonComp>
+            <ButtonComp height={60} handleBtnPress={handleLoginBtnPress}>
+              Login
+            </ButtonComp>
           </View>
         </ScrollView>
       </SafeAreaView>
@@ -104,6 +106,10 @@ const LoginScreen = () => {
 export default LoginScreen;
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingHorizontal: 30,
+  },
   heading: {
     color: colors.textColor,
     fontSize: 25,
@@ -126,8 +132,9 @@ const styles = StyleSheet.create({
     marginBottom: "60%",
   },
   btn: {
-    flex: 1,
-    flexDirection: "column",
-    justifyContent: "flex-end",
+    // flex: 1,
+    marginBottom: "15%",
+    // flexDirection: "column",
+    // justifyContent: "flex-end",
   },
 });

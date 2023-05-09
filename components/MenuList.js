@@ -1,17 +1,34 @@
-import { FlatList, StyleSheet, Text, View } from "react-native";
+import {
+  Dimensions,
+  FlatList,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import React from "react";
 import MenuItem from "./MenuItem";
 
+const height = Dimensions.get("window").height;
+
 const MenuList = ({ menuList }) => {
+  const handleAddPress = () => {};
   return (
     <View style={styles.container}>
-      <FlatList
-        // style={{ flex: 0 }}
-        showsVerticalScrollIndicator={false}
-        data={menuList}
-        renderItem={({ item }) => <MenuItem />}
-        keyExtractor={(item) => item.id}
-      />
+      <ScrollView showsVerticalScrollIndicator={false}>
+        {menuList.map((item, index) => {
+          return (
+            <MenuItem
+              key={index}
+              itemName={item.name}
+              itemPrie={item.price}
+              itemDiscription={item.description}
+              handleAddPress={handleAddPress}
+            />
+          );
+        })}
+      </ScrollView>
     </View>
   );
 };
@@ -20,8 +37,6 @@ export default MenuList;
 
 const styles = StyleSheet.create({
   container: {
-    paddingBottom: "10000%",
-    // flex: 1,
-    marginBottom: 180,
+    marginBottom: "170%",
   },
 });
