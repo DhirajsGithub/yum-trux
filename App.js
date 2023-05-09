@@ -16,10 +16,12 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import { Octicons } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import PaymentMethodScreen from "./screens/PaymentMethodScreen";
 import TrucksMainScreen from "./screens/Trucks/TrucksMainScreen";
+import HomeMainScreen from "./screens/Home/HomeMainScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -55,24 +57,7 @@ const TabNavigator = () => {
           ),
         }}
       />
-      <Tab.Screen
-        options={{
-          headerShown: false,
-          tabBarShowLabel: false,
-          tabBarLabel: "Reviews",
-          tabBarIcon: ({ color, focused }) => (
-            <View style={focused && styles.activeTab}>
-              <Feather
-                name="star"
-                size={30}
-                color={focused ? colors.action : colors.gray}
-              />
-            </View>
-          ),
-        }}
-        name="reviews"
-        component={ReviewScreen}
-      />
+
       <Tab.Screen
         options={{
           headerShown: false,
@@ -90,6 +75,24 @@ const TabNavigator = () => {
         }}
         name="orders"
         component={TruckOrders}
+      />
+      <Tab.Screen
+        options={{
+          headerShown: false,
+          tabBarShowLabel: false,
+          tabBarLabel: "Reviews",
+          tabBarIcon: ({ color, focused }) => (
+            <View style={focused && styles.activeTab}>
+              <AntDesign
+                name="home"
+                size={30}
+                color={focused ? colors.action : colors.gray}
+              />
+            </View>
+          ),
+        }}
+        name="reviews"
+        component={HomeMainScreen}
       />
       <Tab.Screen
         options={{

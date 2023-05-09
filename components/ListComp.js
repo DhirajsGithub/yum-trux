@@ -2,7 +2,7 @@ import { FlatList, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import TruckOverviewCard from "./TruckOverviewCard";
 
-const ListComp = ({ trucksList }) => {
+const ListComp = ({ trucksList, homeComp }) => {
   const tempList = trucksList;
   return (
     <View style={styles.container}>
@@ -11,6 +11,7 @@ const ListComp = ({ trucksList }) => {
         data={tempList}
         renderItem={({ item }) => (
           <TruckOverviewCard
+            homeComp={homeComp}
             truckName={item.name}
             truckRatings={item.ratings}
             truckTiming={item.timing}

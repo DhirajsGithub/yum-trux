@@ -25,6 +25,7 @@ const TruckOverviewCard = ({
   truckImg,
   truckMenu,
   truckAddress,
+  homeComp,
 }) => {
   const navigation = useNavigation();
   const handleSchedulePress = () => {};
@@ -45,10 +46,15 @@ const TruckOverviewCard = ({
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.headTitle}>{truckName} truck</Text>
-        <TouchableOpacity onPress={handleSchedulePress} style={styles.schedule}>
-          <Fontisto name="date" size={16} color={colors.white} />
-          <Text style={styles.scheduleText}>Check schedule</Text>
-        </TouchableOpacity>
+        {!homeComp && (
+          <TouchableOpacity
+            onPress={handleSchedulePress}
+            style={styles.schedule}
+          >
+            <Fontisto name="date" size={16} color={colors.white} />
+            <Text style={styles.scheduleText}>Check schedule</Text>
+          </TouchableOpacity>
+        )}
       </View>
       <Image
         style={{ width: "100%", height: 175 }}
@@ -83,14 +89,21 @@ const TruckOverviewCard = ({
             Time: <Text style={styles.footerHeadBold}>{truckTiming}</Text>
           </Text>
         </View>
-        <View style={styles.contentView}>
-          <Text style={styles.content}>{truckDescription}</Text>
-        </View>
-        <View style={styles.btnView}>
-          <TouchableOpacity onPress={handleTruckViewPress} style={styles.btn}>
-            <Text style={styles.text}>VIEW</Text>
-          </TouchableOpacity>
-        </View>
+        {!homeComp && (
+          <>
+            <View style={styles.contentView}>
+              <Text style={styles.content}>{truckDescription}</Text>
+            </View>
+            <View style={styles.btnView}>
+              <TouchableOpacity
+                onPress={handleTruckViewPress}
+                style={styles.btn}
+              >
+                <Text style={styles.text}>VIEW</Text>
+              </TouchableOpacity>
+            </View>
+          </>
+        )}
       </View>
     </View>
   );
