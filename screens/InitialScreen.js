@@ -17,7 +17,6 @@ const InitialScreen = () => {
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
-
       <SafeAreaView>
         <ScrollView>
           <Text>Register Screen</Text>

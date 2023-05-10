@@ -16,6 +16,7 @@ const HeaderComp = ({
   handleSearchPress,
   handleFilterPress,
   handleSettingPress,
+  prvOrders,
 }) => {
   return (
     <View style={styles.container}>
@@ -36,12 +37,12 @@ const HeaderComp = ({
           />
         </TouchableOpacity>
 
-        {!isTrucksList && (
+        {!isTrucksList && !prvOrders && (
           <TouchableOpacity onPress={handleSettingPress}>
             <Feather name="settings" size={24} color={colors.textColor} />
           </TouchableOpacity>
         )}
-        {isTrucksList && (
+        {isTrucksList && !prvOrders && (
           <TouchableOpacity onPress={handleFilterPress}>
             <MaterialIcons name="tune" size={24} color={colors.textColor} />
           </TouchableOpacity>

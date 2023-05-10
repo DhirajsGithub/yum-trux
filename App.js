@@ -22,6 +22,9 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import PaymentMethodScreen from "./screens/PaymentMethodScreen";
 import TrucksMainScreen from "./screens/Trucks/TrucksMainScreen";
 import HomeMainScreen from "./screens/Home/HomeMainScreen";
+import OrderHistoryMain from "./screens/OrderHistory/OrderHistoryMain";
+import { store } from "./store/store";
+import { Provider } from "react-redux";
 
 const Tab = createBottomTabNavigator();
 
@@ -74,7 +77,7 @@ const TabNavigator = () => {
           ),
         }}
         name="orders"
-        component={TruckOrders}
+        component={OrderHistoryMain}
       />
       <Tab.Screen
         options={{
@@ -137,11 +140,13 @@ const TabNavigator = () => {
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="login" component={LoginScreen} />
-        <Stack.Screen name="register" component={RegisterScreen} />
-        <Stack.Screen name="main" component={TabNavigator} />
-      </Stack.Navigator>
+      <Provider store={store}>
+        <Stack.Navigator>
+          <Stack.Screen name="login" component={LoginScreen} />
+          <Stack.Screen name="register" component={RegisterScreen} />
+          <Stack.Screen name="main" component={TabNavigator} />
+        </Stack.Navigator>
+      </Provider>
     </NavigationContainer>
   );
 }
