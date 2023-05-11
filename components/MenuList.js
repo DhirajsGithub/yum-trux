@@ -12,8 +12,7 @@ import MenuItem from "./MenuItem";
 
 const height = Dimensions.get("window").height;
 
-const MenuList = ({ menuList }) => {
-  const handleAddPress = () => {};
+const MenuList = ({ menuList, handleAddPress }) => {
   return (
     <View style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -22,9 +21,10 @@ const MenuList = ({ menuList }) => {
             <MenuItem
               key={index}
               itemName={item.name}
-              itemPrie={item.price}
+              itemPrice={item.price}
               itemDiscription={item.description}
               handleAddPress={handleAddPress}
+              itemId={item.id}
             />
           );
         })}

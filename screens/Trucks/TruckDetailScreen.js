@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useLayoutEffect } from "react";
+import React, { useLayoutEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { useNavigation, useRoute } from "@react-navigation/native";
@@ -17,11 +17,17 @@ const windowWidth = Dimensions.get("window").width;
 import { Ionicons } from "@expo/vector-icons";
 import { EvilIcons } from "@expo/vector-icons";
 import { Fontisto } from "@expo/vector-icons";
-
+import { AntDesign } from "@expo/vector-icons";
+import { Feather } from "@expo/vector-icons";
 import { AirbnbRating } from "react-native-ratings";
 import MenuList from "../../components/MenuList";
+import { useDispatch, useSelector } from "react-redux";
+import { addToCurrentOrder } from "../../store/store-slice";
 
 const TruckDetailScreen = () => {
+  const dispatch = useDispatch();
+  const currentOrders = useSelector((state) => state.userSlice.currentOrders);
+  const [favPressed, setFavPressed] = useState(false);
   const navigation = useNavigation();
   const route = useRoute();
   const truckData = route.params;
@@ -32,6 +38,28 @@ const TruckDetailScreen = () => {
     navigation.goBack();
   };
   const handleSchedulePress = () => {};
+  const handleCartPress = () => {
+    if (currentOrders.length > 0) {
+      navigation.navigate("order");
+    }
+  };
+  const handleFavIconsPress = () => {
+    setFavPressed(!favPressed);
+  };
+  console.log(currentOrders);
+  const handleAddPress = (data) => {
+    if (currentOrders.length < 99 && data) {
+      dispatch(
+        addToCurrentOrder({
+          truckName: truckData.truckName,
+          truckDescription: truckData.truckDescription,
+          truckImg: truckData.truckImg,
+          ...data,
+        })
+      );
+    }
+  };
+
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
@@ -39,13 +67,36 @@ const TruckDetailScreen = () => {
         <View>
           <View>
             <View style={styles.backIcon}>
-              <TouchableOpacity onPress={handleBackPress}>
-                <Ionicons
-                  name="md-chevron-back-circle"
-                  size={38}
-                  color={colors.textColor}
-                />
+              <TouchableOpacity style={styles.cartBg} onPress={handleBackPress}>
+                <Feather name="chevron-left" size={28} color="black" />
               </TouchableOpacity>
+            </View>
+            <View style={styles.favIcon}>
+              <TouchableOpacity onPress={handleFavIconsPress}>
+                {!favPressed && (
+                  <AntDesign name="staro" size={32} color={colors.action} />
+                )}
+                {favPressed && (
+                  <AntDesign name="star" size={32} color={colors.action} />
+                )}
+              </TouchableOpacity>
+            </View>
+            <View style={styles.cartIcon}>
+              <View>
+                <View style={styles.ItemsCartView}>
+                  <Text style={styles.ItemsInCart}>{currentOrders.length}</Text>
+                </View>
+                <TouchableOpacity
+                  style={styles.cartBg}
+                  onPress={handleCartPress}
+                >
+                  <AntDesign
+                    name="shoppingcart"
+                    size={22}
+                    color={colors.black}
+                  />
+                </TouchableOpacity>
+              </View>
             </View>
             <Image
               style={{ width: "100%", height: 200, borderRadius: 5 }}
@@ -103,7 +154,10 @@ const TruckDetailScreen = () => {
         </View>
         <ScrollView showsVerticalScrollIndicator={false}>
           <View style={styles.menuView}>
-            <MenuList menuList={truckData?.truckMenu} />
+            <MenuList
+              handleAddPress={handleAddPress}
+              menuList={truckData?.truckMenu}
+            />
           </View>
         </ScrollView>
       </SafeAreaView>
@@ -124,9 +178,10 @@ const styles = StyleSheet.create({
   },
   backIcon: {
     position: "absolute",
+
     zIndex: 200,
     left: "2%",
-    top: "2%",
+    top: "6%",
     opacity: 1,
   },
   nameRat: {
@@ -183,5 +238,52 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     color: colors.textColor,
     marginTop: 30,
+  },
+  favIcon: {
+    position: "absolute",
+    zIndex: 200,
+    right: "18%",
+    top: "8%",
+    opacity: 1,
+  },
+  cartIcon: {
+    position: "absolute",
+
+    zIndex: 200,
+    right: "4%",
+    top: "8%",
+    opacity: 1,
+  },
+  cartBg: {
+    backgroundColor: "#f3f3f3",
+    // padding: 4,
+    borderRadius: 50,
+    height: 40,
+    width: 40,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  ItemsCartView: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 1000,
+
+    position: "absolute",
+    bottom: "75%",
+    left: "60%",
+  },
+  ItemsInCart: {
+    backgroundColor: colors.action,
+    width: 18,
+    paddingHorizontal: 2,
+    paddingVertical: 2,
+    textAlign: "center",
+    fontSize: 11,
+    fontWeight: "700",
+    color: colors.white,
+    // padding: 2,
+    borderRadius: 10,
+    overflow: "hidden",
   },
 });

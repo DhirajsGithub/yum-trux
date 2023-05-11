@@ -103,11 +103,31 @@ export const userSlice = createSlice({
     // },
     addToCurrentOrder: (state, action) => {
       state.currentOrders = [...state.currentOrders, action.payload];
-      state.previousOrders = [...state.currentOrders, state.previousOrders];
+      // state.previousOrders = [...state.currentOrders, state.previousOrders];
+    },
+
+    addQuantity: (state, action) => {
+      const findOne = state.currentOrders?.find((item) => {
+        return item.itemId === action.payload;
+      });
+      state.currentOrders = [...state.currentOrders, findOne];
+    },
+    removeQuantity: (state, action) => {
+      let removeIndex = -1;
+      for (let index in state.currentOrders) {
+        if (state.currentOrders[index].itemId === action.payload) {
+          removeIndex = index;
+          break;
+        }
+      }
+      if (removeIndex > -1) {
+        state.currentOrders?.splice(removeIndex, 1);
+      }
     },
   },
 });
 
-export const { addToCurrentOrder } = userSlice.actions;
+export const { addToCurrentOrder, addQuantity, removeQuantity } =
+  userSlice.actions;
 
 export default userSlice.reducer;

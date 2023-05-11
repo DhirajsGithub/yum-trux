@@ -109,36 +109,42 @@ const trucksList = [
     ratings: "5",
     menu: [
       {
+        id: 11,
         name: "mex dish 1",
         price: 30,
         description:
           "Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut.",
       },
       {
+        id: 12,
         name: "mex dish 2",
         price: 10,
         description:
           "Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut.",
       },
       {
+        id: 13,
         name: "mex dish 3",
         price: 24,
         description:
           "Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut.",
       },
       {
+        id: 14,
         name: "mex dish 4",
         price: 33.24,
         description:
           "Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut.",
       },
       {
+        id: 15,
         name: "mex dish 5",
         price: 5.44,
         description:
           "Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut.",
       },
       {
+        id: 16,
         name: "mex dish 6",
         price: 33,
         description:
@@ -159,36 +165,42 @@ const trucksList = [
     ratings: "5",
     menu: [
       {
+        id: 11,
         name: "chinese dish 1",
         price: 30,
         description:
           "Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut.",
       },
       {
+        id: 12,
         name: "chinese dish 2",
         price: 11,
         description:
           "Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut.",
       },
       {
+        id: 13,
         name: "chinese dish 3",
         price: 32,
         description:
           "Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut.",
       },
       {
+        id: 14,
         name: "chinese dish 4",
         price: 49.7,
         description:
           "Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut.",
       },
       {
+        id: 15,
         name: "chinese dish 5",
         price: 5,
         description:
           "Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut.",
       },
       {
+        id: 16,
         name: "chinese dish 6",
         price: 23,
         description:
@@ -209,36 +221,42 @@ const trucksList = [
     ratings: "4",
     menu: [
       {
+        id: 11,
         name: "chinese dish 1",
         price: 30,
         description:
           "Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut.",
       },
       {
+        id: 12,
         name: "chinese dish 2",
         price: 11,
         description:
           "Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut.",
       },
       {
+        id: 13,
         name: "chinese dish 3",
         price: 32,
         description:
           "Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut.",
       },
       {
+        id: 14,
         name: "chinese dish 4",
         price: 49.7,
         description:
           "Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut.",
       },
       {
+        id: 15,
         name: "chinese dish 5",
         price: 5,
         description:
           "Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut.",
       },
       {
+        id: 16,
         name: "chinese dish 6",
         price: 23,
         description:
@@ -259,36 +277,42 @@ const trucksList = [
     ratings: "5",
     menu: [
       {
+        id: 11,
         name: "jap dish 1",
         price: 29,
         description:
           "Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut.",
       },
       {
+        id: 12,
         name: "jap dish 2",
         price: 11.23,
         description:
           "Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut.",
       },
       {
+        id: 13,
         name: "jap dish 3",
         price: 78.99,
         description:
           "Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut.",
       },
       {
+        id: 14,
         name: "jap dish 4",
         price: 34.24,
         description:
           "Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut.",
       },
       {
+        id: 15,
         name: "jap dish 5",
         price: 44,
         description:
           "Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut.",
       },
       {
+        id: 16,
         name: "jap dish 6",
         price: 3.3,
         description:
@@ -309,36 +333,42 @@ const trucksList = [
     ratings: "5",
     menu: [
       {
+        id: 11,
         name: "viet dish 1",
         price: 10.89,
         description:
           "Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut.",
       },
       {
+        id: 12,
         name: "viet dish 2",
         price: 10.32,
         description:
           "Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut.",
       },
       {
+        id: 13,
         name: "viet dish 3",
         price: 40,
         description:
           "Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut.",
       },
       {
+        id: 14,
         name: "viet dish 4",
         price: 3.24,
         description:
           "Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut.",
       },
       {
+        id: 15,
         name: "viet dish 5",
         price: 5.84,
         description:
           "Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut.",
       },
       {
+        id: 16,
         name: "viet dish 6",
         price: 77,
         description:
@@ -358,36 +388,42 @@ const trucksList = [
     ratings: "5",
     menu: [
       {
+        id: 11,
         name: "viet dish 1",
         price: 10.89,
         description:
           "Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut.",
       },
       {
+        id: 12,
         name: "viet dish 2",
         price: 10.32,
         description:
           "Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut.",
       },
       {
+        id: 13,
         name: "viet dish 3",
         price: 40,
         description:
           "Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut.",
       },
       {
+        id: 14,
         name: "viet dish 4",
         price: 3.24,
         description:
           "Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut.",
       },
       {
+        id: 15,
         name: "viet dish 5",
         price: 5.84,
         description:
           "Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut.",
       },
       {
+        id: 16,
         name: "viet dish 6",
         price: 77,
         description:

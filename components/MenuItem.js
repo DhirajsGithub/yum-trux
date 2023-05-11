@@ -2,16 +2,27 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
 import colors from "../constants/colors";
 
-const MenuItem = ({ itemName, itemPrie, itemDiscription, handleAddPress }) => {
+const MenuItem = ({
+  itemName,
+  itemPrice,
+  itemDiscription,
+  itemId,
+  handleAddPress,
+}) => {
   return (
     <View style={styles.container}>
       <View style={styles.itemDetail}>
         <Text style={styles.nameText}>{itemName}</Text>
-        <Text style={styles.price}>$ {itemPrie}</Text>
+        <Text style={styles.price}>$ {itemPrice}</Text>
         <Text style={styles.description}>{itemDiscription}</Text>
       </View>
 
-      <TouchableOpacity onPress={handleAddPress} style={styles.btn}>
+      <TouchableOpacity
+        onPress={() =>
+          handleAddPress({ itemName, itemPrice, itemDiscription, itemId })
+        }
+        style={styles.btn}
+      >
         <Text style={styles.text}>ADD</Text>
       </TouchableOpacity>
     </View>
