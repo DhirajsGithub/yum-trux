@@ -161,6 +161,10 @@ const OrderScreen = () => {
     dispatch(removeQuantity(itemId));
   };
 
+  const handlePaymenPress = () => {
+    navigation.navigate("paymentMethod");
+  };
+
   // note toFixed will convet number to string hence after applying toFoxed make sure to parse the string to float or int
   let totalBeforeTax = currentOrders?.reduce((totalPrice, currentOrder) => {
     return totalPrice + currentOrder.itemPrice;
@@ -376,6 +380,7 @@ const OrderScreen = () => {
                 overflow: "hidden",
                 marginTop: 6,
               }}
+              onPress={handlePaymenPress}
             >
               <View
                 style={{

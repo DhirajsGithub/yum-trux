@@ -10,9 +10,9 @@ import React, { useLayoutEffect } from "react";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
-import colors from "../constants/colors";
+import colors from "../../constants/colors";
 import { Entypo } from "@expo/vector-icons";
-import ButtonComp from "../components/ButtonComp";
+import ButtonComp from "../../components/ButtonComp";
 
 const PaymentMethodScreen = () => {
   const navigation = useNavigation();
@@ -39,7 +39,7 @@ const PaymentMethodScreen = () => {
                 <View style={styles.nameIcon}>
                   <Image
                     style={styles.paymentIcons}
-                    source={require("../assets/Images/paypal.png")}
+                    source={require("../../assets/Images/paypal.png")}
                   />
                   <Text style={styles.paymentText}>Paypal</Text>
                 </View>
@@ -52,16 +52,18 @@ const PaymentMethodScreen = () => {
                 <View style={styles.nameIcon}>
                   <Image
                     style={styles.paymentIcons}
-                    source={require("../assets/Images/bank-cards.png")}
+                    source={require("../../assets/Images/bank-cards.png")}
                   />
                   <Text style={styles.paymentText}>Debit/credit card</Text>
                 </View>
                 <Entypo name="chevron-small-right" size={32} color="black" />
               </TouchableOpacity>
             </View>
-            <View style={styles.btn}>
-              <ButtonComp handleBtnPress={handleBtnPress}>Next</ButtonComp>
-            </View>
+          </View>
+          <View style={styles.btn}>
+            <ButtonComp height={60} handleBtnPress={handleBtnPress}>
+              Next
+            </ButtonComp>
           </View>
         </ScrollView>
       </SafeAreaView>
@@ -73,7 +75,9 @@ export default PaymentMethodScreen;
 
 const styles = StyleSheet.create({
   container: {
-    // flex: 1,
+    flex: 1,
+    paddingHorizontal: 25,
+    backgroundColor: colors.white,
   },
   heading: {
     color: colors.textColor,
@@ -99,14 +103,14 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingHorizontal: 20,
     marginBottom: "10%",
   },
   paymentMethod: {
-    marginBottom: "55%",
+    marginBottom: "65%",
   },
   btn: {
     flex: 1,
+    marginBottom: "20%",
   },
   paymentAndBtn: {
     flex: 1,

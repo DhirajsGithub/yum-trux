@@ -10,6 +10,7 @@ import OrderScreen from "./OrderScreen";
 import SuccessOrderScreen from "./SuccessOrderScreen";
 import ReviewMainScreen from "./ReviewMainScreen";
 import ScheduleScreen from "./ScheduleScreen";
+import PaymentMethodScreen from "./PaymentMethodScreen";
 
 const HomeScreen = () => {
   return (
@@ -21,6 +22,7 @@ const HomeScreen = () => {
       <Stack.Screen name="successOrder" component={SuccessOrderScreen} />
       <Stack.Screen name="reviewScreen" component={ReviewMainScreen} />
       <Stack.Screen name="scheduleScreen" component={ScheduleScreen} />
+      <Stack.Screen name="paymentMethod" component={PaymentMethodScreen} />
     </Stack.Navigator>
   );
 };
