@@ -129,6 +129,8 @@ const OrderScreen = () => {
   const truckName = currentOrders[0]?.truckName;
   const truckDescription = currentOrders[0]?.truckDescription;
   const truckImg = currentOrders[0]?.truckImg;
+  const truckLocation = currentOrders[0]?.truckAddress;
+  const pickUpTime = "05/23/5:15";
   useLayoutEffect(() => {
     navigation.setOptions({ headerShown: false });
   }, []);
@@ -181,7 +183,15 @@ const OrderScreen = () => {
 
   totalWithTaxAndTip = parseFloat(totalWithTaxAndTip.toFixed(2));
 
-  const handleBtnPress = () => {};
+  const handleBtnPress = () => {
+    navigation.navigate("successOrder", {
+      truckName,
+      truckDescription,
+      truckLocation,
+      pickUpTime,
+      truckImg,
+    });
+  };
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
@@ -209,7 +219,7 @@ const OrderScreen = () => {
           <View style={styles.pickUpTime}>
             <Text style={styles.pickupText}>Set pick up time</Text>
             <TouchableOpacity>
-              <Text style={styles.timePickUpTouch}>05/23/5:15</Text>
+              <Text style={styles.timePickUpTouch}>{pickUpTime}</Text>
             </TouchableOpacity>
           </View>
           <View style={styles.ordersView}>
@@ -463,7 +473,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingVertical: 8,
     backgroundColor: colors.inputBg,
-    borderRadius: 30,
+    borderRadius: 16,
     overflow: "hidden",
   },
   itemQuantity: {

@@ -28,9 +28,10 @@ const TruckOverviewCard = ({
   homeComp,
 }) => {
   const navigation = useNavigation();
-  const handleSchedulePress = () => {};
+  const handleSchedulePress = () => {
+    navigation.navigate("scheduleScreen");
+  };
   const handleTruckViewPress = () => {
-    navigation.navigate("truckDetail");
     navigation.navigate("truckDetail", {
       truckName,
       truckRatings,

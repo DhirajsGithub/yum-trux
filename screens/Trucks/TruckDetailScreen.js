@@ -22,7 +22,7 @@ import { Feather } from "@expo/vector-icons";
 import { AirbnbRating } from "react-native-ratings";
 import MenuList from "../../components/MenuList";
 import { useDispatch, useSelector } from "react-redux";
-import { addToCurrentOrder } from "../../store/store-slice";
+import { addToCurrentOrder, removeCurrentOrder } from "../../store/store-slice";
 
 const TruckDetailScreen = () => {
   const dispatch = useDispatch();
@@ -33,11 +33,15 @@ const TruckDetailScreen = () => {
   const truckData = route.params;
   useLayoutEffect(() => {
     navigation.setOptions({ headerShown: false });
+    // this will ensure that whenever user comes to truck detail screen it's cart is empty
+    dispatch(removeCurrentOrder());
   }, []);
   const handleBackPress = () => {
     navigation.goBack();
   };
-  const handleSchedulePress = () => {};
+  const handleSchedulePress = () => {
+    navigation.navigate("scheduleScreen");
+  };
   const handleCartPress = () => {
     if (currentOrders.length > 0) {
       navigation.navigate("order");
@@ -54,6 +58,7 @@ const TruckDetailScreen = () => {
           truckName: truckData.truckName,
           truckDescription: truckData.truckDescription,
           truckImg: truckData.truckImg,
+          truckAddress: truckData.truckAddress,
           ...data,
         })
       );
@@ -201,6 +206,7 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   scheduleText: {
+    marginLeft: 5,
     fontSize: 13,
     fontWeight: "700",
     color: colors.textColor,

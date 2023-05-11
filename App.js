@@ -4,11 +4,7 @@ import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import LoginScreen from "./screens/LoginScreen";
 import RegisterScreen from "./screens/RegisterScreen";
-// import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
-// import TrucksScreen from "./screens/Home/TrucksScreen";
-import ReviewScreen from "./screens/Review/ReviewScreen";
-import TruckOrders from "./screens/TruckOrders";
-import LocationScreen from "./screens/LocationScreen";
+
 import ProfileScreen from "./screens/Profile/ProfileScreen";
 import { useEffect, useLayoutEffect } from "react";
 import colors from "./constants/colors";
@@ -18,13 +14,12 @@ import { Octicons } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import PaymentMethodScreen from "./screens/PaymentMethodScreen";
 import TrucksMainScreen from "./screens/Trucks/TrucksMainScreen";
 import HomeMainScreen from "./screens/Home/HomeMainScreen";
 import OrderHistoryMain from "./screens/OrderHistory/OrderHistoryMain";
 import { store } from "./store/store";
 import { Provider } from "react-redux";
+import LocationMainScreen from "./screens/Location/LocationMainScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -113,7 +108,7 @@ const TabNavigator = () => {
           ),
         }}
         name="location"
-        component={LocationScreen}
+        component={LocationMainScreen}
       />
       <Tab.Screen
         options={{

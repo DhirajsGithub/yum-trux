@@ -105,7 +105,9 @@ export const userSlice = createSlice({
       state.currentOrders = [...state.currentOrders, action.payload];
       // state.previousOrders = [...state.currentOrders, state.previousOrders];
     },
-
+    removeCurrentOrder: (state) => {
+      state.currentOrders = [];
+    },
     addQuantity: (state, action) => {
       const findOne = state.currentOrders?.find((item) => {
         return item.itemId === action.payload;
@@ -127,7 +129,11 @@ export const userSlice = createSlice({
   },
 });
 
-export const { addToCurrentOrder, addQuantity, removeQuantity } =
-  userSlice.actions;
+export const {
+  addToCurrentOrder,
+  addQuantity,
+  removeQuantity,
+  removeCurrentOrder,
+} = userSlice.actions;
 
 export default userSlice.reducer;

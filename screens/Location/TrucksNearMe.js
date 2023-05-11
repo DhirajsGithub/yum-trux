@@ -1,15 +1,12 @@
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import React, { useLayoutEffect } from "react";
-//-------
 
 import { useNavigation } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaView } from "react-native-safe-area-context";
+import colors from "../../constants/colors";
 
-// ------
-
-const InitialScreen = () => {
-  // ----
+const TrucksNearMe = () => {
   const navigation = useNavigation();
   useLayoutEffect(() => {
     navigation.setOptions({ headerShown: false });
@@ -19,15 +16,18 @@ const InitialScreen = () => {
       <StatusBar style="auto" />
       <SafeAreaView>
         <ScrollView>
-          <Text>Register Screen</Text>
+          <Text>Location screen new Screen</Text>
         </ScrollView>
       </SafeAreaView>
     </View>
   );
-
-  // ----
 };
 
-export default InitialScreen;
+export default TrucksNearMe;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: colors.white,
+  },
+});
