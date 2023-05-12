@@ -29,7 +29,11 @@ const TruckOverviewCard = ({
 }) => {
   const navigation = useNavigation();
   const handleSchedulePress = () => {
-    navigation.navigate("scheduleScreen");
+    navigation.navigate("scheduleScreen", {
+      truckImg,
+      // also truck upcoming location, for now it is hardcoded in schedule page
+      // also pass this params from truckDetails screen
+    });
   };
   const handleTruckViewPress = () => {
     navigation.navigate("truckDetail", {

@@ -40,7 +40,11 @@ const TruckDetailScreen = () => {
     navigation.goBack();
   };
   const handleSchedulePress = () => {
-    navigation.navigate("scheduleScreen");
+    navigation.navigate("scheduleScreen", {
+      truckImg: truckData.truckImg,
+      // also truck upcoming location, for now it is hardcoded in schedule page
+      // also pass this params from truckOverview Card
+    });
   };
   const handleCartPress = () => {
     if (currentOrders.length > 0) {
