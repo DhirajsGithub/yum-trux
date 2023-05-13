@@ -22,7 +22,7 @@ const TrucksList = () => {
     <View style={styles.container}>
       <StatusBar style="auto" />
       <SafeAreaView>
-        <View style={{ marginHorizontal: 8 }}>
+        <View style={{ marginHorizontal: 16 }}>
           <HeaderComp
             handleSearchPress={handleSearchPress}
             handleFilterPress={handleFilterPress}

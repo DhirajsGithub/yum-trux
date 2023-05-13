@@ -37,11 +37,14 @@ const HomeScreen = () => {
       <StatusBar style="auto" />
       <SafeAreaView>
         <View style={styles.headFile}>
-          <HeaderComp
-            isTrucksList={false}
-            handleSearchPress={handleSearchPress}
-            handleSettingPress={handleSettingPress}
-          />
+          <View style={{ marginHorizontal: 6 }}>
+            <HeaderComp
+              isTrucksList={false}
+              handleSearchPress={handleSearchPress}
+              handleSettingPress={handleSettingPress}
+            />
+          </View>
+
           <View style={styles.head1}>
             <HomeHeaderCard
               truckName="Mexican"
@@ -113,6 +116,6 @@ const styles = StyleSheet.create({
   },
   headFile: {
     paddingHorizontal: 10,
-    paddingTop: 5,
+    // paddingTop: 5,
   },
 });

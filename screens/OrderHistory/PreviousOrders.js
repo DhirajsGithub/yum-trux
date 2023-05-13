@@ -110,7 +110,7 @@ const PreviousOrders = () => {
     <View style={styles.container}>
       <StatusBar style="auto" />
       <SafeAreaView>
-        <HeaderComp prvOrders={true} />
+        <HeaderComp onlySearch={true} />
         <View style={styles.orderList}>
           <FlatList
             showsVerticalScrollIndicator={false}

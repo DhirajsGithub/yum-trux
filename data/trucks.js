@@ -2,6 +2,7 @@ const trucksList = [
   {
     id: 1,
     name: "Mexican",
+    latLong: { latitude: 38.9632, longitude: 35.2423 },
     description:
       "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.",
     imgUrl:
@@ -99,6 +100,7 @@ const trucksList = [
   {
     id: 2,
     name: "Mexican",
+    latLong: { latitude: 38.9648, longitude: 35.2434 },
     description:
       "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.",
 
@@ -155,6 +157,7 @@ const trucksList = [
   {
     id: 3,
     name: "Chinese",
+    latLong: { latitude: 38.9668, longitude: 35.253 },
     description:
       "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.",
 
@@ -211,6 +214,7 @@ const trucksList = [
   {
     id: 4,
     name: "Chinese",
+    latLong: { latitude: 38.968, longitude: 35.2683 },
     description:
       "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.",
 
@@ -266,6 +270,7 @@ const trucksList = [
   },
   {
     id: 5,
+    latLong: { latitude: 38.8868, longitude: 35.053 },
     name: "Japanese",
     description:
       "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.",
@@ -323,6 +328,7 @@ const trucksList = [
   {
     id: 6,
     name: "Vietnamese",
+    latLong: { latitude: 38.8, longitude: 35.2 },
     description:
       "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.",
 
@@ -379,6 +385,7 @@ const trucksList = [
   {
     id: 7,
     name: "Vietnamese",
+    latLong: { latitude: 38.608, longitude: 35.503 },
     description:
       "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.",
 
