@@ -2,6 +2,83 @@ const trucksList = [
   {
     id: 1,
     name: "Mexican",
+    schedule: [
+      {
+        dateObj: { date: 16, day: "Mon" },
+        locations: [
+          {
+            city: "Snyder, TX",
+            address: "Codgell Memorial Hospital",
+            time: "7 AM - 1 PM",
+          },
+          {
+            city: "Snyder, TX",
+            address: "1 1 4 82nd Street",
+            time: "10 AM - 1 PM",
+          },
+        ],
+      },
+      {
+        dateObj: { date: 17, day: "Tue" },
+        locations: [
+          {
+            city: "Caliform, TX",
+            address: "XXXYY Memorial Hospital",
+            time: "11 AM - 1 PM",
+          },
+          {
+            city: "City AA , State",
+            address: "111YYY 82nd Street",
+            time: "9 AM - 1 PM",
+          },
+        ],
+      },
+      {
+        dateObj: { date: 18, day: "Wed" },
+        locations: [
+          {
+            city: "ZZZCity, TX",
+            address: "Codgell Memorial Hospital",
+            time: "12 AM - 1 PM",
+          },
+          {
+            city: "MMMCity, TX",
+            address: "1 1 4 82nd Street",
+            time: "10 AM - 1 PM",
+          },
+        ],
+      },
+      {
+        dateObj: { date: 19, day: "Thu" },
+        locations: [
+          {
+            city: "THUCity, TX",
+            address: "Codgell Memorial Hospital",
+            time: "10 AM - 1 PM",
+          },
+          {
+            city: "Snyder, TX",
+            address: "1 1 4 82nd Street",
+            time: "10 AM - 1 PM",
+          },
+        ],
+      },
+      {
+        dateObj: { date: 20, day: "Fri" },
+        locations: [
+          {
+            city: "Snyder, TX",
+            address: "Codgell Memorial Hospital",
+            time: "10 AM - 1 PM",
+          },
+          {
+            city: "FFFCity, TX",
+            address: "1 1 4 82nd FFF streeet",
+            time: "10 AM - 1 PM",
+          },
+        ],
+      },
+    ],
     latLong: { latitude: 38.9632, longitude: 35.2423 },
     description:
       "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.",
@@ -99,6 +176,83 @@ const trucksList = [
   },
   {
     id: 2,
+    schedule: [
+      {
+        dateObj: { date: 16, day: "Mon" },
+        locations: [
+          {
+            city: "Snyder, TX",
+            address: "Codgell Memorial Hospital",
+            time: "10 AM - 1 PM",
+          },
+          {
+            city: "Snyder, TX",
+            address: "1 1 4 82nd Street",
+            time: "10 AM - 1 PM",
+          },
+        ],
+      },
+      {
+        dateObj: { date: 17, day: "Tue" },
+        locations: [
+          {
+            city: "Caliform, TX",
+            address: "XXXYY Memorial Hospital",
+            time: "11 AM - 1 PM",
+          },
+          {
+            city: "City AA , State",
+            address: "111YYY 82nd Street",
+            time: "9 AM - 1 PM",
+          },
+        ],
+      },
+      {
+        dateObj: { date: 18, day: "Wed" },
+        locations: [
+          {
+            city: "ZZZCity, TX",
+            address: "Codgell Memorial Hospital",
+            time: "12 AM - 1 PM",
+          },
+          {
+            city: "MMMCity, TX",
+            address: "1 1 4 82nd Street",
+            time: "10 AM - 1 PM",
+          },
+        ],
+      },
+      {
+        dateObj: { date: 19, day: "Thu" },
+        locations: [
+          {
+            city: "THUCity, TX",
+            address: "Codgell Memorial Hospital",
+            time: "10 AM - 1 PM",
+          },
+          {
+            city: "Snyder, TX",
+            address: "1 1 4 82nd Street",
+            time: "10 AM - 1 PM",
+          },
+        ],
+      },
+      {
+        dateObj: { date: 20, day: "Fri" },
+        locations: [
+          {
+            city: "Snyder, TX",
+            address: "Codgell Memorial Hospital",
+            time: "10 AM - 1 PM",
+          },
+          {
+            city: "FFFCity, TX",
+            address: "1 1 4 82nd FFF streeet",
+            time: "10 AM - 1 PM",
+          },
+        ],
+      },
+    ],
     name: "Mexican",
     latLong: { latitude: 38.9648, longitude: 35.2434 },
     description:
@@ -156,6 +310,83 @@ const trucksList = [
   },
   {
     id: 3,
+    schedule: [
+      {
+        dateObj: { date: 16, day: "Mon" },
+        locations: [
+          {
+            city: "Snyder, TX",
+            address: "Codgell Memorial Hospital",
+            time: "10 AM - 1 PM",
+          },
+          {
+            city: "Snyder, TX",
+            address: "1 1 4 82nd Street",
+            time: "10 AM - 1 PM",
+          },
+        ],
+      },
+      {
+        dateObj: { date: 17, day: "Tue" },
+        locations: [
+          {
+            city: "Caliform, TX",
+            address: "XXXYY Memorial Hospital",
+            time: "11 AM - 1 PM",
+          },
+          {
+            city: "City AA , State",
+            address: "111YYY 82nd Street",
+            time: "9 AM - 1 PM",
+          },
+        ],
+      },
+      {
+        dateObj: { date: 18, day: "Wed" },
+        locations: [
+          {
+            city: "ZZZCity, TX",
+            address: "Codgell Memorial Hospital",
+            time: "12 AM - 1 PM",
+          },
+          {
+            city: "MMMCity, TX",
+            address: "1 1 4 82nd Street",
+            time: "10 AM - 1 PM",
+          },
+        ],
+      },
+      {
+        dateObj: { date: 19, day: "Thu" },
+        locations: [
+          {
+            city: "THUCity, TX",
+            address: "Codgell Memorial Hospital",
+            time: "10 AM - 1 PM",
+          },
+          {
+            city: "Snyder, TX",
+            address: "1 1 4 82nd Street",
+            time: "10 AM - 1 PM",
+          },
+        ],
+      },
+      {
+        dateObj: { date: 20, day: "Fri" },
+        locations: [
+          {
+            city: "Snyder, TX",
+            address: "Codgell Memorial Hospital",
+            time: "10 AM - 1 PM",
+          },
+          {
+            city: "FFFCity, TX",
+            address: "1 1 4 82nd FFF streeet",
+            time: "10 AM - 1 PM",
+          },
+        ],
+      },
+    ],
     name: "Chinese",
     latLong: { latitude: 38.9668, longitude: 35.253 },
     description:
@@ -213,6 +444,83 @@ const trucksList = [
   },
   {
     id: 4,
+    schedule: [
+      {
+        dateObj: { date: 16, day: "Mon" },
+        locations: [
+          {
+            city: "Snyder, TX",
+            address: "Codgell Memorial Hospital",
+            time: "10 AM - 1 PM",
+          },
+          {
+            city: "Snyder, TX",
+            address: "1 1 4 82nd Street",
+            time: "10 AM - 1 PM",
+          },
+        ],
+      },
+      {
+        dateObj: { date: 17, day: "Tue" },
+        locations: [
+          {
+            city: "Caliform, TX",
+            address: "XXXYY Memorial Hospital",
+            time: "11 AM - 1 PM",
+          },
+          {
+            city: "City AA , State",
+            address: "111YYY 82nd Street",
+            time: "9 AM - 1 PM",
+          },
+        ],
+      },
+      {
+        dateObj: { date: 18, day: "Wed" },
+        locations: [
+          {
+            city: "ZZZCity, TX",
+            address: "Codgell Memorial Hospital",
+            time: "12 AM - 1 PM",
+          },
+          {
+            city: "MMMCity, TX",
+            address: "1 1 4 82nd Street",
+            time: "10 AM - 1 PM",
+          },
+        ],
+      },
+      {
+        dateObj: { date: 19, day: "Thu" },
+        locations: [
+          {
+            city: "THUCity, TX",
+            address: "Codgell Memorial Hospital",
+            time: "10 AM - 1 PM",
+          },
+          {
+            city: "Snyder, TX",
+            address: "1 1 4 82nd Street",
+            time: "10 AM - 1 PM",
+          },
+        ],
+      },
+      {
+        dateObj: { date: 20, day: "Fri" },
+        locations: [
+          {
+            city: "Snyder, TX",
+            address: "Codgell Memorial Hospital",
+            time: "10 AM - 1 PM",
+          },
+          {
+            city: "FFFCity, TX",
+            address: "1 1 4 82nd FFF streeet",
+            time: "10 AM - 1 PM",
+          },
+        ],
+      },
+    ],
     name: "Chinese",
     latLong: { latitude: 38.968, longitude: 35.2683 },
     description:
@@ -270,6 +578,83 @@ const trucksList = [
   },
   {
     id: 5,
+    schedule: [
+      {
+        dateObj: { date: 16, day: "Mon" },
+        locations: [
+          {
+            city: "Snyder, TX",
+            address: "Codgell Memorial Hospital",
+            time: "10 AM - 1 PM",
+          },
+          {
+            city: "Snyder, TX",
+            address: "1 1 4 82nd Street",
+            time: "10 AM - 1 PM",
+          },
+        ],
+      },
+      {
+        dateObj: { date: 17, day: "Tue" },
+        locations: [
+          {
+            city: "Caliform, TX",
+            address: "XXXYY Memorial Hospital",
+            time: "11 AM - 1 PM",
+          },
+          {
+            city: "City AA , State",
+            address: "111YYY 82nd Street",
+            time: "9 AM - 1 PM",
+          },
+        ],
+      },
+      {
+        dateObj: { date: 18, day: "Wed" },
+        locations: [
+          {
+            city: "ZZZCity, TX",
+            address: "Codgell Memorial Hospital",
+            time: "12 AM - 1 PM",
+          },
+          {
+            city: "MMMCity, TX",
+            address: "1 1 4 82nd Street",
+            time: "10 AM - 1 PM",
+          },
+        ],
+      },
+      {
+        dateObj: { date: 19, day: "Thu" },
+        locations: [
+          {
+            city: "THUCity, TX",
+            address: "Codgell Memorial Hospital",
+            time: "10 AM - 1 PM",
+          },
+          {
+            city: "Snyder, TX",
+            address: "1 1 4 82nd Street",
+            time: "10 AM - 1 PM",
+          },
+        ],
+      },
+      {
+        dateObj: { date: 20, day: "Fri" },
+        locations: [
+          {
+            city: "Snyder, TX",
+            address: "Codgell Memorial Hospital",
+            time: "10 AM - 1 PM",
+          },
+          {
+            city: "FFFCity, TX",
+            address: "1 1 4 82nd FFF streeet",
+            time: "10 AM - 1 PM",
+          },
+        ],
+      },
+    ],
     latLong: { latitude: 38.8868, longitude: 35.053 },
     name: "Japanese",
     description:
@@ -327,6 +712,83 @@ const trucksList = [
   },
   {
     id: 6,
+    schedule: [
+      {
+        dateObj: { date: 16, day: "Mon" },
+        locations: [
+          {
+            city: "Snyder, TX",
+            address: "Codgell Memorial Hospital",
+            time: "10 AM - 1 PM",
+          },
+          {
+            city: "Snyder, TX",
+            address: "1 1 4 82nd Street",
+            time: "10 AM - 1 PM",
+          },
+        ],
+      },
+      {
+        dateObj: { date: 17, day: "Tue" },
+        locations: [
+          {
+            city: "Caliform, TX",
+            address: "XXXYY Memorial Hospital",
+            time: "11 AM - 1 PM",
+          },
+          {
+            city: "City AA , State",
+            address: "111YYY 82nd Street",
+            time: "9 AM - 1 PM",
+          },
+        ],
+      },
+      {
+        dateObj: { date: 18, day: "Wed" },
+        locations: [
+          {
+            city: "ZZZCity, TX",
+            address: "Codgell Memorial Hospital",
+            time: "12 AM - 1 PM",
+          },
+          {
+            city: "MMMCity, TX",
+            address: "1 1 4 82nd Street",
+            time: "10 AM - 1 PM",
+          },
+        ],
+      },
+      {
+        dateObj: { date: 19, day: "Thu" },
+        locations: [
+          {
+            city: "THUCity, TX",
+            address: "Codgell Memorial Hospital",
+            time: "10 AM - 1 PM",
+          },
+          {
+            city: "Snyder, TX",
+            address: "1 1 4 82nd Street",
+            time: "10 AM - 1 PM",
+          },
+        ],
+      },
+      {
+        dateObj: { date: 20, day: "Fri" },
+        locations: [
+          {
+            city: "Snyder, TX",
+            address: "Codgell Memorial Hospital",
+            time: "10 AM - 1 PM",
+          },
+          {
+            city: "FFFCity, TX",
+            address: "1 1 4 82nd FFF streeet",
+            time: "10 AM - 1 PM",
+          },
+        ],
+      },
+    ],
     name: "Vietnamese",
     latLong: { latitude: 38.8, longitude: 35.2 },
     description:
@@ -384,6 +846,83 @@ const trucksList = [
   },
   {
     id: 7,
+    schedule: [
+      {
+        dateObj: { date: 16, day: "Mon" },
+        locations: [
+          {
+            city: "Snyder, TX",
+            address: "Codgell Memorial Hospital",
+            time: "10 AM - 1 PM",
+          },
+          {
+            city: "Snyder, TX",
+            address: "1 1 4 82nd Street",
+            time: "10 AM - 1 PM",
+          },
+        ],
+      },
+      {
+        dateObj: { date: 17, day: "Tue" },
+        locations: [
+          {
+            city: "Caliform, TX",
+            address: "XXXYY Memorial Hospital",
+            time: "11 AM - 1 PM",
+          },
+          {
+            city: "City AA , State",
+            address: "111YYY 82nd Street",
+            time: "9 AM - 1 PM",
+          },
+        ],
+      },
+      {
+        dateObj: { date: 18, day: "Wed" },
+        locations: [
+          {
+            city: "ZZZCity, TX",
+            address: "Codgell Memorial Hospital",
+            time: "12 AM - 1 PM",
+          },
+          {
+            city: "MMMCity, TX",
+            address: "1 1 4 82nd Street",
+            time: "10 AM - 1 PM",
+          },
+        ],
+      },
+      {
+        dateObj: { date: 19, day: "Thu" },
+        locations: [
+          {
+            city: "THUCity, TX",
+            address: "Codgell Memorial Hospital",
+            time: "10 AM - 1 PM",
+          },
+          {
+            city: "Snyder, TX",
+            address: "1 1 4 82nd Street",
+            time: "10 AM - 1 PM",
+          },
+        ],
+      },
+      {
+        dateObj: { date: 20, day: "Fri" },
+        locations: [
+          {
+            city: "Snyder, TX",
+            address: "Codgell Memorial Hospital",
+            time: "10 AM - 1 PM",
+          },
+          {
+            city: "FFFCity, TX",
+            address: "1 1 4 82nd FFF streeet",
+            time: "10 AM - 1 PM",
+          },
+        ],
+      },
+    ],
     name: "Vietnamese",
     latLong: { latitude: 38.608, longitude: 35.503 },
     description:

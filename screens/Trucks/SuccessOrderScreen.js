@@ -6,21 +6,27 @@ import { StatusBar } from "expo-status-bar";
 import { SafeAreaView } from "react-native-safe-area-context";
 import colors from "../../constants/colors";
 import ButtonComp from "../../components/ButtonComp";
-import { useDispatch } from "react-redux";
-import { removeCurrentOrder } from "../../store/store-slice";
+import { useDispatch, useSelector } from "react-redux";
+import { addToAllOrders, removeCurrentOrder } from "../../store/store-slice";
 
 const SuccessOrderScreen = () => {
   const dispatch = useDispatch();
   const route = useRoute();
   const orderData = route.params;
   const navigation = useNavigation();
-  console.log(orderData);
+  const allOrders = useSelector((state) => state.userSlice.allOrders);
   useLayoutEffect(() => {
     navigation.setOptions({ headerShown: false });
   }, []);
   const handleDonePress = () => {
-    // this dispatch will ensure that whenever the order is complete user cart is empty
-    dispatch(removeCurrentOrder());
+    // this will enusre current orders are added to allOrders
+    if (orderData.newOrder === true) {
+      dispatch(addToAllOrders()); // addToALlOrders function will take care of removing current order
+    }
+    if (orderData.newOrder === false) {
+      dispatch(removeCurrentOrder()); // we are not calling addToAllOrders for previous order hence better we delete the current order here
+    }
+
     navigation.navigate("reviewScreen", {
       truckName: orderData.truckName,
       truckImg: orderData.truckImg,
@@ -54,8 +60,10 @@ const SuccessOrderScreen = () => {
               <Text style={styles.mainValue}>{orderData.truckLocation}</Text>
             </View>
             <View style={styles.commonDiv}>
-              <Text style={styles.faintText}>pick up time</Text>
-              <Text style={styles.mainValue}>{orderData.pickUpTime}</Text>
+              <Text style={styles.faintText}>pick up time | date</Text>
+              <Text style={styles.mainValue}>
+                {orderData.pickUpTime.time} | {orderData.pickUpDate.date}
+              </Text>
             </View>
             <View style={styles.btn}>
               <ButtonComp handleBtnPress={handleDonePress} height={50}>

@@ -165,6 +165,7 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 25,
     fontWeight: "600",
+    width: 150,
   },
   nameImg: {
     flexDirection: "row",

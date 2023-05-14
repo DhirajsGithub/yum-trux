@@ -149,83 +149,7 @@ const ScheduleScreen = () => {
 
   const handleDonePress = () => {};
 
-  const upcomingLocations = [
-    {
-      dateObj: { date: 16, day: "Mon" },
-      locations: [
-        {
-          city: "Snyder, TX",
-          address: "Codgell Memorial Hospital",
-          time: "10 AM - 1 PM",
-        },
-        {
-          city: "Snyder, TX",
-          address: "1 1 4 82nd Street",
-          time: "10 AM - 1 PM",
-        },
-      ],
-    },
-    {
-      dateObj: { date: 17, day: "Tue" },
-      locations: [
-        {
-          city: "Caliform, TX",
-          address: "XXXYY Memorial Hospital",
-          time: "11 AM - 1 PM",
-        },
-        {
-          city: "City AA , State",
-          address: "111YYY 82nd Street",
-          time: "9 AM - 1 PM",
-        },
-      ],
-    },
-    {
-      dateObj: { date: 18, day: "Wed" },
-      locations: [
-        {
-          city: "ZZZCity, TX",
-          address: "Codgell Memorial Hospital",
-          time: "12 AM - 1 PM",
-        },
-        {
-          city: "MMMCity, TX",
-          address: "1 1 4 82nd Street",
-          time: "10 AM - 1 PM",
-        },
-      ],
-    },
-    {
-      dateObj: { date: 19, day: "Thu" },
-      locations: [
-        {
-          city: "THUCity, TX",
-          address: "Codgell Memorial Hospital",
-          time: "10 AM - 1 PM",
-        },
-        {
-          city: "Snyder, TX",
-          address: "1 1 4 82nd Street",
-          time: "10 AM - 1 PM",
-        },
-      ],
-    },
-    {
-      dateObj: { date: 20, day: "Fri" },
-      locations: [
-        {
-          city: "Snyder, TX",
-          address: "Codgell Memorial Hospital",
-          time: "10 AM - 1 PM",
-        },
-        {
-          city: "FFFCity, TX",
-          address: "1 1 4 82nd FFF streeet",
-          time: "10 AM - 1 PM",
-        },
-      ],
-    },
-  ];
+  const upcomingLocations = truckData.truckSchedule;
 
   return (
     <View style={styles.container}>
@@ -283,6 +207,7 @@ const ScheduleScreen = () => {
                   city={item.city}
                   address={item.address}
                   time={item.time}
+                  key={index}
                 />
               );
             })}

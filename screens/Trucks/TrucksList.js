@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from "react-native";
-import React, { useLayoutEffect } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -7,30 +7,42 @@ import HeaderComp from "../../components/HeaderComp";
 import ListComp from "../../components/ListComp";
 import colors from "../../constants/colors";
 import { trucksList } from "../../data/trucks";
+import EmptyData from "../../components/EmptyData";
 
 const TrucksList = () => {
   const navigation = useNavigation();
+  const [trucksData, setTrucksData] = useState([]);
   useLayoutEffect(() => {
     navigation.setOptions({ headerShown: false });
   }, []);
   const handleFilterPress = () => {
-    console.log("filter");
     navigation.navigate("trucksFilter");
   };
-  const handleSearchPress = () => {};
+  useEffect(() => {
+    setTrucksData(trucksList);
+  }, []);
+  const [searchInput, setSearchInput] = useState("");
+  const handleSearchInput = (text) => {
+    const filterTrucks = trucksList.filter((truck) => {
+      return truck.name?.toLowerCase().includes(text?.toLowerCase());
+    });
+    setTrucksData(filterTrucks);
+  };
+
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
       <SafeAreaView>
         <View style={{ marginHorizontal: 16 }}>
           <HeaderComp
-            handleSearchPress={handleSearchPress}
+            // handleSearchPress={handleSearchPress}
             handleFilterPress={handleFilterPress}
+            handleSearchInput={handleSearchInput}
             isTrucksList={true}
           />
         </View>
-
-        <ListComp trucksList={trucksList} />
+        {trucksData.length === 0 && <EmptyData msg="No truck found 😞" />}
+        <ListComp trucksList={trucksData} />
       </SafeAreaView>
     </View>
   );

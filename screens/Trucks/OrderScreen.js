@@ -5,9 +5,10 @@ import {
   View,
   Image,
   TouchableOpacity,
+  Platform,
 } from "react-native";
 import React, { useEffect, useLayoutEffect, useState } from "react";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Feather } from "@expo/vector-icons";
@@ -15,6 +16,8 @@ import { useDispatch, useSelector } from "react-redux";
 import colors from "../../constants/colors";
 import { addQuantity, removeQuantity } from "../../store/store-slice";
 import ButtonComp from "../../components/ButtonComp";
+import DateTimePicker from "@react-native-community/datetimepicker";
+import { TextInput } from "react-native-paper";
 
 const OrderedItemCard = ({
   quantity,
@@ -126,11 +129,19 @@ const OrderScreen = () => {
   const currentOrders = useSelector((state) => state.userSlice.currentOrders);
   const navigation = useNavigation();
   const dispatch = useDispatch();
+  const params = useRoute().params;
   const truckName = currentOrders[0]?.truckName;
   const truckDescription = currentOrders[0]?.truckDescription;
   const truckImg = currentOrders[0]?.truckImg;
   const truckLocation = currentOrders[0]?.truckAddress;
-  const pickUpTime = "05/23/5:15";
+
+  // don't allow user if currentOrders are empty
+  useEffect(() => {
+    if (currentOrders.length === 0) {
+      navigation.navigate("trucksList");
+    }
+  }, [currentOrders]);
+
   useLayoutEffect(() => {
     navigation.setOptions({ headerShown: false });
   }, []);
@@ -161,8 +172,10 @@ const OrderScreen = () => {
     dispatch(removeQuantity(itemId));
   };
 
-  const handlePaymenPress = () => {
-    navigation.navigate("paymentMethod");
+  // this is myAmount
+  const [myAmount, setMyAmount] = useState(0);
+  const handleMyAmountValue = (text) => {
+    setMyAmount(text);
   };
 
   // note toFixed will convet number to string hence after applying toFoxed make sure to parse the string to float or int
@@ -175,27 +188,126 @@ const OrderScreen = () => {
   const [tipCardPress, setTipCardPress] = useState(0);
   const handleTipPress = (data) => {
     setTipCardPress(data);
-    console.log(data);
   };
   const taxAmount = parseFloat(
     ((taxPercentage / 100) * totalBeforeTax).toFixed(2)
   );
-  let totalWithTaxAndTip =
-    taxAmount +
-    totalBeforeTax +
-    totalBeforeTax * (tipCardPress === true ? 0 : tipCardPress / 100);
+  let tipShit = 0;
+  if (tipCardPress === true) {
+    tipShit = myAmount.length > 0 && parseFloat(myAmount);
+  } else {
+    tipShit = totalBeforeTax * (tipCardPress / 100);
+  }
+  let totalWithTaxAndTip = taxAmount + totalBeforeTax + tipShit;
 
   totalWithTaxAndTip = parseFloat(totalWithTaxAndTip.toFixed(2));
 
-  const handleBtnPress = () => {
-    navigation.navigate("successOrder", {
+  const [pickUpDate, setPickUpDate] = useState({
+    show: false,
+    date: "date",
+  });
+  const [pickUpTime, setPickUpTime] = useState({
+    show: false,
+    time: "time",
+  });
+  const handlePickupDate = (obj, date) => {
+    if (date) {
+      let temp = JSON.stringify(date);
+      setPickUpDate({ show: false, date: temp.slice(6, 11) });
+    }
+  };
+  const handlePicupTime = (obj, date) => {
+    if (Platform.OS === "ios") {
+      if (date) {
+        let temp2 = "";
+        let temp = date?.toLocaleTimeString()?.slice(0, 5);
+        if (temp[temp.length - 1] === ":") {
+          temp2 = date?.toLocaleTimeString()?.slice(8, 11);
+        } else {
+          temp2 = date?.toLocaleTimeString()?.slice(9, 11);
+        }
+        setPickUpTime({ show: false, time: temp + " " + temp2 });
+      }
+    } else {
+      if (date) {
+        let temp = date?.toLocaleTimeString()?.slice(0, 5);
+        setPickUpTime({ show: false, time: temp });
+      }
+    }
+  };
+  const showPickupDate = () => {
+    setPickUpTime((prvData) => {
+      return { ...prvData, show: false };
+    });
+    if (Platform.OS === "ios") {
+      setPickUpDate((prvData) => {
+        return { ...prvData, show: !prvData.show };
+      });
+    } else {
+      setPickUpDate((prvData) => {
+        return { ...prvData, show: true };
+      });
+    }
+  };
+  const showPickupTime = () => {
+    setPickUpDate((prvData) => {
+      return { ...prvData, show: false };
+    });
+    if (Platform.OS === "ios") {
+      setPickUpTime((prvData) => {
+        return { ...prvData, show: !prvData.show };
+      });
+    } else {
+      setPickUpTime((prvData) => {
+        return { ...prvData, show: true };
+      });
+    }
+  };
+
+  const handlePaymenPress = () => {
+    if (pickUpTime.time === "time") {
+      alert("pick a valid time");
+      return;
+    } else if (pickUpDate.date === "date") {
+      alert("pick a valid date");
+      return;
+    } else if (typeof totalWithTaxAndTip !== "number") {
+      alert("Total price must be a Number");
+      return;
+    }
+    navigation.navigate("paymentMethod", {
       truckName,
       truckDescription,
       truckLocation,
       pickUpTime,
       truckImg,
+      totalWithTaxAndTip,
     });
   };
+
+  const handleBtnPress = () => {
+    if (pickUpTime.time === "time") {
+      alert("pick a valid time");
+      return;
+    } else if (pickUpDate.date === "date") {
+      alert("pick a valid date");
+      return;
+    } else if (typeof totalWithTaxAndTip !== "number") {
+      alert("Total price must be a Number");
+      return;
+    }
+    navigation.navigate("successOrder", {
+      truckName,
+      truckDescription,
+      truckLocation,
+      pickUpTime,
+      pickUpDate,
+      truckImg,
+      totalWithTaxAndTip,
+      newOrder: params.newOrder,
+    });
+  };
+
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
@@ -221,11 +333,42 @@ const OrderScreen = () => {
             <Text style={styles.truckDesc}>{truckDescription}</Text>
           </View>
           <View style={styles.pickUpTime}>
-            <Text style={styles.pickupText}>Set pick up time</Text>
-            <TouchableOpacity>
-              <Text style={styles.timePickUpTouch}>{pickUpTime}</Text>
-            </TouchableOpacity>
+            <Text style={styles.pickupText}>Pick up time | date</Text>
+            <View style={styles.dateTimePick}>
+              <TouchableOpacity
+                style={styles.timeDateTouch}
+                onPress={showPickupTime}
+              >
+                <Text>{pickUpTime.time}</Text>
+              </TouchableOpacity>
+              <View>
+                <Text>|</Text>
+              </View>
+              <TouchableOpacity
+                style={styles.timeDateTouch}
+                onPress={showPickupDate}
+              >
+                <Text>{pickUpDate.date}</Text>
+              </TouchableOpacity>
+            </View>
           </View>
+
+          {pickUpDate.show && (
+            <DateTimePicker
+              onChange={handlePickupDate}
+              mode="date"
+              display="spinner"
+              value={new Date("01-03-2023")}
+            />
+          )}
+          {pickUpTime.show && (
+            <DateTimePicker
+              onChange={handlePicupTime}
+              display="spinner"
+              mode="time"
+              value={new Date()}
+            />
+          )}
           <View style={styles.ordersView}>
             {ordersArray.map((item, index) => {
               return (
@@ -347,6 +490,21 @@ const OrderScreen = () => {
               color={tipCardPress === true ? colors.white : colors.textColor}
             />
           </ScrollView>
+          {tipCardPress === true && (
+            <View style={{}}>
+              <TextInput
+                value={myAmount}
+                onChangeText={handleMyAmountValue}
+                keyboardType={"phone-pad"}
+                style={{
+                  backgroundColor: colors.inputBg,
+                  width: 100,
+                  height: 30,
+                  // borderRadius: 15,
+                }}
+              />
+            </View>
+          )}
           <View
             style={{
               flexDirection: "row",
@@ -366,6 +524,7 @@ const OrderScreen = () => {
               $ {totalWithTaxAndTip}
             </Text>
           </View>
+
           <View>
             <Text style={styles.pickupText}>Payment</Text>
             <TouchableOpacity
@@ -474,12 +633,8 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     color: colors.textColor,
   },
-  timePickUpTouch: {
-    paddingHorizontal: 14,
-    paddingVertical: 8,
-    backgroundColor: colors.inputBg,
-    borderRadius: 16,
-    overflow: "hidden",
+  timeDateTouch: {
+    marginHorizontal: 5,
   },
   itemQuantity: {
     flexDirection: "row",
@@ -513,5 +668,13 @@ const styles = StyleSheet.create({
   },
   tipView: {
     marginVertical: 12,
+  },
+  dateTimePick: {
+    flexDirection: "row",
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    backgroundColor: colors.inputBg,
+    borderRadius: 16,
+    overflow: "hidden",
   },
 });

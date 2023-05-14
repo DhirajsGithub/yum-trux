@@ -5,19 +5,35 @@ import {
   Image,
   Touchable,
   TouchableOpacity,
+  TextInput,
 } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Feather } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import colors from "../constants/colors";
 
 const HeaderComp = ({
   isTrucksList,
-  handleSearchPress,
+  // handleSearchPress,
   handleFilterPress,
   handleSettingPress,
   onlySearch,
+  handleSearchInput,
 }) => {
+  const [showSearch, setShowSearch] = useState(false);
+  const [searchInput, setSearchInput] = useState("");
+  const handleSerachChange = (text) => {
+    setSearchInput(text);
+    // handleSearchInput(text);
+  };
+  const handleSearchPress = () => {
+    setShowSearch(!showSearch);
+  };
+
+  useEffect(() => {
+    handleSearchInput(searchInput);
+  }, [searchInput]);
+
   return (
     <View style={styles.container}>
       <View style={styles.commonView}>
@@ -28,6 +44,24 @@ const HeaderComp = ({
         <Text style={styles.heading}>YumTrux</Text>
       </View>
       <View style={styles.commonView}>
+        {showSearch && (
+          <View style={{ marginRight: 5 }}>
+            <TextInput
+              onChangeText={handleSerachChange}
+              style={{
+                backgroundColor: colors.inputBg,
+                borderRadius: 16,
+                width: 100,
+                height: 30,
+                paddingHorizontal: 8,
+                paddingVertical: 2,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+              placeholder="search truck"
+            />
+          </View>
+        )}
         <TouchableOpacity onPress={handleSearchPress}>
           <Feather
             style={{ marginRight: 12 }}
@@ -37,11 +71,6 @@ const HeaderComp = ({
           />
         </TouchableOpacity>
 
-        {!isTrucksList && !onlySearch && (
-          <TouchableOpacity onPress={handleSettingPress}>
-            <Feather name="settings" size={24} color={colors.textColor} />
-          </TouchableOpacity>
-        )}
         {isTrucksList && !onlySearch && (
           <TouchableOpacity onPress={handleFilterPress}>
             <MaterialIcons name="tune" size={24} color={colors.textColor} />

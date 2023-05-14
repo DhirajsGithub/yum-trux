@@ -9,9 +9,12 @@ import HomeHeaderCard from "../../components/HomeHeaderCard";
 import { trucksList } from "../../data/trucks";
 import ListComp from "../../components/ListComp";
 import HomeTruckList from "../../components/HomeTruckList";
+import EmptyData from "../../components/EmptyData";
 
 const HomeScreen = () => {
   const navigation = useNavigation();
+  const [searchInput, setSearchInput] = useState("");
+  const [category, setCategory] = useState("");
   useLayoutEffect(() => {
     navigation.setOptions({ headerShown: false });
   }, []);
@@ -19,19 +22,25 @@ const HomeScreen = () => {
   useEffect(() => {
     setTruckListNew(trucksList);
   }, []);
-  const handleSearchPress = () => {};
+
   const handleSettingPress = () => {};
   const handleTruckPress = (name) => {
-    console.log(name);
-    if (name === "More") {
-      setTruckListNew(trucksList);
-      return;
-    }
-    const newList = trucksList.filter((truck) => {
-      return truck?.name?.toLowerCase().includes(name?.toLowerCase());
-    });
-    setTruckListNew(newList);
+    setCategory(name);
   };
+
+  const handleSearchInput = (text) => {
+    setSearchInput(text);
+  };
+  const filteredTrucks = trucksList.filter((truck) => {
+    const searchFilter = truck.name
+      ?.toLowerCase()
+      .includes(searchInput?.toLowerCase());
+
+    const categoryFilter =
+      truck?.name?.toLowerCase().includes(category?.toLowerCase()) ||
+      category === "More";
+    return categoryFilter && searchFilter;
+  });
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
@@ -40,8 +49,8 @@ const HomeScreen = () => {
           <View style={{ marginHorizontal: 6 }}>
             <HeaderComp
               isTrucksList={false}
-              handleSearchPress={handleSearchPress}
               handleSettingPress={handleSettingPress}
+              handleSearchInput={handleSearchInput}
             />
           </View>
 
@@ -92,9 +101,10 @@ const HomeScreen = () => {
             <HomeHeaderCard truckName="More" handleOnPress={handleTruckPress} />
           </ScrollView>
         </View>
+        {filteredTrucks.length === 0 && <EmptyData msg="No truck found 😞" />}
         <ScrollView>
           <View>
-            <HomeTruckList truckList={truckListNew} homeComp={true} />
+            <HomeTruckList truckList={filteredTrucks} homeComp={true} />
           </View>
         </ScrollView>
       </SafeAreaView>

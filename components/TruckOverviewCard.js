@@ -25,18 +25,22 @@ const TruckOverviewCard = ({
   truckImg,
   truckMenu,
   truckAddress,
+  truckSchedule,
   homeComp,
 }) => {
   const navigation = useNavigation();
   const handleSchedulePress = () => {
     navigation.navigate("scheduleScreen", {
       truckImg,
+      truckSchedule,
+      truckId,
       // also truck upcoming location, for now it is hardcoded in schedule page
       // also pass this params from truckDetails screen
     });
   };
   const handleTruckViewPress = () => {
     navigation.navigate("truckDetail", {
+      // all necessary fields of truck must be pass here, which will be use to carry to order further
       truckName,
       truckRatings,
       truckTiming,
@@ -45,6 +49,9 @@ const TruckOverviewCard = ({
       truckImg,
       truckMenu,
       truckAddress,
+      truckSchedule,
+
+      // note to pass all this params when click on view truck from order history
     });
   };
   return (
@@ -97,7 +104,11 @@ const TruckOverviewCard = ({
         {!homeComp && (
           <>
             <View style={styles.contentView}>
-              <Text style={styles.content}>{truckDescription}</Text>
+              <Text style={styles.content}>
+                {truckDescription?.length > 215
+                  ? truckDescription?.slice(0, 215) + "..."
+                  : truckDescription}
+              </Text>
             </View>
             <View style={styles.btnView}>
               <TouchableOpacity
@@ -139,6 +150,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 7,
   },
   headTitle: {
+    width: "55%",
     fontSize: 15,
     fontWeight: "700",
     color: colors.white,
@@ -148,6 +160,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   scheduleText: {
+    marginLeft: 5,
     fontSize: 13,
     fontWeight: "700",
     color: colors.white,

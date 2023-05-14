@@ -3,6 +3,7 @@ import {
   Button,
   Dimensions,
   FlatList,
+  Platform,
   ScrollView,
   StyleSheet,
   Text,
@@ -70,12 +71,12 @@ const TruckCard = ({
               color: colors.textColor,
               fontSize: 20,
               fontWeight: "600",
-              marginBottom: 25,
+              width: 180,
             }}
           >
             {truckName} Truck
           </Text>
-          <View style={{ position: "absolute", top: 25 }}>
+          <View style={{ left: "-20%" }}>
             <AirbnbRating
               size={17}
               defaultRating={truckRating}
@@ -170,6 +171,10 @@ const TrucksNearMe = () => {
   const handleSwipeDown = () => {
     setModalVisible(false);
   };
+  const [searchInput, setSearchInput] = useState("");
+  const handleSearchInput = (text) => {
+    setSearchInput(text);
+  };
 
   return (
     <View style={styles.container}>
@@ -177,7 +182,10 @@ const TrucksNearMe = () => {
       <SafeAreaView>
         <ScrollView showsVerticalScrollIndicator={false}>
           <View>
-            <HeaderComp onlySearch={true} />
+            <HeaderComp
+              handleSearchInput={handleSearchInput}
+              onlySearch={true}
+            />
             <View
               style={{
                 flexDirection: "row",
@@ -250,22 +258,25 @@ const TrucksNearMe = () => {
               <View
                 style={{
                   backgroundColor: colors.white,
-                  height: Dimensions.get("window").height - 350,
-                  // width: Dimensions.get("window").width - 32,
+                  height:
+                    Platform.OS === "ios"
+                      ? Dimensions.get("screen").height - 350
+                      : Dimensions.get("screen").height - 250,
                   justifyContent: "center",
                   alignItems: "center",
-                  position: "absolute",
-                  bottom: "2%",
+
+                  // bottom: "2%",
                   borderRadius: 15,
-                  paddingHorizontal: 5,
                   paddingBottom: 10,
                 }}
               >
-                <Entypo name="chevron-small-down" size={24} color="black" />
+                <TouchableOpacity onPress={handleSwipeDown}>
+                  <Entypo name="chevron-small-down" size={30} color="black" />
+                </TouchableOpacity>
                 <ScrollView showsVerticalScrollIndicator={false}>
                   {truckListData.map((item, index) => {
                     return (
-                      <View style={{ minWidth: "100%" }} key={index}>
+                      <View key={index}>
                         <TruckCard
                           truckName={item.name}
                           truckImg={item.imgUrl}
@@ -285,6 +296,21 @@ const TrucksNearMe = () => {
             </Modal>
 
             <View style={styles.baseModal}>
+              <TouchableOpacity
+                onPress={handleSwipeUp}
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  zIndex: 1009,
+                }}
+              >
+                <Entypo
+                  style={{ position: "absolute", zIndex: 1009 }}
+                  name="chevron-small-up"
+                  size={30}
+                  color="black"
+                />
+              </TouchableOpacity>
               <TruckCard
                 truckName={truckListData[0].name}
                 truckImg={truckListData[0].imgUrl}
@@ -312,23 +338,24 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     paddingHorizontal: 16,
     paddingBottom: 8,
-    // maxHeight: Dimensions.get("window").height,
   },
   map: {
-    // width: Dimensions.get("window").width,
-    height: Dimensions.get("window").height - 200,
+    height:
+      Platform.OS === "ios"
+        ? Dimensions.get("screen").height - 360
+        : Dimensions.get("screen").height - 340,
   },
   section: {
     flexDirection: "row",
     alignItems: "center",
     marginTop: 3,
     width: "90%",
-    // marginRight: 8,
   },
   footerHead: {
     color: colors.lightBlack,
     fontSize: 12,
     fontWeight: "400",
+    width: "65%",
   },
   footerHeadBold: {
     color: colors.textColor,
@@ -336,10 +363,8 @@ const styles = StyleSheet.create({
     fontWeight: "500",
   },
   baseModal: {
-    // marginBottom: "25%",
-    position: "absolute",
     width: "100%",
-    bottom: "10%",
+    bottom: "1%",
     zIndex: 1000,
   },
 });

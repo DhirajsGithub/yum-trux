@@ -20,6 +20,7 @@ const ListComp = ({ trucksList, homeComp }) => {
             truckImg={item.imgUrl}
             truckMenu={item.menu}
             truckAddress={item.address}
+            truckSchedule={item.schedule}
           />
         )}
         keyExtractor={(item) => item.id}

@@ -9,12 +9,15 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@ant-design/react-native": "^5.0.4",
     "@react-native-async-storage/async-storage": "^1.18.1",
+    "@react-native-community/datetimepicker": "6.7.3",
     "@react-navigation/bottom-tabs": "^6.5.7",
     "@react-navigation/material-bottom-tabs": "^6.2.15",
     "@react-navigation/native": "^6.1.6",
     "@react-navigation/native-stack": "^6.9.12",
     "@reduxjs/toolkit": "^1.9.5",
+    "date-and-time": "^3.0.0",
     "expo": "~48.0.15",
     "expo-image-picker": "~14.1.1",
     "expo-location": "~15.1.1",
@@ -30,8 +33,10 @@
     "react-native-screens": "~3.20.0",
     "react-native-swipe-gestures": "^1.0.5",
     "react-native-swipe-modal-up-down": "^1.1.0",
+    "react-native-swipe-up-down": "^1.2.0",
     "react-native-vector-icons": "^9.2.0",
-    "react-redux": "^8.0.5"
+    "react-redux": "^8.0.5",
+    "uniqid": "^5.4.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"

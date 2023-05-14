@@ -1,4 +1,5 @@
 import {
+  Alert,
   Dimensions,
   FlatList,
   Image,
@@ -33,8 +34,6 @@ const TruckDetailScreen = () => {
   const truckData = route.params;
   useLayoutEffect(() => {
     navigation.setOptions({ headerShown: false });
-    // this will ensure that whenever user comes to truck detail screen it's cart is empty
-    dispatch(removeCurrentOrder());
   }, []);
   const handleBackPress = () => {
     navigation.goBack();
@@ -42,28 +41,61 @@ const TruckDetailScreen = () => {
   const handleSchedulePress = () => {
     navigation.navigate("scheduleScreen", {
       truckImg: truckData.truckImg,
+      truckId: truckData.truckId,
+      truckSchedule: truckData.truckSchedule,
       // also truck upcoming location, for now it is hardcoded in schedule page
       // also pass this params from truckOverview Card
     });
   };
   const handleCartPress = () => {
     if (currentOrders.length > 0) {
-      navigation.navigate("order");
+      // passing newOrder as true to store this order to allOrders
+      navigation.navigate("order", { newOrder: true });
     }
   };
   const handleFavIconsPress = () => {
     setFavPressed(!favPressed);
   };
-  console.log(currentOrders);
-  const handleAddPress = (data) => {
-    if (currentOrders.length < 99 && data) {
+  const handleRemoveTruckPress = (orderData) => {
+    // this will ensure that user cart only have item from only one truck
+    dispatch(removeCurrentOrder());
+    addItemToCart(orderData);
+  };
+  const handleAddPress = (orderData) => {
+    if (
+      currentOrders.length > 0 &&
+      currentOrders[0].truckId !== truckData.truckId
+    ) {
+      Alert.alert(
+        "Can't add items from two different trucks ❗️",
+        "Remove Truck will remove previous truck orders and add new truck orders 🔁",
+        [
+          {
+            text: "Cancel",
+            // onPress: () => console.log("Cancel Pressed"),
+            style: "cancel",
+          },
+          {
+            text: "Remove truck",
+            onPress: () => handleRemoveTruckPress(orderData),
+          },
+        ]
+      );
+      return;
+    }
+    addItemToCart(orderData);
+  };
+
+  const addItemToCart = (orderData) => {
+    if (currentOrders.length < 99 && orderData) {
       dispatch(
         addToCurrentOrder({
+          truckId: truckData.truckId,
           truckName: truckData.truckName,
           truckDescription: truckData.truckDescription,
           truckImg: truckData.truckImg,
           truckAddress: truckData.truckAddress,
-          ...data,
+          ...orderData,
         })
       );
     }

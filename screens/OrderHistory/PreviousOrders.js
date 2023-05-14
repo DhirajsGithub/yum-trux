@@ -1,4 +1,5 @@
 import {
+  Alert,
   FlatList,
   ScrollView,
   StyleSheet,
@@ -6,42 +7,34 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useLayoutEffect } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import HeaderComp from "../../components/HeaderComp";
 import { Image } from "react-native";
 import colors from "../../constants/colors";
-import { useSelector } from "react-redux";
+import { trucksList } from "../../data/trucks";
 import RectangularDisplayFields from "../../components/RectangularDisplayFields";
+import { useDispatch, useSelector } from "react-redux";
+import { addToCurrentOrder, removeCurrentOrder } from "../../store/store-slice";
+import EmptyData from "../../components/EmptyData";
 
-const TempButton = ({ bg, text, handleButtonPress }) => {
-  return (
-    <View style={styles.btnView}>
-      <TouchableOpacity style={styles.btnTouch} onPress={handleButtonPress}>
-        <Text
-          onPress={handleButtonPress}
-          style={[styles.btnText, { backgroundColor: bg }]}
-        >
-          {text}
-        </Text>
-      </TouchableOpacity>
-    </View>
-  );
-};
-
-const OrderCard = ({ imgUrl, truckName, NoOfDishes, price, dateTime }) => {
-  const handleReorderPress = () => {
-    console.log("jhj");
-  };
-  const handleViewTruckPress = () => {};
+const OrderCard = ({
+  imgUrl,
+  truckName,
+  NoOfDishes,
+  price,
+  dateTime,
+  handleReorderPress,
+  handleViewTruckPress,
+}) => {
   return (
     <View style={styles.orderCard}>
       <View style={styles.imgDesc}>
         <View>
           <Image
-            style={{ width: 102, height: 86, borderRadius: 5, marginRight: 11 }}
+            style={{ width: 100, height: 86, borderRadius: 5, marginRight: 5 }}
             source={{
               uri: imgUrl,
             }}
@@ -55,16 +48,6 @@ const OrderCard = ({ imgUrl, truckName, NoOfDishes, price, dateTime }) => {
         </View>
       </View>
       <View style={styles.btns}>
-        {/* <TempButton
-          handleButtonPress={handleReorderPress}
-          text="Reorder"
-          bg={colors.action}
-        />
-        <TempButton
-          handleButtonPress={handleViewTruckPress}
-          text="View truck"
-          bg="#404040"
-        /> */}
         <RectangularDisplayFields
           paddingHorizontal={4}
           paddingVertical={9}
@@ -91,7 +74,7 @@ const OrderCard = ({ imgUrl, truckName, NoOfDishes, price, dateTime }) => {
           marginRight={0}
           handlePress={handleViewTruckPress}
         >
-          View trucks
+          View truck
         </RectangularDisplayFields>
       </View>
     </View>
@@ -99,29 +82,114 @@ const OrderCard = ({ imgUrl, truckName, NoOfDishes, price, dateTime }) => {
 };
 
 const PreviousOrders = () => {
-  const prvOrders = useSelector((state) => state.userSlice.previousOrders);
-  console.log(prvOrders);
+  const dispatch = useDispatch();
+  const prvOrders = useSelector((state) => state.userSlice.allOrders);
+  const currentOrders = useSelector((state) => state.userSlice.currentOrders);
+
+  const [prvOrdersList, setPrvOrdersList] = useState([]);
+
   const navigation = useNavigation();
   useLayoutEffect(() => {
     navigation.setOptions({ headerShown: false });
   }, []);
 
+  useEffect(() => {
+    setPrvOrdersList(prvOrders);
+  }, [prvOrders]);
+
+  // const [searchInput, setSearchInput] = useState("");
+  const handleSearchInput = (text) => {
+    const filterTrucks = prvOrders.filter((truck) => {
+      return truck.truckName?.toLowerCase().includes(text?.toLowerCase());
+    });
+    setPrvOrdersList(filterTrucks);
+  };
+
+  const handleViewTruckPress = (truckId) => {
+    let truckDetail = trucksList.find((truck) => {
+      return truck.id === truckId;
+    });
+
+    if (truckDetail) {
+      const truckName = truckDetail.name;
+      const truckRatings = truckDetail.ratings;
+      const truckTiming = truckDetail.timing;
+      const truckDescription = truckDetail.description;
+      const truckId = truckDetail.id;
+      const truckImg = truckDetail.imgUrl;
+      const truckMenu = truckDetail.menu;
+      const truckAddress = truckDetail.address;
+      const truckSchedule = truckDetail.schedule;
+      navigation.navigate("trucks", {
+        screen: "truckDetail",
+        params: {
+          truckName,
+          truckRatings,
+          truckTiming,
+          truckDescription,
+          truckId,
+          truckImg,
+          truckMenu,
+          truckAddress,
+          truckSchedule,
+        },
+      });
+    }
+  };
+  const handleReorderPress = (prvOrder) => {
+    // note here we will check if user has some items in his cart, if yes show alert for removing all the order
+    if (currentOrders.length > 0) {
+      Alert.alert(
+        "Your cart already contain some orders ❗️",
+        "Reorder will override all the items in your cart",
+        [
+          {
+            text: "Cancel",
+            // onPress: () => console.log("Cancel Pressed"),
+            style: "cancel",
+          },
+          {
+            text: "Reorder",
+            onPress: () => addPrvOrdersToCart(prvOrder),
+          },
+        ]
+      );
+    } else {
+      addPrvOrdersToCart(prvOrder);
+    }
+  };
+
+  const addPrvOrdersToCart = (prvOrders) => {
+    dispatch(removeCurrentOrder()); // removing the previous order if present
+    for (let i of prvOrders) {
+      dispatch(addToCurrentOrder(i));
+    }
+    navigation.navigate("trucks", {
+      screen: "order",
+      // passing params of newOrder as false to not store this order again in allOrders !
+      params: { newOrder: false },
+    });
+  };
+
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
       <SafeAreaView>
-        <HeaderComp onlySearch={true} />
+        <HeaderComp handleSearchInput={handleSearchInput} onlySearch={true} />
+        {prvOrdersList.length === 0 && <EmptyData msg="No truck found 😞" />}
         <View style={styles.orderList}>
           <FlatList
             showsVerticalScrollIndicator={false}
-            data={prvOrders}
+            data={prvOrdersList}
             renderItem={({ item }) => (
               <OrderCard
+                handleViewTruckPress={() => handleViewTruckPress(item.truckId)}
+                handleReorderPress={() => handleReorderPress(item.items)}
                 imgUrl={item.truckImg}
-                truckName={item.nameOfTruck}
-                NoOfDishes={item.totalItems}
-                price={item.price}
-                dateTime={item.orderDate}
+                truckName={item.truckName}
+                NoOfDishes={item.items?.length}
+                price={item.totalPrice}
+                dateTime={item.orderOn}
               />
             )}
             keyExtractor={(item, index) => index.toString()}
@@ -151,12 +219,6 @@ const styles = StyleSheet.create({
   btnText: {
     // width: 102,
     color: colors.white,
-    // justifyContent: "center",
-    // alignItems: "center",
-    // textAlign: "center",
-    // paddingVertical: 9,
-    // borderRadius: 20,
-    // paddingHorizontal: 4,
 
     fontSize: 14,
     fontWeight: "500",
@@ -167,14 +229,14 @@ const styles = StyleSheet.create({
     // borderRadius: 20,
   },
   trckNameText: {
+    width: 120,
     color: colors.textColor,
     fontSize: 20,
     fontWeight: "700",
-    maxWidth: 140,
   },
   smallText: {
     color: "#6B6B6B",
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: "400",
   },
   btns: {
