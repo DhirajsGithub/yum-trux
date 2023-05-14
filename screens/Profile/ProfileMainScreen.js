@@ -1,4 +1,6 @@
 import {
+  Alert,
+  BackHandler,
   ScrollView,
   StyleSheet,
   Text,
@@ -16,6 +18,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { EvilIcons } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import colors from "../../constants/colors";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const ProfileMainScreen = () => {
   const navigation = useNavigation();
@@ -27,7 +30,26 @@ const ProfileMainScreen = () => {
   };
   const handlePaymentMethodPress = () => {};
   const handleFavouritePress = () => {};
-  const handleLogoutPress = () => {};
+  const logoutFunction = async () => {
+    try {
+      await AsyncStorage.removeItem("@yumtrux");
+    } catch (exception) {
+      console.log(exception);
+    }
+    BackHandler.exitApp();
+  };
+  const handleLogoutPress = async () => {
+    Alert.alert("Alert", "Are you sure you want to logout", [
+      {
+        text: "Cancel",
+        style: "cancel",
+      },
+      {
+        text: "Logout",
+        onPress: logoutFunction,
+      },
+    ]);
+  };
   const handleSupportPress = () => {};
   return (
     <View style={styles.container}>

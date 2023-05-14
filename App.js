@@ -78,7 +78,7 @@ const TabNavigator = () => {
         options={{
           headerShown: false,
           tabBarShowLabel: false,
-          tabBarLabel: "Reviews",
+          tabBarLabel: "Home",
           tabBarIcon: ({ color, focused }) => (
             <View style={focused && styles.activeTab}>
               <AntDesign
@@ -89,7 +89,7 @@ const TabNavigator = () => {
             </View>
           ),
         }}
-        name="reviews"
+        name="home"
         component={HomeMainScreen}
       />
       <Tab.Screen

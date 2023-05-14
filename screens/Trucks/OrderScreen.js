@@ -18,6 +18,7 @@ import { addQuantity, removeQuantity } from "../../store/store-slice";
 import ButtonComp from "../../components/ButtonComp";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { TextInput } from "react-native-paper";
+import date from "date-and-time";
 
 const OrderedItemCard = ({
   quantity,
@@ -136,11 +137,12 @@ const OrderScreen = () => {
   const truckLocation = currentOrders[0]?.truckAddress;
 
   // don't allow user if currentOrders are empty
-  useEffect(() => {
-    if (currentOrders.length === 0) {
-      navigation.navigate("trucksList");
-    }
-  }, [currentOrders]);
+  // creating problem, review screen is not showing due to this below effect hence commented
+  // useEffect(() => {
+  //   if (currentOrders.length === 0) {
+  //     navigation.navigate("trucksList");
+  //   }
+  // }, [currentOrders]);
 
   useLayoutEffect(() => {
     navigation.setOptions({ headerShown: false });
@@ -210,29 +212,15 @@ const OrderScreen = () => {
     show: false,
     time: "time",
   });
-  const handlePickupDate = (obj, date) => {
-    if (date) {
-      let temp = JSON.stringify(date);
-      setPickUpDate({ show: false, date: temp.slice(6, 11) });
+  const handlePickupDate = (obj, daa) => {
+    if (daa) {
+      setPickUpDate({ show: false, date: date.format(daa, "D MMM") });
     }
   };
-  const handlePicupTime = (obj, date) => {
-    if (Platform.OS === "ios") {
-      if (date) {
-        let temp2 = "";
-        let temp = date?.toLocaleTimeString()?.slice(0, 5);
-        if (temp[temp.length - 1] === ":") {
-          temp2 = date?.toLocaleTimeString()?.slice(8, 11);
-        } else {
-          temp2 = date?.toLocaleTimeString()?.slice(9, 11);
-        }
-        setPickUpTime({ show: false, time: temp + " " + temp2 });
-      }
-    } else {
-      if (date) {
-        let temp = date?.toLocaleTimeString()?.slice(0, 5);
-        setPickUpTime({ show: false, time: temp });
-      }
+
+  const handlePicupTime = (obj, daa) => {
+    if (daa) {
+      setPickUpTime({ show: false, time: date.format(daa, "hh:mm A") });
     }
   };
   const showPickupDate = () => {
@@ -333,22 +321,22 @@ const OrderScreen = () => {
             <Text style={styles.truckDesc}>{truckDescription}</Text>
           </View>
           <View style={styles.pickUpTime}>
-            <Text style={styles.pickupText}>Pick up time | date</Text>
+            <Text style={styles.pickupText}>Pick up date | time</Text>
             <View style={styles.dateTimePick}>
               <TouchableOpacity
                 style={styles.timeDateTouch}
-                onPress={showPickupTime}
+                onPress={showPickupDate}
               >
-                <Text>{pickUpTime.time}</Text>
+                <Text>{pickUpDate.date}</Text>
               </TouchableOpacity>
               <View>
                 <Text>|</Text>
               </View>
               <TouchableOpacity
                 style={styles.timeDateTouch}
-                onPress={showPickupDate}
+                onPress={showPickupTime}
               >
-                <Text>{pickUpDate.date}</Text>
+                <Text>{pickUpTime.time}</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -493,7 +481,7 @@ const OrderScreen = () => {
           {tipCardPress === true && (
             <View style={{}}>
               <TextInput
-                value={myAmount}
+                value={String(myAmount)}
                 onChangeText={handleMyAmountValue}
                 keyboardType={"phone-pad"}
                 style={{
@@ -629,7 +617,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
   },
   pickupText: {
-    fontSize: 19,
+    fontSize: 18,
     fontWeight: "700",
     color: colors.textColor,
   },

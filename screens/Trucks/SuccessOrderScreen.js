@@ -26,7 +26,6 @@ const SuccessOrderScreen = () => {
     if (orderData.newOrder === false) {
       dispatch(removeCurrentOrder()); // we are not calling addToAllOrders for previous order hence better we delete the current order here
     }
-
     navigation.navigate("reviewScreen", {
       truckName: orderData.truckName,
       truckImg: orderData.truckImg,

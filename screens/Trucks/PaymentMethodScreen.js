@@ -28,7 +28,7 @@ const PaymentMethodScreen = () => {
     <View style={styles.container}>
       <StatusBar style="auto" />
       <SafeAreaView>
-        <ScrollView>
+        <ScrollView showsVerticalScrollIndicator={false}>
           <Text style={styles.heading}>Choose payment method</Text>
           <View style={styles.paymentAndBtn}>
             <View style={styles.paymentMethod}>
