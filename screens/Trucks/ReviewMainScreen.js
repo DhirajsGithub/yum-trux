@@ -1,4 +1,6 @@
 import {
+  Alert,
+  BackHandler,
   Dimensions,
   ScrollView,
   StyleSheet,
@@ -7,7 +9,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useLayoutEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation, useRoute } from "@react-navigation/native";
@@ -40,6 +42,34 @@ const ReviewMainScreen = () => {
   const handleSendBtnPress = () => {
     navigation.navigate("trucksList");
   };
+
+  const handleBackPress = () => {
+    if (route.name === "reviewScreen" && navigation.isFocused()) {
+      Alert.alert(
+        "Exit Screen",
+        "Exit without Rating",
+        [
+          {
+            text: "Cancel",
+            style: "cancel",
+          },
+          {
+            text: "Leave",
+            onPress: () => navigation.navigate("trucksList"),
+            style: "destructive",
+          },
+        ],
+        {
+          cancelable: false,
+        }
+      );
+      return true;
+    }
+  };
+
+  useEffect(() => {
+    BackHandler.addEventListener("hardwareBackPress", handleBackPress);
+  }, []);
 
   return (
     <View style={styles.container}>

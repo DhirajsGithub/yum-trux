@@ -254,10 +254,10 @@ const OrderScreen = () => {
   };
 
   const handlePaymenPress = () => {
-    if (pickUpTime.time === "time") {
+    if (pickUpTime.time === "") {
       alert("pick a valid time");
       return;
-    } else if (pickUpDate.date === "date") {
+    } else if (pickUpDate.date === "") {
       alert("pick a valid date");
       return;
     } else if (typeof totalWithTaxAndTip !== "number") {

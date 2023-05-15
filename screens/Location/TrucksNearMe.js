@@ -25,15 +25,9 @@ import { EvilIcons } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
 import { Image } from "react-native";
 import ButtonComp from "../../components/ButtonComp";
-import {
-  getCurrentPositionAsync,
-  useForegroundPermissions,
-  PermissionStatus,
-} from "expo-location";
 import { trucksList } from "../../data/trucks";
-import GestureRecognizer, {
-  swipeDirections,
-} from "react-native-swipe-gestures";
+import GestureRecognizer from "react-native-swipe-gestures";
+import * as Location from "expo-location";
 
 const TruckCard = ({
   handleMakeOrderPress,
@@ -125,43 +119,22 @@ const TrucksNearMe = () => {
   const handleMakeOrderPress = () => {};
   const [initialLatLong, setInitialLatLong] = useState(null);
   const [truckListData, setTruckListData] = useState(trucksList);
-  const [locationPermissionInformation, requestPermission] =
-    useForegroundPermissions();
 
-  async function verifyPermissions() {
-    if (
-      locationPermissionInformation.status === PermissionStatus.UNDETERMINED
-    ) {
-      const permissionResponse = await requestPermission();
+  const [location, setLocation] = useState(null);
+  const [errorMsg, setErrorMsg] = useState(null);
 
-      return permissionResponse.granted;
-    }
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        setErrorMsg("Permission to access location was denied");
+        return;
+      }
 
-    if (locationPermissionInformation.status === PermissionStatus.DENIED) {
-      Alert.alert(
-        "Insufficient Permissions!",
-        "You need to grant location permissions to use this app."
-      );
-      return false;
-    }
-
-    return true;
-  }
-
-  async function getLocationHandler() {
-    const hasPermission = await verifyPermissions();
-
-    if (!hasPermission) {
-      return;
-    }
-
-    const location = await getCurrentPositionAsync();
-    setInitialLatLong({
-      latitude: location.coords.latitude,
-      longitude: location.coords.longitude,
-    });
-    console.log(location);
-  }
+      let location = await Location.getCurrentPositionAsync({});
+      setLocation(location);
+    })();
+  }, []);
 
   const [isModalVisible, setModalVisible] = useState(false);
 
@@ -203,23 +176,22 @@ const TrucksNearMe = () => {
               >
                 Trucks near you
               </Text>
-              <TouchableOpacity onPress={getLocationHandler}>
-                <Ionicons name="locate" size={30} color={colors.textColor} />
-              </TouchableOpacity>
             </View>
           </View>
           <View style={{ marginTop: 16, flex: 1 }}>
             <MapView
               zoomEnabled={true}
-              initialRegion={{
-                latitude: 38.9637,
-                longitude: 35.2433,
-                latitudeDelta: 0,
-                longitudeDelta: 0,
-              }}
-              // minZoomLevel={100000}
+              initialRegion={
+                location && {
+                  latitude: location?.coords.latitude,
+                  longitude: location?.coords.longitude,
+                  latitudeDelta: 0,
+                  longitudeDelta: 0,
+                }
+              }
               showsUserLocation={true}
               followsUserLocation={true}
+              oomEnabled={true}
               style={styles.map}
             >
               <Marker
@@ -227,6 +199,19 @@ const TrucksNearMe = () => {
                 title="Chinese Truck"
                 description="Food stall"
                 coordinate={{ latitude: 38.9632, longitude: 35.2423 }}
+              />
+              <Marker
+                pinColor={"yellow"}
+                title="Chinese Truck"
+                description="Food stall"
+                coordinate={
+                  location
+                    ? {
+                        latitude: location?.coords.latitude,
+                        longitude: location?.coords.longitude,
+                      }
+                    : { latitude: 38.9632, longitude: 35.2423 }
+                }
               />
               <Marker
                 pinColor={"green"}
@@ -253,7 +238,6 @@ const TrucksNearMe = () => {
               // backdropOpacity={1}
               // style={{ height: "100%", width: "100%" }}
               isVisible={isModalVisible}
-              onSwipeStart={() => console.log("swipe")}
             >
               <View
                 style={{
