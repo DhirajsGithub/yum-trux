@@ -19,9 +19,7 @@ const PaymentMethodScreen = () => {
   useLayoutEffect(() => {
     navigation.setOptions({ headerShown: false });
   }, []);
-  const handleBtnPress = () => {
-    console.log("next");
-  };
+  const handleBtnPress = () => {};
   const handlePaypalPress = () => {};
   const handleCardsPress = () => {};
   return (

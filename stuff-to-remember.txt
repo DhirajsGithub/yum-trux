@@ -1,1 +1,2 @@
 expo-location picker for truck owner 
+Date picker problem for iOS, make the initial date to be Date now()

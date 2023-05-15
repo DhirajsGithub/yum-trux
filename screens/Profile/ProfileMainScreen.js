@@ -33,10 +33,10 @@ const ProfileMainScreen = () => {
   const logoutFunction = async () => {
     try {
       await AsyncStorage.removeItem("@yumtrux");
+      navigation.navigate("login");
     } catch (exception) {
       console.log(exception);
     }
-    BackHandler.exitApp();
   };
   const handleLogoutPress = async () => {
     Alert.alert("Alert", "Are you sure you want to logout", [

@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "yumtruck",
-    "slug": "yumtruck",
+    "name": "YumTrux",
+    "slug": "YumTrux",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",

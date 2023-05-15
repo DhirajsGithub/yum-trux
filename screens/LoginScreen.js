@@ -48,7 +48,6 @@ const LoginScreen = () => {
     }
   };
   useEffect(() => {
-    console.log("first");
     getData();
   }, []);
 

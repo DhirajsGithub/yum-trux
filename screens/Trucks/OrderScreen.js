@@ -204,13 +204,14 @@ const OrderScreen = () => {
 
   totalWithTaxAndTip = parseFloat(totalWithTaxAndTip.toFixed(2));
 
+  const dateNow = new Date();
   const [pickUpDate, setPickUpDate] = useState({
     show: false,
-    date: "date",
+    date: date.format(dateNow, "D MMM"),
   });
   const [pickUpTime, setPickUpTime] = useState({
     show: false,
-    time: "time",
+    time: date.format(dateNow, "hh:mm A"),
   });
   const handlePickupDate = (obj, daa) => {
     if (daa) {
