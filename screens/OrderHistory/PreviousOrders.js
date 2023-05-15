@@ -19,6 +19,7 @@ import RectangularDisplayFields from "../../components/RectangularDisplayFields"
 import { useDispatch, useSelector } from "react-redux";
 import { addToCurrentOrder, removeCurrentOrder } from "../../store/store-slice";
 import EmptyData from "../../components/EmptyData";
+import { FontAwesome5 } from "@expo/vector-icons";
 
 const OrderCard = ({
   imgUrl,
@@ -177,24 +178,47 @@ const PreviousOrders = () => {
       <SafeAreaView>
         <HeaderComp handleSearchInput={handleSearchInput} onlySearch={true} />
         {prvOrdersList.length === 0 && <EmptyData msg="No truck found 😞" />}
-        <View style={styles.orderList}>
-          <FlatList
-            showsVerticalScrollIndicator={false}
-            data={prvOrdersList}
-            renderItem={({ item }) => (
-              <OrderCard
-                handleViewTruckPress={() => handleViewTruckPress(item.truckId)}
-                handleReorderPress={() => handleReorderPress(item.items)}
-                imgUrl={item.truckImg}
-                truckName={item.truckName}
-                NoOfDishes={item.items?.length}
-                price={item.totalPrice}
-                dateTime={item.orderOn}
-              />
-            )}
-            keyExtractor={(item, index) => index.toString()}
+        <View
+          style={{ flexDirection: "row", alignItems: "center", marginTop: 10 }}
+        >
+          <Text
+            style={{
+              fontSize: 20,
+              fontWeight: "700",
+              color: colors.textColor,
+              marginRight: 10,
+            }}
+          >
+            Order History
+          </Text>
+          <FontAwesome5
+            name="clipboard-list"
+            size={18}
+            color={colors.textColor}
           />
         </View>
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <View style={styles.orderList}>
+            <ScrollView showsVerticalScrollIndicator={false}>
+              {prvOrdersList.map((item, index) => {
+                return (
+                  <OrderCard
+                    handleViewTruckPress={() =>
+                      handleViewTruckPress(item.truckId)
+                    }
+                    handleReorderPress={() => handleReorderPress(item.items)}
+                    imgUrl={item.truckImg}
+                    key={index}
+                    truckName={item.truckName}
+                    NoOfDishes={item.items?.length}
+                    price={item.totalPrice}
+                    dateTime={item.orderOn}
+                  />
+                );
+              })}
+            </ScrollView>
+          </View>
+        </ScrollView>
       </SafeAreaView>
     </View>
   );
@@ -208,10 +232,9 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     paddingHorizontal: 16,
     paddingBottom: 8,
-    // marginBottom: "50%",
   },
   orderList: {
-    marginBottom: 180,
+    marginBottom: "100%",
   },
   btnView: {
     flexDirection: "row",

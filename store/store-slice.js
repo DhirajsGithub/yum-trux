@@ -7,6 +7,7 @@ const initialState = {
   userName: "Dhiraj Borse",
   allOrders: [...prvOrders], // fetch them from database
   currentOrders: [],
+  routeName: "",
 };
 
 export const userSlice = createSlice({
@@ -63,6 +64,10 @@ export const userSlice = createSlice({
       }
       // no need of current order now
       state.currentOrders = [];
+    },
+
+    setRouteName: (state, action) => {
+      state.routeName = action.payload;
     },
   },
 });

@@ -1,6 +1,6 @@
 import { Alert, BackHandler, StyleSheet, Text, View } from "react-native";
 import React, { useEffect, useLayoutEffect, useState } from "react";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaView } from "react-native-safe-area-context";
 import HeaderComp from "../../components/HeaderComp";
@@ -11,6 +11,7 @@ import EmptyData from "../../components/EmptyData";
 
 const TrucksList = () => {
   const navigation = useNavigation();
+  const route = useRoute();
   const [trucksData, setTrucksData] = useState([]);
   useLayoutEffect(() => {
     navigation.setOptions({ headerShown: false });
@@ -28,25 +29,32 @@ const TrucksList = () => {
     });
     setTrucksData(filterTrucks);
   };
-  useEffect(() => {
-    const backAction = () => {
-      Alert.alert("Exit", "Are you sure you want to exit", [
+  const handleBackPress = () => {
+    if (route.name === "trucksList" && navigation.isFocused()) {
+      Alert.alert(
+        "Exit App",
+        "Are you sure you want to leave YumTrux",
+        [
+          {
+            text: "Cancel",
+            style: "cancel",
+          },
+          {
+            text: "Leave",
+            onPress: () => BackHandler.exitApp(),
+            style: "destructive",
+          },
+        ],
         {
-          text: "Cancel",
-          onPress: () => null,
-          style: "cancel",
-        },
-        { text: "Exit", onPress: () => BackHandler.exitApp() },
-      ]);
+          cancelable: false,
+        }
+      );
       return true;
-    };
+    }
+  };
 
-    const backHandler = BackHandler.addEventListener(
-      "hardwareBackPress",
-      backAction
-    );
-
-    return () => backHandler.remove();
+  useEffect(() => {
+    BackHandler.addEventListener("hardwareBackPress", handleBackPress);
   }, []);
 
   return (

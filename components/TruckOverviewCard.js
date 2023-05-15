@@ -158,14 +158,15 @@ const styles = StyleSheet.create({
   schedule: {
     flexDirection: "row",
     alignItems: "center",
+    paddingBottom: 2,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.white,
   },
   scheduleText: {
     marginLeft: 5,
-    fontSize: 13,
+    fontSize: 15.5,
     fontWeight: "700",
     color: colors.white,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.white,
   },
   locRat: {
     flexDirection: "row",
