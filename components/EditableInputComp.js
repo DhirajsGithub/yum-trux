@@ -24,7 +24,7 @@ const EditableInputComp = ({
         onBlur={handleOnBlur}
         style={styles.input}
         onChangeText={onChangeValue}
-        value={value}
+        value={defaultVal}
         // placeholder={placeholder}
         keyboardType={keyType}
       />

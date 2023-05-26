@@ -6,7 +6,7 @@ import {
   View,
   Keyboard,
 } from "react-native";
-import React, { useLayoutEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
@@ -16,19 +16,52 @@ import { Image } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import EditableInputComp from "../../components/EditableInputComp";
 import ButtonComp from "../../components/ButtonComp";
+import Spinner from "react-native-loading-spinner-overlay";
+import { baseUrl } from "../../constants/baseUrl";
+
+const InputErroMsg = ({ msg }) => {
+  return (
+    <View style={{ marginBottom: 10, marginTop: -10 }}>
+      <Text style={{ color: "#ff0033", marginLeft: 30 }}>{msg}</Text>
+    </View>
+  );
+};
 
 const ProfileEditScreen = () => {
+  const [loading, setLoding] = useState(false);
   const [keyboardVisible, setKeyboardVisible] = useState(false);
   const [wantMargin, setWantMargin] = useState(false);
+  const [fullName, setFullName] = useState("");
+  const [phoneNo, setPhoneNo] = useState("");
+  const [address, setAddress] = useState("");
+  const [inputError, setInputError] = useState({
+    fullName: false,
+    phoneNo: false,
+    address: false,
+  });
   const [image, setImage] = useState(
     "https://buffer.com/library/content/images/2022/03/sigmund-MQ2xYBHImKM-unsplash--1--1.jpg"
   );
 
-  const [userData, setUserData] = useState({
-    name: "Victoria Tho",
-    phoneNo: "+1 (647) 459-9865",
-    address: "Gerald Street 92, ON, Toronto",
-  });
+  // will be done in App.js and data can be taken throught redux
+  const fetchUserData = async () => {
+    setLoding(true);
+    let res = await fetch(
+      "http://192.168.0.101:8000/userDetails/647034e4130ceeb47e938540"
+    );
+    res = await res.json();
+    setLoding(false);
+    setFullName(res.fullName);
+    setAddress(res.address);
+    setPhoneNo(res.phoneNo);
+  };
+  useEffect(() => {
+    try {
+      fetchUserData();
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
 
   const navigation = useNavigation();
   useLayoutEffect(() => {
@@ -49,21 +82,57 @@ const ProfileEditScreen = () => {
 
     if (!result.canceled) {
       const img = result.assets[0].uri;
+
       setImage(img);
     }
   };
 
+  const updateUser = async () => {
+    setLoding(true);
+    let res = await fetch(baseUrl + "updateUser/647034e4130ceeb47e938540", {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ fullName, profileImg: image, phoneNo, address }),
+    });
+    setLoding(false);
+  };
+
   const handleFullName = (value) => {
-    // edit user data here
+    setFullName(value);
   };
   const handlePhoneNumber = (value) => {
-    // edit user data here
+    setPhoneNo(value);
   };
   const handleAddress = (value) => {
-    // edit user data here
+    setAddress(value);
   };
   const handleSavePress = () => {
     // call udate api
+    if (fullName.length < 4) {
+      setInputError((prvData) => {
+        return { ...prvData, fullName: true };
+      });
+    }
+    if (phoneNo.length < 10) {
+      setInputError((prvData) => {
+        return { ...prvData, phoneNo: true };
+      });
+    }
+    if (address.length < 5) {
+      setInputError((prvData) => {
+        return { ...prvData, address: true };
+      });
+    }
+    if (!(fullName.length < 4 || phoneNo.length < 10 || address.length < 5)) {
+      // set http
+      try {
+        updateUser();
+      } catch (error) {
+        console.log(error);
+      }
+    }
   };
 
   const keyboardShowListener = Keyboard.addListener("keyboardDidShow", () => {
@@ -76,6 +145,14 @@ const ProfileEditScreen = () => {
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
+      <Spinner
+        //visibility of Overlay Loading Spinner
+        visible={loading}
+        //Text with the Spinner
+        // textContent={'Loading...'}
+        color={colors.action}
+        // textStyle={styles.spinnerTextStyle}
+      />
       <SafeAreaView>
         <ScrollView
           style={{
@@ -108,27 +185,45 @@ const ProfileEditScreen = () => {
           </View>
           <View style={styles.inputFields}>
             <EditableInputComp
-              defaultVal={userData.name}
+              defaultVal={fullName}
               placeholder="full name"
               keyType="default"
+              handleOnFocus={() =>
+                setInputError((prvData) => {
+                  return { ...prvData, fullName: false };
+                })
+              }
               inputValue={handleFullName}
             />
+            {inputError.fullName && <InputErroMsg msg="Enter valid fullname" />}
             <EditableInputComp
-              defaultVal={userData.phoneNo}
+              defaultVal={phoneNo}
               placeholder="phone number"
               keyType="default"
               inputValue={handlePhoneNumber}
               handleOnBlur={() => setWantMargin(false)}
-              handleOnFocus={() => setWantMargin(true)}
+              handleOnFocus={() => {
+                setWantMargin(true);
+                setInputError((prvData) => {
+                  return { ...prvData, phoneNo: false };
+                });
+              }}
             />
+            {inputError.phoneNo && <InputErroMsg msg="Enter valid Number" />}
             <EditableInputComp
-              defaultVal={userData.address}
+              defaultVal={address}
               placeholder="address"
               keyType="default"
               inputValue={handleAddress}
               handleOnBlur={() => setWantMargin(false)}
-              handleOnFocus={() => setWantMargin(true)}
+              handleOnFocus={() => {
+                setWantMargin(true);
+                setInputError((prvData) => {
+                  return { ...prvData, address: false };
+                });
+              }}
             />
+            {inputError.address && <InputErroMsg msg="Enter valid address" />}
           </View>
           <View style={styles.btn}>
             <ButtonComp height={52} handleBtnPress={handleSavePress}>

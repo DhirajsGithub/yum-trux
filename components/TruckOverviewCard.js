@@ -110,6 +110,7 @@ const TruckOverviewCard = ({
                   : truckDescription}
               </Text>
             </View>
+
             <View style={styles.btnView}>
               <TouchableOpacity
                 onPress={handleTruckViewPress}

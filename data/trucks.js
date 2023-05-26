@@ -527,7 +527,7 @@ const trucksList = [
       "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.",
 
     imgUrl:
-      "https://d3hbe0kmbam4a5.cloudfront.net/photos/196ddaea-c3a0-4cdc-bd5f-06da11f42300.png",
+      "https://media.istockphoto.com/id/1282829300/photo/satisfied-couple-taking-ordered-sandwiches-from-an-polite-and-friendly-employee.jpg?s=612x612&w=0&k=20&c=YL6oBYBfvbvrsGl5Tts1vLoy7Nptq4OECn5ho83xbmc=",
     address: "44 GG Bobcat Lanet",
     timing: "3pm - 11pm",
     ratings: "4",

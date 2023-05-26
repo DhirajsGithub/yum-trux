@@ -43,6 +43,7 @@ const TruckCard = ({
         backgroundColor: "gray",
         padding: 13,
         borderRadius: 14,
+
         marginVertical: 10,
         backgroundColor: colors.white,
         elevation: 14,
