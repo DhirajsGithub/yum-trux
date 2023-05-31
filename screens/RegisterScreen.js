@@ -16,10 +16,16 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import InputComp from "../components/InputComp";
 import colors from "../constants/colors";
 import ButtonComp from "../components/ButtonComp";
+import { baseUrl } from "../constants/baseUrl";
+import Spinner from "react-native-loading-spinner-overlay/lib";
+import { signupUserHttp } from "../utils/user-http-requests";
 
 const RegisterScreen = () => {
   const [keyboardVisible, setKeyboardVisible] = useState(false);
   const [wantMargin, setWantMargin] = useState(false);
+  const [registerStatus, setRegisterStatus] = useState(null);
+  const [registerMsg, setRegisterMsg] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
   useLayoutEffect(() => {
     navigation.setOptions({ headerShown: false });
@@ -43,7 +49,17 @@ const RegisterScreen = () => {
   const handleLoginPress = () => {
     navigation.navigate("login");
   };
-  const handleRegisterBtnPress = () => {
+  const signUpUserFunc = async () => {
+    setLoading(true);
+    let res = await signupUserHttp({ email, password, username });
+    setLoading(false);
+    setRegisterMsg(res.message);
+    setRegisterStatus(res.status);
+    if (res.status === "success") {
+      navigation.navigate("login");
+    }
+  };
+  const handleRegisterBtnPress = async () => {
     if (
       !email.includes("@") ||
       !email.includes(".") ||
@@ -54,7 +70,16 @@ const RegisterScreen = () => {
       alert("Fill all the fields with valid values");
       return;
     }
-    navigation.navigate("login");
+    if (confirmPass !== password) {
+      setRegisterStatus("error");
+      setRegisterMsg("Password and confirm password not matching");
+      return;
+    }
+    try {
+      await signUpUserFunc();
+    } catch (error) {
+      console.log(error);
+    }
     // send http request
   };
 
@@ -67,6 +92,14 @@ const RegisterScreen = () => {
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
+      <Spinner
+        //visibility of Overlay Loading Spinner
+        visible={loading}
+        //Text with the Spinner
+        // textContent={'Loading...'}
+        color={colors.action}
+        // textStyle={styles.spinnerTextStyle}
+      />
       <SafeAreaView>
         <ScrollView
           showsVerticalScrollIndicator={false}
@@ -75,6 +108,18 @@ const RegisterScreen = () => {
           }}
         >
           <Text style={styles.heading}>Create profile</Text>
+          {registerStatus === "error" && (
+            <Text
+              style={{
+                textAlign: "center",
+                fontSize: 15,
+                fontWeight: 500,
+                color: "#ff0033",
+              }}
+            >
+              {registerMsg}
+            </Text>
+          )}
           <View style={styles.inputFields}>
             <InputComp
               inputValue={handleEmailValue}

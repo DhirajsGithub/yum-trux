@@ -1,6 +1,6 @@
 import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
 import React, { useLayoutEffect } from "react";
-
+import date from "date-and-time";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -8,28 +8,66 @@ import colors from "../../constants/colors";
 import ButtonComp from "../../components/ButtonComp";
 import { useDispatch, useSelector } from "react-redux";
 import { addToAllOrders, removeCurrentOrder } from "../../store/store-slice";
+import { addToAllOrdersHttp } from "../../utils/user-http-requests";
 
 const SuccessOrderScreen = () => {
   const dispatch = useDispatch();
   const route = useRoute();
   const orderData = route.params;
   const navigation = useNavigation();
-  const allOrders = useSelector((state) => state.userSlice.allOrders);
+  const userSlice = useSelector((state) => state.userSlice);
+  const userId = userSlice.userDetails._id;
+  const currentOrders = userSlice.currentOrders;
+
+  const orderSummaryToStore = () => {
+    let totalPrice = 0;
+    let tempMenuIds = [];
+    for (let item of currentOrders) {
+      tempMenuIds.push({
+        itemId: item.itemId,
+      });
+      totalPrice = totalPrice + item.itemPrice;
+    }
+    const tempDate = new Date();
+    let tim = date.format(tempDate, "hh:mm A");
+    let dat = date.format(tempDate, "MMM D");
+    const reqDate = tim + ", " + dat;
+    let reqData = {
+      items: tempMenuIds,
+      orderOn: reqDate,
+      totalPrice: totalPrice,
+      truckId: currentOrders[0].truckId,
+    };
+    return reqData;
+  };
+
   useLayoutEffect(() => {
     navigation.setOptions({ headerShown: false });
   }, []);
-  const handleDonePress = () => {
-    // this will enusre current orders are added to allOrders
-    if (orderData.newOrder === true) {
-      dispatch(addToAllOrders()); // addToALlOrders function will take care of removing current order
+  const addToAllOrdersFunc = async () => {
+    const data = orderSummaryToStore();
+    if (currentOrders.length > 0) {
+      let res = await addToAllOrdersHttp(userId, data);
+      if (res.status === "success") {
+        if (orderData.newOrder === true) {
+          dispatch(addToAllOrders()); // addToALlOrders function will take care of removing current order
+        }
+        if (orderData.newOrder === false) {
+          dispatch(removeCurrentOrder()); // we are not calling addToAllOrders for previous order hence better we delete the current order here
+        }
+        navigation.navigate("reviewScreen", {
+          truckName: orderData.truckName,
+          truckImg: orderData.truckImg,
+        });
+      }
     }
-    if (orderData.newOrder === false) {
-      dispatch(removeCurrentOrder()); // we are not calling addToAllOrders for previous order hence better we delete the current order here
+  };
+  const handleDonePress = async () => {
+    try {
+      await addToAllOrdersFunc();
+    } catch (error) {
+      console.log(error);
     }
-    navigation.navigate("reviewScreen", {
-      truckName: orderData.truckName,
-      truckImg: orderData.truckImg,
-    });
   };
   return (
     <View style={styles.container}>

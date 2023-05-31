@@ -13,51 +13,72 @@ import InputComp from "../components/InputComp";
 import ButtonComp from "../components/ButtonComp";
 import colors from "../constants/colors";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { baseUrl } from "../constants/baseUrl";
+import Spinner from "react-native-loading-spinner-overlay/lib";
+import { useDispatch } from "react-redux";
+import { setUserDetails } from "../store/store-slice";
+import { loginUserHttp } from "../utils/user-http-requests";
 
 const LoginScreen = () => {
+  const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
   useLayoutEffect(() => {
     navigation.setOptions({ headerShown: false });
   }, []);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loginStatus, setLoginStatus] = useState(null);
+  const [LoginMsg, setLoginMsg] = useState("");
   const handleEmailValue = (value) => {
     setEmail(value);
   };
   const handlePasswordValue = (value) => {
     setPassword(value);
   };
-  const storeData = async (value) => {
+
+  const storeData = async (data) => {
     try {
-      await AsyncStorage.setItem("@yumtrux", email);
+      await AsyncStorage.setItem("@yumtrux_user", JSON.stringify(data));
     } catch (e) {
       // saving error
     }
   };
 
-  // need to add another splash screen for this
-  const getData = async () => {
-    try {
-      const jsonValue = await AsyncStorage.getItem("@yumtrux");
-      const val = jsonValue;
-      if (val) {
+  const loginUserFunc = async () => {
+    setLoading(true);
+    let res = await loginUserHttp({ email, password });
+    setLoading(false);
+    if (res.status === "success") {
+      try {
+        await storeData({
+          token: res.token,
+          email: res.user.email,
+          userId: res.user._id,
+        });
+        dispatch(setUserDetails(res.user));
         navigation.navigate("main");
+      } catch (error) {
+        console.log(error);
       }
-    } catch (e) {
-      // error reading value
+    } else {
+      alert("Internal server error");
     }
+    setLoginMsg(res.message);
+    setLoginStatus(res.status);
+    return;
   };
-  useEffect(() => {
-    getData();
-  }, []);
 
   const handleLoginBtnPress = () => {
     if (!email.includes("@") || !email.includes(".") || password.length < 3) {
       alert("Enter valid email and password");
       return;
     }
-    storeData();
-    navigation.navigate("main");
+    try {
+      loginUserFunc();
+    } catch (error) {
+      console.log(error);
+    }
     // send http request
   };
   const handleCreateProfilePress = () => {
@@ -66,9 +87,29 @@ const LoginScreen = () => {
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
+      <Spinner
+        //visibility of Overlay Loading Spinner
+        visible={loading}
+        //Text with the Spinner
+        // textContent={'Loading...'}
+        color={colors.action}
+        // textStyle={styles.spinnerTextStyle}
+      />
       <SafeAreaView style={styles.alignment}>
         <ScrollView showsVerticalScrollIndicator={false}>
           <Text style={styles.heading}>Login</Text>
+          {loginStatus === "error" && (
+            <Text
+              style={{
+                textAlign: "center",
+                fontSize: 15,
+                fontWeight: 500,
+                color: "#ff0033",
+              }}
+            >
+              {LoginMsg}
+            </Text>
+          )}
           <View>
             <InputComp
               inputValue={handleEmailValue}

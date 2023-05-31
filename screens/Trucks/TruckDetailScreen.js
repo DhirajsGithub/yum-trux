@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useLayoutEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { useNavigation, useRoute } from "@react-navigation/native";
@@ -23,19 +23,41 @@ import { Feather } from "@expo/vector-icons";
 import { AirbnbRating } from "react-native-ratings";
 import MenuList from "../../components/MenuList";
 import { useDispatch, useSelector } from "react-redux";
-import { addToCurrentOrder, removeCurrentOrder } from "../../store/store-slice";
+import {
+  addToCurrentOrder,
+  removeCurrentOrder,
+  setUserDetails,
+} from "../../store/store-slice";
+import {
+  getUserDetailsHttp,
+  removeFromFavTruckHttp,
+  updateFavTruckHttp,
+} from "../../utils/user-http-requests";
 
 const TruckDetailScreen = () => {
   const dispatch = useDispatch();
+  const userDetails = useSelector((state) => state.userSlice.userDetails);
+  const userId = userDetails._id;
   const currentOrders = useSelector((state) => state.userSlice.currentOrders);
   const [favPressed, setFavPressed] = useState(false);
   const navigation = useNavigation();
+  const [loading, setLoading] = useState(false);
   const route = useRoute();
   const truckData = route.params;
   useLayoutEffect(() => {
     navigation.setOptions({ headerShown: false });
   }, []);
+  useEffect(() => {
+    for (let item of userDetails.favouriteTrucks) {
+      if (item.truckId === truckData.truckId) {
+        setFavPressed(true);
+      }
+    }
+  }, [userDetails]);
   const handleBackPress = () => {
+    if (truckData.screen === "favTruck") {
+      navigation.navigate("favouriteTrucks");
+    }
     navigation.goBack();
   };
   const handleSchedulePress = () => {
@@ -53,7 +75,52 @@ const TruckDetailScreen = () => {
       navigation.navigate("order", { newOrder: true });
     }
   };
+  const getUserData = async () => {
+    let res = await getUserDetailsHttp(userId);
+    if (res.status === "success") {
+      dispatch(setUserDetails(res.user));
+    } else {
+      alert("Internal server error");
+    }
+  };
+  const addToFavTruck = async () => {
+    setLoading(true);
+    let res = await updateFavTruckHttp(userId, truckData.truckId);
+    if (res.status === "success") {
+      try {
+        await getUserData();
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    setLoading(false);
+  };
+  const removeFromFavTruck = async () => {
+    setLoading(true);
+    let res = await removeFromFavTruckHttp(userId, truckData.truckId);
+    if (res.status === "success") {
+      try {
+        await getUserData();
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    setLoading(false);
+  };
   const handleFavIconsPress = () => {
+    if (!favPressed) {
+      try {
+        addToFavTruck();
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      try {
+        removeFromFavTruck();
+      } catch (error) {
+        console.log(error);
+      }
+    }
     setFavPressed(!favPressed);
   };
   const handleRemoveTruckPress = (orderData) => {

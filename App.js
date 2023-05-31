@@ -20,6 +20,7 @@ import OrderHistoryMain from "./screens/OrderHistory/OrderHistoryMain";
 import { store } from "./store/store";
 import { Provider } from "react-redux";
 import LocationMainScreen from "./screens/Location/LocationMainScreen";
+import BlankScreen from "./screens/BlankScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -137,7 +138,9 @@ export default function App() {
     <NavigationContainer>
       <Provider store={store}>
         <Stack.Navigator>
+          <Stack.Screen name="loading" component={BlankScreen} />
           <Stack.Screen name="login" component={LoginScreen} />
+
           <Stack.Screen name="register" component={RegisterScreen} />
           <Stack.Screen name="main" component={TabNavigator} />
         </Stack.Navigator>

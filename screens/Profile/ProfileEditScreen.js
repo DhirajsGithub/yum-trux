@@ -18,6 +18,14 @@ import EditableInputComp from "../../components/EditableInputComp";
 import ButtonComp from "../../components/ButtonComp";
 import Spinner from "react-native-loading-spinner-overlay";
 import { baseUrl } from "../../constants/baseUrl";
+import {
+  getUserDetailsHttp,
+  updateUserHttp,
+} from "../../utils/user-http-requests";
+import { useDispatch, useSelector } from "react-redux";
+import FlashMessage, { showMessage } from "react-native-flash-message";
+import { Button } from "react-native";
+import { setUserDetails } from "../../store/store-slice";
 
 const InputErroMsg = ({ msg }) => {
   return (
@@ -28,6 +36,9 @@ const InputErroMsg = ({ msg }) => {
 };
 
 const ProfileEditScreen = () => {
+  const userDetails = useSelector((state) => state.userSlice.userDetails);
+  const dispatch = useDispatch();
+  const userId = userDetails._id;
   const [loading, setLoding] = useState(false);
   const [keyboardVisible, setKeyboardVisible] = useState(false);
   const [wantMargin, setWantMargin] = useState(false);
@@ -43,25 +54,11 @@ const ProfileEditScreen = () => {
     "https://buffer.com/library/content/images/2022/03/sigmund-MQ2xYBHImKM-unsplash--1--1.jpg"
   );
 
-  // will be done in App.js and data can be taken throught redux
-  const fetchUserData = async () => {
-    setLoding(true);
-    let res = await fetch(
-      "http://192.168.0.101:8000/userDetails/647034e4130ceeb47e938540"
-    );
-    res = await res.json();
-    setLoding(false);
-    setFullName(res.fullName);
-    setAddress(res.address);
-    setPhoneNo(res.phoneNo);
-  };
   useEffect(() => {
-    try {
-      fetchUserData();
-    } catch (error) {
-      console.log(error);
-    }
-  }, []);
+    setFullName(userDetails.fullName);
+    setAddress(userDetails.address);
+    setPhoneNo(userDetails.phoneNo);
+  }, [userDetails]);
 
   const navigation = useNavigation();
   useLayoutEffect(() => {
@@ -81,21 +78,45 @@ const ProfileEditScreen = () => {
     });
 
     if (!result.canceled) {
-      const img = result.assets[0].uri;
-
+      const img = result.assets[0];
+      try {
+        updateProfileImg(result.assets[0].uri);
+      } catch (error) {
+        console.log(error);
+      }
       setImage(img);
     }
   };
 
+  const updateProfileImg = async () => {
+    const formData = new FormData();
+    formData.append("file", image);
+    formData.append("upload_preset", "ml_default");
+    formData.append("cloud_name", "dk8hyxr2z");
+    setLoding(true);
+    console.log(formData);
+    let res = await fetch(
+      // use user id from redux
+      baseUrl + "updateProfileImg/647034e4130ceeb47e938540",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        body: formData,
+      }
+    );
+
+    setLoding(false);
+  };
+
   const updateUser = async () => {
     setLoding(true);
-    let res = await fetch(baseUrl + "updateUser/647034e4130ceeb47e938540", {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ fullName, profileImg: image, phoneNo, address }),
-    });
+    let res = await updateUserHttp(userId, { fullName, phoneNo, address });
+    if (res.status === "success") {
+      let res2 = await getUserDetailsHttp(userId);
+      dispatch(setUserDetails(res2.user));
+    }
     setLoding(false);
   };
 
@@ -127,6 +148,11 @@ const ProfileEditScreen = () => {
     }
     if (!(fullName.length < 4 || phoneNo.length < 10 || address.length < 5)) {
       // set http
+      setInputError({
+        fullName: false,
+        phoneNo: false,
+        address: false,
+      });
       try {
         updateUser();
       } catch (error) {
@@ -179,7 +205,7 @@ const ProfileEditScreen = () => {
             <Image
               style={{ width: 125, height: 125, borderRadius: 200 }}
               source={{
-                uri: image,
+                uri: image.uri,
               }}
             />
           </View>
@@ -241,7 +267,7 @@ export default ProfileEditScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // backgroundColor: "white",
+    backgroundColor: "white",
     paddingVertical: 20,
     paddingHorizontal: 30,
   },

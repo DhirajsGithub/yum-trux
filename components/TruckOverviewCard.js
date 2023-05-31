@@ -27,6 +27,7 @@ const TruckOverviewCard = ({
   truckAddress,
   truckSchedule,
   homeComp,
+  screen,
 }) => {
   const navigation = useNavigation();
   const handleSchedulePress = () => {
@@ -50,7 +51,7 @@ const TruckOverviewCard = ({
       truckMenu,
       truckAddress,
       truckSchedule,
-
+      screen,
       // note to pass all this params when click on view truck from order history
     });
   };

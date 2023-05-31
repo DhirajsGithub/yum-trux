@@ -9,6 +9,7 @@ const HomeTruckList = ({ truckList, homeComp }) => {
         {truckList.map((item, index) => {
           return (
             <TruckOverviewCard
+              screen="home"
               key={index}
               homeComp={homeComp}
               truckName={item.name}

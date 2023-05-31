@@ -4,7 +4,7 @@ import date from "date-and-time";
 
 const initialState = {
   //   value: 0,
-  userName: "Dhiraj Borse",
+  userDetails: {},
   allOrders: [...prvOrders], // fetch them from database
   currentOrders: [],
   routeName: "",
@@ -66,6 +66,11 @@ export const userSlice = createSlice({
       state.currentOrders = [];
     },
 
+    setUserDetails: (state, action) => {
+      // payload is expected object with userId, email and token
+      state.userDetails = action.payload;
+    },
+
     setRouteName: (state, action) => {
       state.routeName = action.payload;
     },
@@ -78,6 +83,7 @@ export const {
   removeQuantity,
   removeCurrentOrder,
   addToAllOrders,
+  setUserDetails,
 } = userSlice.actions;
 
 export default userSlice.reducer;
