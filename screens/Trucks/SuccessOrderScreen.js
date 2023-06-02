@@ -35,31 +35,30 @@ const SuccessOrderScreen = () => {
     let reqData = {
       items: tempMenuIds,
       orderOn: reqDate,
-      totalPrice: totalPrice,
+      totalPrice: parseFloat(totalPrice.toFixed(2)),
       truckId: currentOrders[0].truckId,
     };
     return reqData;
   };
-
   useLayoutEffect(() => {
     navigation.setOptions({ headerShown: false });
   }, []);
   const addToAllOrdersFunc = async () => {
     const data = orderSummaryToStore();
     if (currentOrders.length > 0) {
-      let res = await addToAllOrdersHttp(userId, data);
-      if (res.status === "success") {
-        if (orderData.newOrder === true) {
-          dispatch(addToAllOrders()); // addToALlOrders function will take care of removing current order
-        }
-        if (orderData.newOrder === false) {
-          dispatch(removeCurrentOrder()); // we are not calling addToAllOrders for previous order hence better we delete the current order here
-        }
-        navigation.navigate("reviewScreen", {
-          truckName: orderData.truckName,
-          truckImg: orderData.truckImg,
-        });
+      if (orderData.newOrder === true) {
+        let res = await addToAllOrdersHttp(userId, data);
+        // dispatch(addToAllOrders());
+        dispatch(removeCurrentOrder());
       }
+      if (orderData.newOrder === false) {
+        dispatch(removeCurrentOrder());
+      }
+      navigation.navigate("reviewScreen", {
+        truckName: orderData.truckName,
+        truckImg: orderData.truckImg,
+        truckId: currentOrders[0].truckId,
+      });
     }
   };
   const handleDonePress = async () => {

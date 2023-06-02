@@ -61,8 +61,6 @@ const LoginScreen = () => {
       } catch (error) {
         console.log(error);
       }
-    } else {
-      alert("Internal server error");
     }
     setLoginMsg(res.message);
     setLoginStatus(res.status);

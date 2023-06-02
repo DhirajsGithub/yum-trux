@@ -11,6 +11,8 @@ import { StatusBar } from "expo-status-bar";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
+import * as FileSystem from "expo-file-system";
+
 import colors from "../../constants/colors";
 import { Image } from "react-native";
 import * as ImagePicker from "expo-image-picker";
@@ -19,8 +21,10 @@ import ButtonComp from "../../components/ButtonComp";
 import Spinner from "react-native-loading-spinner-overlay";
 import { baseUrl } from "../../constants/baseUrl";
 import {
+  deleteProfileImg,
   getUserDetailsHttp,
   updateUserHttp,
+  uploadProfileImg,
 } from "../../utils/user-http-requests";
 import { useDispatch, useSelector } from "react-redux";
 import FlashMessage, { showMessage } from "react-native-flash-message";
@@ -50,14 +54,16 @@ const ProfileEditScreen = () => {
     phoneNo: false,
     address: false,
   });
-  const [image, setImage] = useState(
-    "https://buffer.com/library/content/images/2022/03/sigmund-MQ2xYBHImKM-unsplash--1--1.jpg"
+  const [image, setImage] = useState("");
+  const [imgUrl, setImgUrl] = useState(
+    "https://res.cloudinary.com/dk8hyxr2z/image/upload/v1685710777/yumtrux_users/defaultProfileImg_rrndub.webp"
   );
 
   useEffect(() => {
     setFullName(userDetails.fullName);
     setAddress(userDetails.address);
     setPhoneNo(userDetails.phoneNo);
+    setImgUrl(userDetails.profileImg);
   }, [userDetails]);
 
   const navigation = useNavigation();
@@ -67,6 +73,12 @@ const ProfileEditScreen = () => {
   const handleBackBtnPress = () => {
     navigation.navigate("profileMain");
   };
+
+  const getFileInfo = async (fileURI) => {
+    const fileInfo = await FileSystem.getInfoAsync(fileURI);
+    return fileInfo;
+  };
+
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -74,40 +86,74 @@ const ProfileEditScreen = () => {
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [4, 4],
-      quality: 1,
+      quality: 0.8,
+      maxWidth: 100,
+      maxHeight: 100,
     });
 
     if (!result.canceled) {
       const img = result.assets[0];
+      const fileInfo = await getFileInfo(img.uri);
+      const imgSize = fileInfo.size / 1024 / 1024;
+      console.log(imgSize);
+      if (imgSize > 2) {
+        alert("Image size too large, try image with size less than 5 mb");
+        return;
+      }
       try {
-        updateProfileImg(result.assets[0].uri);
+        setLoding(true);
+        let res = await deleteProfileImg(userId);
+
+        if (res.result) {
+          let uplaodImgStatus = await updateProfileImg({
+            uri: img.uri,
+            type: `test/${img.uri.split(".")[1]}`,
+            name: `test.${img.uri.split(".")[1]}`,
+          });
+
+          if (uplaodImgStatus.url) {
+            let uploadImg = await uploadProfileImg(userId, uplaodImgStatus.url);
+            console.log(uploadImg);
+            if (uploadImg.status === "success") {
+              let res2 = await getUserDetailsHttp(userId);
+              if (res2.status === "success") {
+                dispatch(setUserDetails(res2.user));
+              }
+            }
+          }
+        }
+        setLoding(false);
       } catch (error) {
+        setLoding(false);
         console.log(error);
       }
       setImage(img);
     }
   };
 
-  const updateProfileImg = async () => {
+  const updateProfileImg = async (dd) => {
     const formData = new FormData();
-    formData.append("file", image);
+    formData.append("file", dd);
     formData.append("upload_preset", "ml_default");
     formData.append("cloud_name", "dk8hyxr2z");
+    formData.append("public_id", userId);
+
     setLoding(true);
-    console.log(formData);
-    let res = await fetch(
-      // use user id from redux
-      baseUrl + "updateProfileImg/647034e4130ceeb47e938540",
+    let uploadImgStatus = await fetch(
+      "https://api.cloudinary.com/v1_1/dk8hyxr2z/image/upload",
       {
         method: "POST",
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
         body: formData,
       }
-    );
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        setImgUrl(data.url);
+        setLoding(false);
+        return data;
+      });
 
-    setLoding(false);
+    return uploadImgStatus;
   };
 
   const updateUser = async () => {
@@ -115,7 +161,9 @@ const ProfileEditScreen = () => {
     let res = await updateUserHttp(userId, { fullName, phoneNo, address });
     if (res.status === "success") {
       let res2 = await getUserDetailsHttp(userId);
-      dispatch(setUserDetails(res2.user));
+      if (res2.status === "success") {
+        dispatch(setUserDetails(res2.user));
+      }
     }
     setLoding(false);
   };
@@ -205,7 +253,7 @@ const ProfileEditScreen = () => {
             <Image
               style={{ width: 125, height: 125, borderRadius: 200 }}
               source={{
-                uri: image.uri,
+                uri: imgUrl,
               }}
             />
           </View>

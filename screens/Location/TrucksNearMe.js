@@ -13,7 +13,7 @@ import {
 import React, { useEffect, useLayoutEffect, useState } from "react";
 import Modal from "react-native-modal";
 
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaView } from "react-native-safe-area-context";
 import colors from "../../constants/colors";
@@ -28,6 +28,8 @@ import ButtonComp from "../../components/ButtonComp";
 import { trucksList } from "../../data/trucks";
 import GestureRecognizer from "react-native-swipe-gestures";
 import * as Location from "expo-location";
+import { truckListDetailHttp } from "../../utils/user-http-requests";
+import Spinner from "react-native-loading-spinner-overlay/lib";
 
 const TruckCard = ({
   handleMakeOrderPress,
@@ -117,12 +119,44 @@ const TrucksNearMe = () => {
   useLayoutEffect(() => {
     navigation.setOptions({ headerShown: false });
   }, []);
-  const handleMakeOrderPress = () => {};
+  const handleMakeOrderPress = (id) => {
+    console.log("truck id " + id);
+  };
   const [initialLatLong, setInitialLatLong] = useState(null);
-  const [truckListData, setTruckListData] = useState(trucksList);
+  const [truckListData, setTruckListData] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      try {
+        fetchTrucksList();
+      } catch (error) {
+        console.log(error);
+      }
+    }, [])
+  );
+
+  const fetchTrucksList = async () => {
+    setLoading(true);
+    let res = await truckListDetailHttp();
+    if (res.status === "success") {
+      setTruckListData(res.truckList);
+    } else {
+      setTruckListData([]);
+    }
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    try {
+      fetchTrucksList();
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
 
   useEffect(() => {
     (async () => {
@@ -153,6 +187,7 @@ const TrucksNearMe = () => {
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
+
       <SafeAreaView>
         <ScrollView showsVerticalScrollIndicator={false}>
           <View>
@@ -228,7 +263,14 @@ const TrucksNearMe = () => {
               />
             </MapView>
           </View>
-
+          <Spinner
+            //visibility of Overlay Loading Spinner
+            visible={loading}
+            //Text with the Spinner
+            // textContent={'Loading...'}
+            color={colors.action}
+            // textStyle={styles.spinnerTextStyle}
+          />
           <GestureRecognizer
             style={{ flex: 1 }}
             onSwipeUp={handleSwipeUp}
@@ -259,7 +301,7 @@ const TrucksNearMe = () => {
                   <Entypo name="chevron-small-down" size={30} color="black" />
                 </TouchableOpacity>
                 <ScrollView showsVerticalScrollIndicator={false}>
-                  {truckListData.map((item, index) => {
+                  {truckListData?.map((item, index) => {
                     return (
                       <View key={index}>
                         <TruckCard
@@ -268,9 +310,10 @@ const TrucksNearMe = () => {
                           truckAddress={item.address}
                           truckRating={item.ratings}
                           truckTime={item.timing}
+                          truckId={item._id}
                           // here we go with truck id later
                           handleMakeOrderPress={() =>
-                            handleMakeOrderPress(item.truckName)
+                            handleMakeOrderPress(item._id)
                           }
                         />
                       </View>
@@ -296,17 +339,19 @@ const TrucksNearMe = () => {
                   color="black"
                 />
               </TouchableOpacity>
-              <TruckCard
-                truckName={truckListData[0].name}
-                truckImg={truckListData[0].imgUrl}
-                truckAddress={truckListData[0].address}
-                truckRating={truckListData[0].ratings}
-                truckTime={truckListData[0].timing}
-                // here we go with truck id later
-                handleMakeOrderPress={() =>
-                  handleMakeOrderPress(truckListData[0].truckName)
-                }
-              />
+              {truckListData.length > 0 && (
+                <TruckCard
+                  truckName={truckListData[0].name}
+                  truckImg={truckListData[0].imgUrl}
+                  truckAddress={truckListData[0].address}
+                  truckRating={truckListData[0].ratings}
+                  truckTime={truckListData[0].timing}
+                  // here we go with truck id later
+                  handleMakeOrderPress={() =>
+                    handleMakeOrderPress(truckListData[0]._id)
+                  }
+                />
+              )}
             </View>
           </GestureRecognizer>
         </ScrollView>

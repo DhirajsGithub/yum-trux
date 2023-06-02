@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useLayoutEffect } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
@@ -23,7 +23,12 @@ import { useSelector } from "react-redux";
 
 const ProfileMainScreen = () => {
   const userDetails = useSelector((state) => state.userSlice.userDetails);
-
+  const [imgUrl, setImgUrl] = useState(
+    "https://res.cloudinary.com/dk8hyxr2z/image/upload/v1685710777/yumtrux_users/defaultProfileImg_rrndub.webp"
+  );
+  useEffect(() => {
+    setImgUrl(userDetails.profileImg);
+  }, [userDetails]);
   const navigation = useNavigation();
   useLayoutEffect(() => {
     navigation.setOptions({ headerShown: false });
@@ -75,7 +80,9 @@ const ProfileMainScreen = () => {
             <Image
               style={{ width: 91, height: 91, borderRadius: 100 }}
               source={{
-                uri: "https://buffer.com/library/content/images/2022/03/sigmund-MQ2xYBHImKM-unsplash--1--1.jpg",
+                uri: userDetails.profileImg.includes("http")
+                  ? userDetails.profileImg
+                  : "https://res.cloudinary.com/dk8hyxr2z/image/upload/v1685710777/yumtrux_users/defaultProfileImg_rrndub.webp",
               }}
             />
           </View>

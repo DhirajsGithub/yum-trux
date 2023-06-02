@@ -10,16 +10,26 @@ import {
 import React, { useEffect, useLayoutEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import HeaderComp from "../../components/HeaderComp";
 import { Image } from "react-native";
 import colors from "../../constants/colors";
-import { trucksList } from "../../data/trucks";
+// import { trucksList } from "../../data/trucks";
 import RectangularDisplayFields from "../../components/RectangularDisplayFields";
 import { useDispatch, useSelector } from "react-redux";
-import { addToCurrentOrder, removeCurrentOrder } from "../../store/store-slice";
+import {
+  addToCurrentOrder,
+  removeCurrentOrder,
+  setAllOrderHistoryProper,
+  setUserDetails,
+} from "../../store/store-slice";
 import EmptyData from "../../components/EmptyData";
 import { FontAwesome5 } from "@expo/vector-icons";
+import Spinner from "react-native-loading-spinner-overlay/lib";
+import {
+  getUserDetailsHttp,
+  truckListDetailHttp,
+} from "../../utils/user-http-requests";
 
 const OrderCard = ({
   imgUrl,
@@ -84,19 +94,127 @@ const OrderCard = ({
 
 const PreviousOrders = () => {
   const dispatch = useDispatch();
-  const prvOrders = useSelector((state) => state.userSlice.allOrders);
-  const currentOrders = useSelector((state) => state.userSlice.currentOrders);
-
+  const userSlice = useSelector((state) => state.userSlice);
+  const userDetails = userSlice.userDetails;
+  const rowOrderHistory = userDetails.orderHistory;
+  const userId = userDetails._id;
+  const prvOrders = userSlice.allOrders;
+  const currentOrders = userSlice.currentOrders;
+  const [loading, setLoading] = useState(false);
   const [prvOrdersList, setPrvOrdersList] = useState([]);
+  const [trucksList, setTruckList] = useState([]);
 
   const navigation = useNavigation();
   useLayoutEffect(() => {
     navigation.setOptions({ headerShown: false });
   }, []);
 
+  const fetchUserLatestDetails = async () => {
+    setLoading(true);
+    let res2 = await getUserDetailsHttp(userId);
+    setLoading(false);
+    if (res2.status === "success") {
+      dispatch(setUserDetails(res2.user));
+    }
+  };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      try {
+        fetchUserLatestDetails();
+        fetchTrucksList();
+      } catch (error) {
+        console.log(error);
+      }
+    }, [])
+  );
+
+  const fetchTrucksList = async () => {
+    setLoading(true);
+    let res = await truckListDetailHttp();
+    setLoading(false);
+    if (res.status === "success") {
+      setTruckList(res.truckList);
+    } else {
+      setTruckList([]);
+    }
+  };
+
   useEffect(() => {
+    try {
+      fetchUserLatestDetails();
+      fetchTrucksList();
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+  // actual converting order history row data to require data to be shown on order history
+  const findTruckDetails = (truckId) => {
+    let truckDetails = trucksList.filter((truck) => {
+      return truck._id === truckId;
+    });
+    if (
+      truckDetails[0]?.name &&
+      truckDetails[0]?._id &&
+      truckDetails[0]?.imgUrl &&
+      truckDetails[0]?.menu
+    ) {
+      return truckDetails[0];
+    }
+    return null;
+  };
+
+  let temp = [];
+  for (let i = rowOrderHistory.length - 1; i >= 0; i--) {
+    let truckId = rowOrderHistory[i].truckId;
+    let truckDetail = findTruckDetails(truckId);
+
+    if (truckDetail) {
+      let totalPrice = parseFloat(rowOrderHistory[i].totalPrice.toFixed(2));
+      let truckId = rowOrderHistory[i].truckId;
+      let orderOn = rowOrderHistory[i].orderOn;
+      let Rowitems = rowOrderHistory[i].items;
+      let truckMenu = truckDetail.menu;
+      let truckDescription = truckDetail.truckDescription;
+      let truckImg = truckDetail.imgUrl;
+      let truckName = truckDetail.name;
+      let truckAddress = truckDetail.truckAddress;
+      let items = [];
+      for (let item of Rowitems) {
+        // from store order history menu item id
+        for (let item2 of truckMenu) {
+          // from truck menu item id
+          if (item.itemId === item2.id) {
+            items.push({
+              truckId: truckId,
+              truckName: truckName,
+              truckDescription: truckDescription,
+              truckImg: truckImg,
+              truckAddress: truckAddress,
+              itemName: item2.name,
+              itemId: item2.id,
+              itemPrice: item2.price,
+              itemDiscription: item2.description,
+            });
+          }
+        }
+      }
+      let tempOrder = {
+        truckName,
+        orderOn,
+        totalPrice,
+        items,
+        truckId,
+        truckImg,
+      };
+      temp.push(tempOrder);
+    }
+  }
+
+  useEffect(() => {
+    dispatch(setAllOrderHistoryProper(temp));
     setPrvOrdersList(prvOrders);
-  }, [prvOrders]);
+  }, [trucksList, userDetails]);
 
   // const [searchInput, setSearchInput] = useState("");
   const handleSearchInput = (text) => {
@@ -107,16 +225,25 @@ const PreviousOrders = () => {
   };
 
   const handleViewTruckPress = (truckId) => {
-    let truckDetail = trucksList.find((truck) => {
-      return truck.id === truckId;
+    let truckDetail = trucksList?.find((truck) => {
+      return truck._id === truckId;
     });
-
+    const findRating = (ratingLi) => {
+      if (ratingLi.length > 0) {
+        let sum = 0;
+        for (let r of ratingLi) {
+          sum = sum + r;
+        }
+        return Math.round(sum / ratingLi.length);
+      }
+      return 0;
+    };
     if (truckDetail) {
       const truckName = truckDetail.name;
-      const truckRatings = truckDetail.ratings;
+      const truckRatings = findRating(truckDetail.ratings);
       const truckTiming = truckDetail.timing;
       const truckDescription = truckDetail.description;
-      const truckId = truckDetail.id;
+      const truckId = truckDetail._id;
       const truckImg = truckDetail.imgUrl;
       const truckMenu = truckDetail.menu;
       const truckAddress = truckDetail.address;
@@ -124,6 +251,7 @@ const PreviousOrders = () => {
       navigation.navigate("trucks", {
         screen: "truckDetail",
         params: {
+          screen: "prvOrders",
           truckName,
           truckRatings,
           truckTiming,
@@ -175,9 +303,17 @@ const PreviousOrders = () => {
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
+      <Spinner
+        //visibility of Overlay Loading Spinner
+        visible={loading}
+        //Text with the Spinner
+        // textContent={'Loading...'}
+        color={colors.action}
+        // textStyle={styles.spinnerTextStyle}
+      />
       <SafeAreaView>
         <HeaderComp handleSearchInput={handleSearchInput} onlySearch={true} />
-        {prvOrdersList.length === 0 && <EmptyData msg="No truck found 😞" />}
+
         <View
           style={{ flexDirection: "row", alignItems: "center", marginTop: 10 }}
         >
@@ -197,23 +333,26 @@ const PreviousOrders = () => {
             color={colors.textColor}
           />
         </View>
+        {prvOrdersList.length === 0 && <EmptyData msg="No truck found 😞" />}
         <ScrollView showsVerticalScrollIndicator={false}>
           <View style={styles.orderList}>
             <ScrollView showsVerticalScrollIndicator={false}>
               {prvOrdersList.map((item, index) => {
                 return (
-                  <OrderCard
-                    handleViewTruckPress={() =>
-                      handleViewTruckPress(item.truckId)
-                    }
-                    handleReorderPress={() => handleReorderPress(item.items)}
-                    imgUrl={item.truckImg}
-                    key={index}
-                    truckName={item.truckName}
-                    NoOfDishes={item.items?.length}
-                    price={item.totalPrice}
-                    dateTime={item.orderOn}
-                  />
+                  <>
+                    <OrderCard
+                      handleViewTruckPress={() =>
+                        handleViewTruckPress(item.truckId)
+                      }
+                      handleReorderPress={() => handleReorderPress(item.items)}
+                      imgUrl={item.truckImg}
+                      key={index}
+                      truckName={item.truckName}
+                      NoOfDishes={item.items?.length}
+                      price={item.totalPrice}
+                      dateTime={item.orderOn}
+                    />
+                  </>
                 );
               })}
             </ScrollView>

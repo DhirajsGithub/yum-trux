@@ -26,8 +26,12 @@ const BlankScreen = () => {
       const jsonValue = await AsyncStorage.getItem("@yumtrux_user");
       const val = JSON.parse(jsonValue);
       if (val?.token) {
-        await getUserData(val.userId);
-        navigation.navigate("main");
+        try {
+          await getUserData(val.userId);
+          navigation.navigate("main");
+        } catch (error) {
+          console.log(error);
+        }
       } else {
         navigation.navigate("login");
       }

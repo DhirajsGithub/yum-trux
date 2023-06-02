@@ -96,6 +96,42 @@ const addToAllOrdersHttp = async (userId, data) => {
   return res;
 };
 
+const addRatingToTruck = async (truckId, rating) => {
+  let res = await fetch(baseUrl + "updateRating/" + truckId, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ rating }),
+  });
+  res = await res.json();
+  return res;
+};
+
+const deleteProfileImg = async (userId) => {
+  let res = await fetch(baseUrl + "deleteProfileImg/" + userId, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(),
+  });
+  res = await res.json();
+  return res;
+};
+
+const uploadProfileImg = async (userId, imgUrl) => {
+  let res = await fetch(baseUrl + "uploadProfileImgMogogDB/" + userId, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ imgUrl }),
+  });
+  res = await res.json();
+  return res;
+};
+
 export {
   loginUserHttp,
   signupUserHttp,
@@ -106,4 +142,7 @@ export {
   updateFavTruckHttp,
   removeFromFavTruckHttp,
   addToAllOrdersHttp,
+  addRatingToTruck,
+  deleteProfileImg,
+  uploadProfileImg,
 };

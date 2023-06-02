@@ -135,19 +135,15 @@ const OrderScreen = () => {
   const truckDescription = currentOrders[0]?.truckDescription;
   const truckImg = currentOrders[0]?.truckImg;
   const truckLocation = currentOrders[0]?.truckAddress;
-
-  // don't allow user if currentOrders are empty
-  // creating problem, review screen is not showing due to this below effect hence commented
-  // useEffect(() => {
-  //   if (currentOrders.length === 0) {
-  //     navigation.navigate("trucksList");
-  //   }
-  // }, [currentOrders]);
+  const truckId = currentOrders[0]?.truckId;
 
   useLayoutEffect(() => {
     navigation.setOptions({ headerShown: false });
   }, []);
   const handleBackPress = () => {
+    if (!params.newOrder) {
+      navigation.navigate("previousOrders");
+    }
     navigation.goBack();
   };
 

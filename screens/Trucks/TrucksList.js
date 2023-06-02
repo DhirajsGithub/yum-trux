@@ -1,6 +1,15 @@
 import { Alert, BackHandler, StyleSheet, Text, View } from "react-native";
-import React, { useEffect, useLayoutEffect, useState } from "react";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import React, {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useState,
+} from "react";
+import {
+  useNavigation,
+  useRoute,
+  useFocusEffect,
+} from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaView } from "react-native-safe-area-context";
 import HeaderComp from "../../components/HeaderComp";
@@ -18,6 +27,16 @@ const TrucksList = () => {
   const [loading, setLoading] = useState(false);
   const [trucksData, setTrucksData] = useState([]);
   const [trucksDataUnFilter, setTrucksDataUnFilter] = useState([]);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      try {
+        fetchTrucksList();
+      } catch (error) {
+        console.log(error);
+      }
+    }, [])
+  );
 
   const fetchTrucksList = async () => {
     setLoading(true);
@@ -44,7 +63,6 @@ const TrucksList = () => {
       console.log(error);
     }
   }, []);
-  const [searchInput, setSearchInput] = useState("");
   const handleSearchInput = (text) => {
     const filterTrucks = trucksDataUnFilter.filter((truck) => {
       return truck.name?.toLowerCase().includes(text?.toLowerCase());

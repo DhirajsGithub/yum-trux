@@ -1,26 +1,53 @@
 import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
 import React, { useEffect, useLayoutEffect, useState } from "react";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import HeaderComp from "../../components/HeaderComp";
 import colors from "../../constants/colors";
 import HomeHeaderCard from "../../components/HomeHeaderCard";
-import { trucksList } from "../../data/trucks";
-import ListComp from "../../components/ListComp";
 import HomeTruckList from "../../components/HomeTruckList";
 import EmptyData from "../../components/EmptyData";
+import { truckListDetailHttp } from "../../utils/user-http-requests";
+import Spinner from "react-native-loading-spinner-overlay/lib";
 
 const HomeScreen = () => {
   const navigation = useNavigation();
   const [searchInput, setSearchInput] = useState("");
   const [category, setCategory] = useState("");
+  const [loading, setLoading] = useState(false);
   useLayoutEffect(() => {
     navigation.setOptions({ headerShown: false });
   }, []);
   const [truckListNew, setTruckListNew] = useState([]);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      try {
+        fetchTrucksList();
+      } catch (error) {
+        console.log(error);
+      }
+    }, [])
+  );
+
+  const fetchTrucksList = async () => {
+    setLoading(true);
+    let res = await truckListDetailHttp();
+    if (res.status === "success") {
+      setTruckListNew(res.truckList);
+    } else {
+      setTruckListNew([]);
+    }
+    setLoading(false);
+  };
+
   useEffect(() => {
-    setTruckListNew(trucksList);
+    try {
+      fetchTrucksList();
+    } catch (error) {
+      console.log(error);
+    }
   }, []);
 
   const handleSettingPress = () => {};
@@ -31,7 +58,7 @@ const HomeScreen = () => {
   const handleSearchInput = (text) => {
     setSearchInput(text);
   };
-  const filteredTrucks = trucksList.filter((truck) => {
+  const filteredTrucks = truckListNew?.filter((truck) => {
     const searchFilter = truck.name
       ?.toLowerCase()
       .includes(searchInput?.toLowerCase());
@@ -41,9 +68,18 @@ const HomeScreen = () => {
       category === "More";
     return categoryFilter && searchFilter;
   });
+
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
+      <Spinner
+        //visibility of Overlay Loading Spinner
+        visible={loading}
+        //Text with the Spinner
+        // textContent={'Loading...'}
+        color={colors.action}
+        // textStyle={styles.spinnerTextStyle}
+      />
       <SafeAreaView>
         <View style={styles.headFile}>
           <View style={{ marginHorizontal: 6 }}>

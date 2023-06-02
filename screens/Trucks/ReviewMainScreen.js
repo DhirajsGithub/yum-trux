@@ -18,6 +18,7 @@ import colors from "../../constants/colors";
 import { Image } from "react-native";
 import { Rating, AirbnbRating } from "react-native-ratings";
 import ButtonComp from "../../components/ButtonComp";
+import { addRatingToTruck } from "../../utils/user-http-requests";
 const WATER_IMAGE = require("../../assets/Images/water.png");
 
 const height = Dimensions.get("window").height;
@@ -28,6 +29,7 @@ const ReviewMainScreen = () => {
   const orderData = route.params;
   const truckImg = orderData.truckImg;
   const truckName = orderData.truckName;
+  const truckId = orderData.truckId;
   const [ragings, setRatings] = useState(5);
   useLayoutEffect(() => {
     navigation.setOptions({ headerShown: false });
@@ -39,7 +41,12 @@ const ReviewMainScreen = () => {
     setRatings(rating);
   };
 
-  const handleSendBtnPress = () => {
+  const handleSendBtnPress = async () => {
+    try {
+      await addRatingToTruck(truckId, ragings);
+    } catch (error) {
+      console.log(err);
+    }
     navigation.navigate("trucksList");
   };
 

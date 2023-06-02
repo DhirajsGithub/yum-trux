@@ -4,6 +4,16 @@ import TruckOverviewCard from "./TruckOverviewCard";
 
 const ListComp = ({ trucksList, homeComp, screen }) => {
   const tempList = trucksList;
+  const findRating = (ratingLi) => {
+    if (ratingLi.length > 0) {
+      let sum = 0;
+      for (let r of ratingLi) {
+        sum = sum + r;
+      }
+      return Math.round(sum / ratingLi.length);
+    }
+    return 0;
+  };
   return (
     <View style={styles.container}>
       <FlatList
@@ -14,7 +24,7 @@ const ListComp = ({ trucksList, homeComp, screen }) => {
             screen={screen}
             homeComp={homeComp}
             truckName={item.name}
-            truckRatings={item.ratings}
+            truckRatings={findRating(item.ratings)}
             truckTiming={item.timing}
             truckDescription={item.description}
             truckId={item._id}

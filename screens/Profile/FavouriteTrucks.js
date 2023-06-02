@@ -7,7 +7,7 @@ import {
 } from "react-native";
 import React, { useEffect, useLayoutEffect, useState } from "react";
 
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaView } from "react-native-safe-area-context";
 import colors from "../../constants/colors";
@@ -17,12 +17,12 @@ import ListComp from "../../components/ListComp";
 import { truckListDetailHttp } from "../../utils/user-http-requests";
 import { useSelector } from "react-redux";
 import { Ionicons } from "@expo/vector-icons";
+import Spinner from "react-native-loading-spinner-overlay/lib";
 
 const FavouriteTrucks = () => {
   const userDetails = useSelector((state) => state.userSlice.userDetails);
   const userId = userDetails._id;
   const navigation = useNavigation();
-  const [trucksData, setTrucksData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [filterFavTrucks, setFilterFavTrucks] = useState([]);
   useLayoutEffect(() => {
@@ -43,10 +43,19 @@ const FavouriteTrucks = () => {
       }
       setFilterFavTrucks(temp);
     } else {
-      setTrucksData([]);
+      filterFavTrucks([]);
     }
     setLoading(false);
   };
+  useFocusEffect(
+    React.useCallback(() => {
+      try {
+        fetchTrucksList();
+      } catch (error) {
+        console.log(error);
+      }
+    }, [])
+  );
   useEffect(() => {
     try {
       fetchTrucksList();
@@ -60,13 +69,21 @@ const FavouriteTrucks = () => {
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
+      <Spinner
+        //visibility of Overlay Loading Spinner
+        visible={loading}
+        //Text with the Spinner
+        // textContent={'Loading...'}
+        color={colors.action}
+        // textStyle={styles.spinnerTextStyle}
+      />
       <SafeAreaView>
         <View
           style={{
             paddingHorizontal: 25,
             flexDirection: "row",
             alignItems: "center",
-            height: "8%",
+            height: 60,
           }}
         >
           <View style={{ flexDirection: "row", marginRight: 20 }}>
@@ -85,10 +102,17 @@ const FavouriteTrucks = () => {
               alignItems: "center",
             }}
           >
-            <Text style={{ fontSize: 25, fontWeight: 500, marginRight: 10 }}>
+            <Text
+              style={{
+                fontSize: 20,
+                fontWeight: "700",
+                color: colors.textColor,
+                marginRight: 10,
+              }}
+            >
               Favourite Trucks{" "}
             </Text>
-            <AntDesign name="star" size={28} color={colors.action} />
+            <AntDesign name="star" size={18} color={colors.action} />
           </View>
         </View>
 
