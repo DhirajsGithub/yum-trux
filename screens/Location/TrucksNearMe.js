@@ -8,6 +8,7 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
+  StatusBar as StatusBar2,
   View,
 } from "react-native";
 import React, { useEffect, useLayoutEffect, useState } from "react";
@@ -30,6 +31,7 @@ import GestureRecognizer from "react-native-swipe-gestures";
 import * as Location from "expo-location";
 import { truckListDetailHttp } from "../../utils/user-http-requests";
 import Spinner from "react-native-loading-spinner-overlay/lib";
+import Constants from "expo-constants";
 
 const TruckCard = ({
   handleMakeOrderPress,
@@ -39,6 +41,16 @@ const TruckCard = ({
   truckImg,
   truckRating,
 }) => {
+  const findRating = (ratingLi) => {
+    if (ratingLi.length > 0) {
+      let sum = 0;
+      for (let r of ratingLi) {
+        sum = sum + r;
+      }
+      return Math.round(sum / ratingLi.length);
+    }
+    return 0;
+  };
   return (
     <View
       style={{
@@ -76,7 +88,7 @@ const TruckCard = ({
           <View style={{ left: "-20%" }}>
             <AirbnbRating
               size={17}
-              defaultRating={truckRating}
+              defaultRating={findRating(truckRating)}
               showRating={false}
               isDisabled={true}
             />
@@ -183,179 +195,147 @@ const TrucksNearMe = () => {
   const handleSearchInput = (text) => {
     setSearchInput(text);
   };
-
+  const statusBarHeight = Constants.statusBarHeight;
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
 
-      <SafeAreaView>
-        <ScrollView showsVerticalScrollIndicator={false}>
-          <View>
-            <HeaderComp
-              handleSearchInput={handleSearchInput}
-              onlySearch={true}
-            />
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "center",
-              }}
-            >
-              <Text
-                style={{
-                  fontSize: 22,
-                  fontWeight: "600",
-                  marginTop: 10,
-                  color: colors.textColor,
-                }}
-              >
-                Trucks near you
-              </Text>
-            </View>
-          </View>
-          <View style={{ marginTop: 16, flex: 1 }}>
-            <MapView
-              zoomEnabled={true}
-              initialRegion={
-                location && {
-                  latitude: location?.coords.latitude,
-                  longitude: location?.coords.longitude,
-                  latitudeDelta: 0,
-                  longitudeDelta: 0,
-                }
-              }
-              showsUserLocation={true}
-              followsUserLocation={true}
-              oomEnabled={true}
-              style={styles.map}
-            >
-              <Marker
-                pinColor={"blue"}
-                title="Chinese Truck"
-                description="Food stall"
-                coordinate={{ latitude: 38.9632, longitude: 35.2423 }}
-              />
-              <Marker
-                pinColor={"yellow"}
-                title="Chinese Truck"
-                description="Food stall"
-                coordinate={
-                  location
-                    ? {
-                        latitude: location?.coords.latitude,
-                        longitude: location?.coords.longitude,
-                      }
-                    : { latitude: 38.9632, longitude: 35.2423 }
-                }
-              />
-              <Marker
-                pinColor={"green"}
-                title="Mexican Truck"
-                description="Food stall"
-                coordinate={{ latitude: 38.9648, longitude: 35.2434 }}
-              />
-              <Marker
-                pinColor={"red"}
-                title="Veitamanian Truck"
-                description="Food stall"
-                coordinate={{ latitude: 38.9668, longitude: 35.253 }}
-              />
-            </MapView>
-          </View>
-          <Spinner
-            //visibility of Overlay Loading Spinner
-            visible={loading}
-            //Text with the Spinner
-            // textContent={'Loading...'}
-            color={colors.action}
-            // textStyle={styles.spinnerTextStyle}
-          />
-          <GestureRecognizer
-            style={{ flex: 1 }}
-            onSwipeUp={handleSwipeUp}
-            onSwipeDown={handleSwipeDown}
+      <View style={{ marginTop: statusBarHeight, paddingHorizontal: 16 }}>
+        <HeaderComp handleSearchInput={handleSearchInput} onlySearch={true} />
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <Text
+            style={{
+              fontSize: 20,
+              fontWeight: "500",
+              marginTop: 5,
+              color: colors.textColor,
+            }}
           >
-            <Modal
-              animationType="slide"
-              // backdropOpacity={1}
-              // style={{ height: "100%", width: "100%" }}
-              isVisible={isModalVisible}
-            >
-              <View
-                style={{
-                  backgroundColor: colors.white,
-                  height:
-                    Platform.OS === "ios"
-                      ? Dimensions.get("screen").height - 350
-                      : Dimensions.get("screen").height - 250,
-                  justifyContent: "center",
-                  alignItems: "center",
-
-                  // bottom: "2%",
-                  borderRadius: 15,
-                  paddingBottom: 10,
-                }}
-              >
-                <TouchableOpacity onPress={handleSwipeDown}>
-                  <Entypo name="chevron-small-down" size={30} color="black" />
-                </TouchableOpacity>
-                <ScrollView showsVerticalScrollIndicator={false}>
-                  {truckListData?.map((item, index) => {
-                    return (
-                      <View key={index}>
-                        <TruckCard
-                          truckName={item.name}
-                          truckImg={item.imgUrl}
-                          truckAddress={item.address}
-                          truckRating={item.ratings}
-                          truckTime={item.timing}
-                          truckId={item._id}
-                          // here we go with truck id later
-                          handleMakeOrderPress={() =>
-                            handleMakeOrderPress(item._id)
-                          }
-                        />
-                      </View>
-                    );
-                  })}
-                </ScrollView>
-              </View>
-            </Modal>
-
-            <View style={styles.baseModal}>
-              <TouchableOpacity
-                onPress={handleSwipeUp}
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "center",
-                  zIndex: 1009,
-                }}
-              >
-                <Entypo
-                  style={{ position: "absolute", zIndex: 1009 }}
-                  name="chevron-small-up"
-                  size={30}
-                  color="black"
-                />
-              </TouchableOpacity>
-              {truckListData.length > 0 && (
-                <TruckCard
-                  truckName={truckListData[0].name}
-                  truckImg={truckListData[0].imgUrl}
-                  truckAddress={truckListData[0].address}
-                  truckRating={truckListData[0].ratings}
-                  truckTime={truckListData[0].timing}
-                  // here we go with truck id later
-                  handleMakeOrderPress={() =>
-                    handleMakeOrderPress(truckListData[0]._id)
+            Trucks near you
+          </Text>
+        </View>
+      </View>
+      <View style={{ marginTop: 5, flex: 1 }}>
+        <MapView
+          zoomEnabled={true}
+          initialRegion={
+            location && {
+              latitude: location?.coords.latitude,
+              longitude: location?.coords.longitude,
+              latitudeDelta: 0,
+              longitudeDelta: 0,
+            }
+          }
+          showsUserLocation={true}
+          followsUserLocation={true}
+          oomEnabled={true}
+          style={styles.map}
+        >
+          <Marker
+            pinColor={"blue"}
+            title="Chinese Truck"
+            description="Food stall"
+            coordinate={{ latitude: 38.9632, longitude: 35.2423 }}
+          />
+          <Marker
+            pinColor={"yellow"}
+            title="Chinese Truck"
+            description="Food stall"
+            coordinate={
+              location
+                ? {
+                    latitude: location?.coords.latitude,
+                    longitude: location?.coords.longitude,
                   }
-                />
-              )}
-            </View>
-          </GestureRecognizer>
-        </ScrollView>
-      </SafeAreaView>
+                : { latitude: 38.9632, longitude: 35.2423 }
+            }
+          />
+          <Marker
+            pinColor={"green"}
+            title="Mexican Truck"
+            description="Food stall"
+            coordinate={{ latitude: 38.9648, longitude: 35.2434 }}
+          />
+          <Marker
+            pinColor={"red"}
+            title="Veitamanian Truck"
+            description="Food stall"
+            coordinate={{ latitude: 38.9668, longitude: 35.253 }}
+          />
+        </MapView>
+      </View>
+
+      <Modal animationType="slide" isVisible={isModalVisible}>
+        <View
+          style={{
+            backgroundColor: colors.white,
+            height: "80%",
+            justifyContent: "center",
+            alignItems: "center",
+            borderRadius: 16,
+            paddingBottom: 10,
+          }}
+        >
+          <TouchableOpacity onPress={handleSwipeDown}>
+            <Entypo name="chevron-small-down" size={30} color="black" />
+          </TouchableOpacity>
+          <ScrollView showsVerticalScrollIndicator={false}>
+            {truckListData?.map((item, index) => {
+              return (
+                <View key={index}>
+                  <TruckCard
+                    truckName={item.name}
+                    truckImg={item.imgUrl}
+                    truckAddress={item.address}
+                    truckRating={item.ratings}
+                    truckTime={item.timing}
+                    truckId={item._id}
+                    // here we go with truck id later
+                    handleMakeOrderPress={() => handleMakeOrderPress(item._id)}
+                  />
+                </View>
+              );
+            })}
+          </ScrollView>
+        </View>
+      </Modal>
+
+      <View style={styles.baseModal}>
+        <TouchableOpacity
+          onPress={handleSwipeUp}
+          style={{
+            flexDirection: "row",
+            justifyContent: "center",
+            zIndex: 1009,
+          }}
+        >
+          <Entypo
+            style={{ position: "absolute", zIndex: 1009, paddingVertical: 4 }}
+            name="chevron-small-up"
+            size={35}
+            color="black"
+          />
+        </TouchableOpacity>
+        {truckListData.length > 0 && (
+          <TruckCard
+            truckName={truckListData[0].name}
+            truckImg={truckListData[0].imgUrl}
+            truckAddress={truckListData[0].address}
+            truckRating={truckListData[0].ratings}
+            truckTime={truckListData[0].timing}
+            // here we go with truck id later
+            handleMakeOrderPress={() =>
+              handleMakeOrderPress(truckListData[0]._id)
+            }
+          />
+        )}
+      </View>
     </View>
   );
 };
@@ -366,14 +346,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.white,
-    paddingHorizontal: 16,
-    paddingBottom: 8,
   },
   map: {
-    height:
-      Platform.OS === "ios"
-        ? Dimensions.get("screen").height - 360
-        : Dimensions.get("screen").height - 340,
+    flex: 1,
   },
   section: {
     flexDirection: "row",
@@ -393,8 +368,10 @@ const styles = StyleSheet.create({
     fontWeight: "500",
   },
   baseModal: {
+    position: "absolute",
+    paddingHorizontal: 10,
     width: "100%",
-    bottom: "1%",
+    bottom: Platform.OS === "android" ? "-2%" : "1%",
     zIndex: 1000,
   },
 });

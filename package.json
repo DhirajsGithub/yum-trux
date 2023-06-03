@@ -44,7 +44,9 @@
     "redux-logger": "^3.0.6",
     "sha1": "^1.1.1",
     "uniqid": "^5.4.0",
-    "expo-file-system": "~15.2.2"
+    "expo-file-system": "~15.2.2",
+    "react-native-gesture-handler": "~2.9.0",
+    "expo-constants": "~14.2.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"

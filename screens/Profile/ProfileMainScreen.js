@@ -80,9 +80,7 @@ const ProfileMainScreen = () => {
             <Image
               style={{ width: 91, height: 91, borderRadius: 100 }}
               source={{
-                uri: userDetails.profileImg.includes("http")
-                  ? userDetails.profileImg
-                  : "https://res.cloudinary.com/dk8hyxr2z/image/upload/v1685710777/yumtrux_users/defaultProfileImg_rrndub.webp",
+                uri: imgUrl,
               }}
             />
           </View>

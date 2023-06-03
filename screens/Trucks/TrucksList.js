@@ -19,6 +19,7 @@ import EmptyData from "../../components/EmptyData";
 import { useSelector } from "react-redux";
 import Spinner from "react-native-loading-spinner-overlay/lib";
 import { truckListDetailHttp } from "../../utils/user-http-requests";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const TrucksList = () => {
   const userDetails = useSelector((state) => state.userSlice.userDetails);
@@ -92,7 +93,6 @@ const TrucksList = () => {
       return true;
     }
   };
-
   useEffect(() => {
     BackHandler.addEventListener("hardwareBackPress", handleBackPress);
   }, []);
@@ -117,7 +117,9 @@ const TrucksList = () => {
             isTrucksList={true}
           />
         </View>
-        {trucksData.length === 0 && <EmptyData msg="No truck found 😞" />}
+        {trucksData.length === 0 && !loading && (
+          <EmptyData msg="No truck found 😞" />
+        )}
         <ListComp screen="truckList" trucksList={trucksData} />
       </SafeAreaView>
     </View>

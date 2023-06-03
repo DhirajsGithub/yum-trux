@@ -116,7 +116,9 @@ const FavouriteTrucks = () => {
           </View>
         </View>
 
-        {filterFavTrucks.length === 0 && <EmptyData msg="No truck found 😞" />}
+        {filterFavTrucks.length === 0 && !loading && (
+          <EmptyData msg="No truck found 😞" />
+        )}
         <ListComp screen="favTruck" trucksList={filterFavTrucks} />
       </SafeAreaView>
     </View>

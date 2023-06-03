@@ -137,7 +137,9 @@ const HomeScreen = () => {
             <HomeHeaderCard truckName="More" handleOnPress={handleTruckPress} />
           </ScrollView>
         </View>
-        {filteredTrucks.length === 0 && <EmptyData msg="No truck found 😞" />}
+        {filteredTrucks.length === 0 && !loading && (
+          <EmptyData msg="No truck found 😞" />
+        )}
         <ScrollView>
           <View>
             <HomeTruckList truckList={filteredTrucks} homeComp={true} />

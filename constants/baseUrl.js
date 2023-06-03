@@ -1,2 +1,2 @@
-const baseUrl = "http://192.168.68.155:8000/";
+const baseUrl = "https://yumtruxbe.onrender.com/";
 export { baseUrl };
