@@ -43,6 +43,13 @@
         {
           "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location."
         }
+      ],
+      [
+        "@stripe/stripe-react-native",
+        {
+          "merchantIdentifier": "string | string []",
+          "enableGooglePay": true
+        }
       ]
     ],
     "extra": {

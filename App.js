@@ -21,6 +21,7 @@ import { store } from "./store/store";
 import { Provider } from "react-redux";
 import LocationMainScreen from "./screens/Location/LocationMainScreen";
 import BlankScreen from "./screens/BlankScreen";
+import { StripeProvider } from "@stripe/stripe-react-native";
 
 const Tab = createBottomTabNavigator();
 
@@ -136,15 +137,21 @@ const TabNavigator = () => {
 export default function App() {
   return (
     <NavigationContainer>
-      <Provider store={store}>
-        <Stack.Navigator>
-          <Stack.Screen name="loading" component={BlankScreen} />
-          <Stack.Screen name="login" component={LoginScreen} />
+      <StripeProvider
+        publishableKey="pk_test_51NH2dbEGDgrKEqaABDf0SgAHZm4RdgsG4rBsACqYQJEcx4pJHpR5FcYjZ7DToCPq95za1V4KBXAFBkZg8FJoCMvS00MewMEOuM"
+        urlScheme="your-url-scheme" // required for 3D Secure and bank redirects
+        merchantIdentifier="merchant.com.{{YOUR_APP_NAME}}" // required for Apple Pay
+      >
+        <Provider store={store}>
+          <Stack.Navigator>
+            <Stack.Screen name="loading" component={BlankScreen} />
+            <Stack.Screen name="login" component={LoginScreen} />
 
-          <Stack.Screen name="register" component={RegisterScreen} />
-          <Stack.Screen name="main" component={TabNavigator} />
-        </Stack.Navigator>
-      </Provider>
+            <Stack.Screen name="register" component={RegisterScreen} />
+            <Stack.Screen name="main" component={TabNavigator} />
+          </Stack.Navigator>
+        </Provider>
+      </StripeProvider>
     </NavigationContainer>
   );
 }

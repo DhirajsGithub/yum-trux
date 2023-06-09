@@ -348,7 +348,7 @@ const PreviousOrders = () => {
                       }
                       handleReorderPress={() => handleReorderPress(item.items)}
                       imgUrl={item.truckImg}
-                      key={index}
+                      key={index + Math.random()}
                       truckName={item.truckName}
                       NoOfDishes={item.items?.length}
                       price={item.totalPrice}

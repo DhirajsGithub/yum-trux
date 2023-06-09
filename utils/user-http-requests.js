@@ -132,6 +132,18 @@ const uploadProfileImg = async (userId, imgUrl) => {
   return res;
 };
 
+const createPaymentIntent = async (data) => {
+  let res = await fetch(baseUrl + "payments/intents/", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+  res = await res.json();
+  return res;
+};
+
 export {
   loginUserHttp,
   signupUserHttp,
@@ -145,4 +157,5 @@ export {
   addRatingToTruck,
   deleteProfileImg,
   uploadProfileImg,
+  createPaymentIntent,
 };

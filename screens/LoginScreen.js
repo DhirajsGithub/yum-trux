@@ -1,4 +1,5 @@
 import {
+  BackHandler,
   ScrollView,
   StyleSheet,
   Text,
@@ -7,7 +8,7 @@ import {
 } from "react-native";
 import React, { useEffect, useLayoutEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import InputComp from "../components/InputComp";
 import ButtonComp from "../components/ButtonComp";
@@ -20,6 +21,7 @@ import { setUserDetails } from "../store/store-slice";
 import { loginUserHttp } from "../utils/user-http-requests";
 
 const LoginScreen = () => {
+  const route = useRoute();
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
@@ -44,6 +46,12 @@ const LoginScreen = () => {
       // saving error
     }
   };
+
+  useEffect(() => {
+    if (route.name === "login" && navigation.isFocused()) {
+      BackHandler.addEventListener("hardwareBackPress", BackHandler.exitApp());
+    }
+  });
 
   const loginUserFunc = async () => {
     setLoading(true);

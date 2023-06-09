@@ -1,4 +1,5 @@
 import {
+  Alert,
   Image,
   ScrollView,
   StyleSheet,
@@ -6,22 +7,79 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useLayoutEffect } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import colors from "../../constants/colors";
 import { Entypo } from "@expo/vector-icons";
 import ButtonComp from "../../components/ButtonComp";
+import { createPaymentIntent } from "../../utils/user-http-requests";
+import { useStripe } from "@stripe/stripe-react-native";
+import { baseUrl } from "../../constants/baseUrl";
 
 const PaymentMethodScreen = () => {
+  const { initPaymentSheet, presentPaymentSheet } = useStripe();
+  const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
   useLayoutEffect(() => {
     navigation.setOptions({ headerShown: false });
   }, []);
   const handleBtnPress = () => {};
   const handlePaypalPress = () => {};
-  const handleCardsPress = () => {};
+
+  const fetchPaymentSheetParams = async () => {
+    const response = await fetch(baseUrl + "payments/createPaymentSheet", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const { paymentIntent, ephemeralKey, customer } = await response.json();
+
+    return {
+      paymentIntent,
+      ephemeralKey,
+      customer,
+    };
+  };
+  const initializePaymentSheet = async () => {
+    const { paymentIntent, ephemeralKey, customer, publishableKey } =
+      await fetchPaymentSheetParams();
+
+    const { error } = await initPaymentSheet({
+      merchantDisplayName: "Truck Name",
+      customerId: customer,
+      customerEphemeralKeySecret: ephemeralKey,
+      paymentIntentClientSecret: paymentIntent,
+      // Set `allowsDelayedPaymentMethods` to true if your business can handle payment
+      //methods that complete payment after a delay, like SEPA Debit and Sofort.
+      allowsDelayedPaymentMethods: true,
+      defaultBillingDetails: {
+        name: "User Name",
+      },
+    });
+    if (!error) {
+      setLoading(true);
+    }
+  };
+  useEffect(() => {
+    initializePaymentSheet();
+  }, []);
+
+  const openPaymentSheet = async () => {
+    const { error } = await presentPaymentSheet();
+
+    if (error) {
+      Alert.alert(`Error code: ${error.code}`, error.message);
+    } else {
+      Alert.alert("Success", "Your order is confirmed!");
+    }
+  };
+  const handleCardsPress = async () => {
+    let res = await openPaymentSheet();
+    console.log(res);
+  };
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />

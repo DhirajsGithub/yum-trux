@@ -1,4 +1,4 @@
 expo-location picker for truck owner 
-Date picker problem for iOS, make the initial date to be Date now()
+Date picker problem for iOS, make the initial date to be Date now()  --> Done
 trucks near me will be only depend on user live location
 orders will be deliver to users live location, or popup will come he need to pick location on map
