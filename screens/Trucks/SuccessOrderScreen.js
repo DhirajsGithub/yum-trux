@@ -14,6 +14,8 @@ const SuccessOrderScreen = () => {
   const dispatch = useDispatch();
   const route = useRoute();
   const orderData = route.params;
+  console.log(orderData.truckId);
+
   const navigation = useNavigation();
   const userSlice = useSelector((state) => state.userSlice);
   const userId = userSlice.userDetails._id;
@@ -36,7 +38,7 @@ const SuccessOrderScreen = () => {
       items: tempMenuIds,
       orderOn: reqDate,
       totalPrice: parseFloat(totalPrice.toFixed(2)),
-      truckId: currentOrders[0].truckId,
+      truckId: orderData.truckId,
     };
     return reqData;
   };
@@ -54,16 +56,14 @@ const SuccessOrderScreen = () => {
       if (orderData.newOrder === false) {
         dispatch(removeCurrentOrder());
       }
-      navigation.navigate("reviewScreen", {
-        truckName: orderData.truckName,
-        truckImg: orderData.truckImg,
-        truckId: currentOrders[0].truckId,
-      });
     }
   };
   const handleDonePress = async () => {
     try {
       await addToAllOrdersFunc();
+      navigation.navigate("reviewScreen", {
+        ...orderData,
+      });
     } catch (error) {
       console.log(error);
     }

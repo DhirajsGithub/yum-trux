@@ -136,6 +136,9 @@ const OrderScreen = () => {
   const truckImg = currentOrders[0]?.truckImg;
   const truckLocation = currentOrders[0]?.truckAddress;
   const truckId = currentOrders[0]?.truckId;
+  const paymentId = currentOrders[0]?.paymentId;
+  console.log("from order screen " + paymentId);
+  console.log("truck id from order screen " + truckId);
 
   useLayoutEffect(() => {
     navigation.setOptions({ headerShown: false });
@@ -146,6 +149,12 @@ const OrderScreen = () => {
     }
     navigation.goBack();
   };
+
+  useEffect(() => {
+    if (currentOrders.length === 0) {
+      navigation.goBack();
+    }
+  }, [currentOrders]);
 
   const orderSet = new Set();
   const ordersArray = [];
@@ -249,26 +258,26 @@ const OrderScreen = () => {
     }
   };
 
-  const handlePaymenPress = () => {
-    if (pickUpTime.time === "") {
-      alert("pick a valid time");
-      return;
-    } else if (pickUpDate.date === "") {
-      alert("pick a valid date");
-      return;
-    } else if (typeof totalWithTaxAndTip !== "number") {
-      alert("Total price must be a Number");
-      return;
-    }
-    navigation.navigate("paymentMethod", {
-      truckName,
-      truckDescription,
-      truckLocation,
-      pickUpTime,
-      truckImg,
-      totalWithTaxAndTip,
-    });
-  };
+  // const handlePaymenPress = () => {
+  //   if (pickUpTime.time === "") {
+  //     alert("pick a valid time");
+  //     return;
+  //   } else if (pickUpDate.date === "") {
+  //     alert("pick a valid date");
+  //     return;
+  //   } else if (typeof totalWithTaxAndTip !== "number") {
+  //     alert("Total price must be a Number");
+  //     return;
+  //   }
+  //   navigation.navigate("paymentMethod", {
+  //     truckName,
+  //     truckDescription,
+  //     truckLocation,
+  //     pickUpTime,
+  //     truckImg,
+  //     totalWithTaxAndTip,
+  //   });
+  // };
 
   const handleBtnPress = () => {
     if (pickUpTime.time === "time") {
@@ -281,7 +290,7 @@ const OrderScreen = () => {
       alert("Total price must be a Number");
       return;
     }
-    navigation.navigate("successOrder", {
+    navigation.navigate("paymentMethod", {
       truckName,
       truckDescription,
       truckLocation,
@@ -289,6 +298,8 @@ const OrderScreen = () => {
       pickUpDate,
       truckImg,
       totalWithTaxAndTip,
+      paymentId,
+      truckId,
       newOrder: params.newOrder,
     });
   };
@@ -510,7 +521,7 @@ const OrderScreen = () => {
             </Text>
           </View>
 
-          <View>
+          {/* <View>
             <Text style={styles.pickupText}>Payment</Text>
             <TouchableOpacity
               style={{
@@ -548,7 +559,7 @@ const OrderScreen = () => {
               </View>
               <Feather name="chevron-right" size={24} color={colors.black} />
             </TouchableOpacity>
-          </View>
+          </View> */}
           <View style={{ marginTop: 16, marginBottom: "25%" }}>
             <ButtonComp handleBtnPress={handleBtnPress} height={50}>
               PLACE ORDER

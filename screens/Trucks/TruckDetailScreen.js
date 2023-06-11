@@ -44,6 +44,7 @@ const TruckDetailScreen = () => {
   const [loading, setLoading] = useState(false);
   const route = useRoute();
   const truckData = route.params;
+  console.log("from details screen " + truckData.paymentId);
   useLayoutEffect(() => {
     navigation.setOptions({ headerShown: false });
   }, []);
@@ -165,6 +166,7 @@ const TruckDetailScreen = () => {
           truckDescription: truckData.truckDescription,
           truckImg: truckData.truckImg,
           truckAddress: truckData.truckAddress,
+          paymentId: truckData.paymentId,
           ...orderData,
         })
       );

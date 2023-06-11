@@ -28,7 +28,6 @@ const TrucksList = () => {
   const [loading, setLoading] = useState(false);
   const [trucksData, setTrucksData] = useState([]);
   const [trucksDataUnFilter, setTrucksDataUnFilter] = useState([]);
-
   useFocusEffect(
     React.useCallback(() => {
       try {
