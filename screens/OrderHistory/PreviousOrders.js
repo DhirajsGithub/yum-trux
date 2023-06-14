@@ -14,7 +14,6 @@ import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import HeaderComp from "../../components/HeaderComp";
 import { Image } from "react-native";
 import colors from "../../constants/colors";
-// import { trucksList } from "../../data/trucks";
 import RectangularDisplayFields from "../../components/RectangularDisplayFields";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -104,6 +103,9 @@ const PreviousOrders = () => {
   const [prvOrdersList, setPrvOrdersList] = useState([]);
   const [trucksList, setTruckList] = useState([]);
 
+  console.log(prvOrdersList);
+  console.log("shit");
+
   const navigation = useNavigation();
   useLayoutEffect(() => {
     navigation.setOptions({ headerShown: false });
@@ -175,10 +177,11 @@ const PreviousOrders = () => {
       let orderOn = rowOrderHistory[i].orderOn;
       let Rowitems = rowOrderHistory[i].items;
       let truckMenu = truckDetail.menu;
-      let truckDescription = truckDetail.truckDescription;
+      let truckDescription = truckDetail.description;
       let truckImg = truckDetail.imgUrl;
       let truckName = truckDetail.name;
-      let truckAddress = truckDetail.truckAddress;
+      let truckAddress = truckDetail.address;
+      let paymentId = truckDetail.paymentId;
       let items = [];
       for (let item of Rowitems) {
         // from store order history menu item id
@@ -195,6 +198,7 @@ const PreviousOrders = () => {
               itemId: item2.id,
               itemPrice: item2.price,
               itemDiscription: item2.description,
+              paymentId,
             });
           }
         }
@@ -206,6 +210,7 @@ const PreviousOrders = () => {
         items,
         truckId,
         truckImg,
+        paymentId,
       };
       temp.push(tempOrder);
     }
@@ -248,6 +253,7 @@ const PreviousOrders = () => {
       const truckMenu = truckDetail.menu;
       const truckAddress = truckDetail.address;
       const truckSchedule = truckDetail.schedule;
+      const paymentId = truckDetail.paymentId;
       navigation.navigate("trucks", {
         screen: "truckDetail",
         params: {
@@ -261,6 +267,7 @@ const PreviousOrders = () => {
           truckMenu,
           truckAddress,
           truckSchedule,
+          paymentId,
         },
       });
     }
@@ -348,7 +355,7 @@ const PreviousOrders = () => {
                       }
                       handleReorderPress={() => handleReorderPress(item.items)}
                       imgUrl={item.truckImg}
-                      key={index + Math.random()}
+                      key={Math.random()}
                       truckName={item.truckName}
                       NoOfDishes={item.items?.length}
                       price={item.totalPrice}

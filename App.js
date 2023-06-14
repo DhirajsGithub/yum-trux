@@ -1,4 +1,5 @@
 import { StatusBar } from "expo-status-bar";
+import { STRIPE_PUBLISHABLE_KEY } from "@env";
 import { StyleSheet, Text, View } from "react-native";
 import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -138,7 +139,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <StripeProvider
-        publishableKey="pk_test_51NH2dbEGDgrKEqaABDf0SgAHZm4RdgsG4rBsACqYQJEcx4pJHpR5FcYjZ7DToCPq95za1V4KBXAFBkZg8FJoCMvS00MewMEOuM"
+        publishableKey={STRIPE_PUBLISHABLE_KEY}
         urlScheme="your-url-scheme" // required for 3D Secure and bank redirects
         merchantIdentifier="merchant.com.{{YOUR_APP_NAME}}" // required for Apple Pay
       >
