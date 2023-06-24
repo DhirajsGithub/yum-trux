@@ -5,3 +5,8 @@ orders will be deliver to users live location, or popup will come he need to pic
 
 PreviousOrders will only store first 50 previous orders
 order data will be store in truckowner field
+
+Need to replace : 
+stripe api's
+paypal api's
+nodemailer email id

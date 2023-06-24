@@ -1,6 +1,7 @@
 import {
   Alert,
   Image,
+  Modal,
   ScrollView,
   StyleSheet,
   Text,
@@ -14,16 +15,24 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import colors from "../../constants/colors";
 import { Entypo } from "@expo/vector-icons";
 import ButtonComp from "../../components/ButtonComp";
+import { WebView } from "react-native-webview";
+import Constants from "expo-constants";
+
 import {
+  capturePaypalPayment,
   createPaymentIntent,
-  generateAccessToken,
+  createPaypalOrder,
+  generatePaypalToken,
 } from "../../utils/user-http-requests";
 import { useStripe } from "@stripe/stripe-react-native";
 import { baseUrl } from "../../constants/baseUrl";
 import Spinner from "react-native-loading-spinner-overlay";
 import { useSelector } from "react-redux";
+import queryString from "query-string";
 
 const PaymentMethodScreen = () => {
+  const statusBarHeight = Constants.statusBarHeight;
+
   const userDetails = useSelector((state) => state.userSlice.userDetails);
   const params = useRoute().params;
   const paymentId = params.paymentId;
@@ -31,9 +40,10 @@ const PaymentMethodScreen = () => {
   const amount = params.totalWithTaxAndTip
     ? Number(params.totalWithTaxAndTip).toFixed(2) * 100
     : 0;
-  console.log(amount);
   const { initPaymentSheet, presentPaymentSheet } = useStripe();
   const [loading, setLoading] = useState(false);
+  const [paypalAccessToken, setPaypalAccessToken] = useState(null);
+  const [paypaylApprovedUrl, setPaypalApprovedUrl] = useState(null);
   const navigation = useNavigation();
   useLayoutEffect(() => {
     navigation.setOptions({ headerShown: false });
@@ -41,23 +51,101 @@ const PaymentMethodScreen = () => {
   const handleBtnPress = () => {
     navigation.goBack();
   };
+
+  // -----------------PAYPAL-----------------
+
   const handlePaypalPress = async () => {
     try {
       setLoading(true);
-      let res = await generateAccessToken();
-      let token = res;
+      let res = await generatePaypalToken();
       setLoading(false);
-      console.log(token);
+
+      let token = res.access_token;
+      setPaypalAccessToken(token);
+      if (token) {
+        setLoading(true);
+        let res = await createPaypalOrder(token, {
+          intent: "CAPTURE",
+          purchase_units: [
+            {
+              items: [
+                {
+                  name: "T-Shirt",
+                  description: "Green XL",
+                  quantity: "1",
+                  unit_amount: {
+                    currency_code: "USD",
+                    value: "250.00",
+                  },
+                },
+              ],
+              amount: {
+                currency_code: "USD",
+                value: "250.00",
+                breakdown: {
+                  item_total: {
+                    currency_code: "USD",
+                    value: "250.00",
+                  },
+                },
+              },
+            },
+          ],
+          application_context: {
+            return_url: "https://example.com/return",
+            cancel_url: "https://example.com/cancel",
+          },
+        });
+        setLoading(false);
+        let approvedLink = res.links.find((link) => link.rel === "approve");
+        if (approvedLink) {
+          setPaypalApprovedUrl(approvedLink.href);
+        }
+      }
     } catch (error) {
+      setLoading(false);
       console.log(error);
     }
   };
-  const handleSuceesPaymentPress = () => {
-    navigation.navigate("successOrder", {
-      ...params,
-    });
+  const onPaypalUrlChange = (webViewState) => {
+    console.log("webveiw state ", webViewState);
+    if (webViewState?.url?.includes("https://example.com/cancel")) {
+      clearPaypalState();
+      alert("Paypal payment cancelled ❗️");
+      return;
+    }
+    if (webViewState?.url?.includes("https://example.com/return")) {
+      const urlValue = queryString.parseUrl(webViewState.url);
+      console.log("my url value ", urlValue);
+      const { token } = urlValue.query;
+      if (!!token) {
+        paypalPaymentStatus(token);
+      }
+    }
   };
 
+  const paypalPaymentStatus = async (id) => {
+    try {
+      setLoading(true);
+      let res = await capturePaypalPayment(paypalAccessToken, id);
+      console.log("capture payment res ", res);
+      setLoading(false);
+      alert("Paypal payment success ✅");
+      clearPaypalState();
+    } catch (error) {
+      setLoading(false);
+      alert("Paypal payment failed ❌");
+      console.log(error);
+    }
+  };
+
+  const clearPaypalState = () => {
+    setPaypalApprovedUrl(null);
+    setPaypalAccessToken(null);
+  };
+  // ---------------------------------------------
+
+  // ----------------------STRIPE--------------------------
   const fetchPaymentSheetParams = async () => {
     const response = await fetch(baseUrl + "payments/createPaymentSheet", {
       method: "POST",
@@ -123,10 +211,25 @@ const PaymentMethodScreen = () => {
       console.log(error);
     }
   };
+  // -----------------------------------------------------------
+
+  const handleSuceesPaymentPress = () => {
+    navigation.navigate("successOrder", {
+      ...params,
+    });
+  };
+
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
-
+      <Modal visible={!!paypaylApprovedUrl}>
+        <View style={{ flex: 1, marginTop: statusBarHeight + 10 }}>
+          <WebView
+            onNavigationStateChange={onPaypalUrlChange}
+            source={{ uri: paypaylApprovedUrl }}
+          />
+        </View>
+      </Modal>
       <SafeAreaView>
         <ScrollView showsVerticalScrollIndicator={false}>
           <Text style={styles.heading}>Choose payment method</Text>
@@ -135,6 +238,7 @@ const PaymentMethodScreen = () => {
               Loading...
             </Text>
           )}
+
           <View style={styles.paymentAndBtn}>
             <View style={styles.paymentMethod}>
               <TouchableOpacity
