@@ -1,4 +1,5 @@
-import { baseUrl } from "../constants/baseUrl";
+import { baseUrl, payPalBaseUrl } from "../constants/baseUrl";
+import base64 from "react-native-base64";
 
 const loginUserHttp = async ({ email, password }) => {
   let res = await fetch(baseUrl + "signin", {
@@ -143,6 +144,27 @@ const createPaymentIntent = async (data) => {
   res = await res.json();
   return res;
 };
+
+// const generateAccessToken = async () => {
+//   const headers = new Headers();
+//   headers.append("Content-Type", "application/x-www-form-urlencoded");
+//   headers.set("Authorization", "Basic " + btoa(clientId + ":" + secretKey));
+
+//   const reqOptions = {
+//     method: "POST",
+//     headers: headers,
+//     body: "grant_type=client_credentials",
+//   };
+//   try {
+//     let res = await fetch("https://api-m.sandbox.paypal.com/v1/oauth2/token/", {
+//       reqOptions,
+//     });
+//     res = await res.json();
+//     return res;
+//   } catch (error) {
+//     return error;
+//   }
+// };
 
 export {
   loginUserHttp,

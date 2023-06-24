@@ -32,6 +32,8 @@ import * as Location from "expo-location";
 import { truckListDetailHttp } from "../../utils/user-http-requests";
 import Spinner from "react-native-loading-spinner-overlay/lib";
 import Constants from "expo-constants";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { Fontisto } from "@expo/vector-icons";
 
 const TruckCard = ({
   handleMakeOrderPress,
@@ -40,6 +42,7 @@ const TruckCard = ({
   truckTime,
   truckImg,
   truckRating,
+  distanceAndTime,
 }) => {
   const findRating = (ratingLi) => {
     if (ratingLi.length > 0) {
@@ -107,6 +110,12 @@ const TruckCard = ({
               Time: <Text style={styles.footerHeadBold}>{truckTime}</Text>
             </Text>
           </View>
+          <View style={styles.section}>
+            <Fontisto name="car" size={20} color="black" />
+            <Text style={{ fontSize: 14, fontWeight: 500 }}>
+              &nbsp;&nbsp;{distanceAndTime?.time}
+            </Text>
+          </View>
         </View>
         <View>
           <Image
@@ -115,6 +124,24 @@ const TruckCard = ({
               uri: truckImg,
             }}
           />
+          <View
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              marginTop: 10,
+              justifyContent: "center",
+            }}
+          >
+            <MaterialCommunityIcons
+              name="map-marker-distance"
+              size={18}
+              color="black"
+            />
+            <Text style={{ fontSize: 16, fontWeight: 500 }}>
+              &nbsp; &nbsp;{distanceAndTime?.distance}
+            </Text>
+          </View>
         </View>
       </View>
       <View style={{ marginTop: 24, marginBottom: 8 }}>
@@ -131,36 +158,94 @@ const TrucksNearMe = () => {
   useLayoutEffect(() => {
     navigation.setOptions({ headerShown: false });
   }, []);
-  const handleMakeOrderPress = (id) => {
-    console.log("truck id " + id);
-  };
+
   const [initialLatLong, setInitialLatLong] = useState(null);
   const [truckListData, setTruckListData] = useState([]);
   const [loading, setLoading] = useState(false);
 
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
+  const [tempLocations, setTempLocations] = useState([]);
 
-  useFocusEffect(
-    React.useCallback(() => {
-      try {
-        fetchTrucksList();
-      } catch (error) {
-        console.log(error);
-      }
-    }, [])
-  );
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     try {
+  //       fetchTrucksList();
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   }, [])
+  // );
 
   const fetchTrucksList = async () => {
     setLoading(true);
     let res = await truckListDetailHttp();
     if (res.status === "success") {
-      setTruckListData(res.truckList);
+      let temp = [];
+      for (let truck of res.truckList) {
+        if (truck.latLong.latitude && truck.latLong.latitude) {
+          let res = await fetch(
+            `https://maps.googleapis.com/maps/api/distancematrix/json?destinations=${truck.latLong.latitude},${truck.latLong.latitude}&origins=38.9668,35.253&units=imperial&key=AIzaSyB_vw8UYx_si6-K_eqhc8zsJ98orFLQtA4`
+          );
+          res = await res.json();
+          let distanceAndTime = {
+            distance: 1000000,
+            time: "Over sea",
+          };
+          if (res?.rows[0]?.elements[0]?.distance) {
+            distanceAndTime = {
+              distance: res?.rows[0]?.elements[0]?.distance.text,
+              time: res?.rows[0]?.elements[0]?.duration.text,
+            };
+          }
+          temp.push({ ...truck, distanceAndTime });
+        }
+      }
+      setTempLocations(temp);
+      setTruckListData(temp);
     } else {
       setTruckListData([]);
     }
     setLoading(false);
   };
+
+  let filterTrucks = truckListData.sort((a, b) => {
+    console.log(Number(a?.distanceAndTime?.distance.split(" ")[0]));
+    return (
+      Number(a?.distanceAndTime?.distance.split(" ")[0]) -
+      Number(b?.distanceAndTime?.distance.split(" ")[0])
+    );
+  });
+
+  // const addDistAndTime = async () => {
+  //   let c = tempLocations;
+  //   let i = 0;
+  // const apiBase = "https://maps.googleapis.com/maps/api/distancematrix/json";
+
+  //   // const origin = `&origins=${location?.coords?.latitude},${location?.coords?.longitude}&`;
+  //   const origin = "&origins=37.2309,38.6489&";
+  //   console.log(origin);
+  //   const apiKeyAnMode =
+  //     "key=AIzaSyB_vw8UYx_si6-K_eqhc8zsJ98orFLQtA4&mode=driving";
+  //   const steps = 4;
+  //   while (c.length > 0) {
+  //     c = tempLocations.slice(i, i + steps);
+  //     i = i + steps;
+  //     let destination = "?destinations=";
+  //     for (let loc of c) {
+  //       destination +=
+  //         String(loc.latLong.latitude) +
+  //         "," +
+  //         String(loc.latLong.longitude) +
+  //         "|";
+  //     }
+  //     destination.slice(0, destination.length);
+  //     const api = apiBase + destination + origin + apiKeyAnMode;
+  //     let res = await fetch(api);
+  //     res = await res.json();
+  //     console.log(res);
+  //   }
+  // };
 
   useEffect(() => {
     try {
@@ -196,10 +281,63 @@ const TrucksNearMe = () => {
     setSearchInput(text);
   };
   const statusBarHeight = Constants.statusBarHeight;
+
+  const handleMakeOrderPress = (truckId) => {
+    setModalVisible(false);
+    let truckDetail = truckListData?.find((truck) => {
+      return truck._id === truckId;
+    });
+    const findRating = (ratingLi) => {
+      if (ratingLi.length > 0) {
+        let sum = 0;
+        for (let r of ratingLi) {
+          sum = sum + r;
+        }
+        return Math.round(sum / ratingLi.length);
+      }
+      return 0;
+    };
+    if (truckDetail) {
+      const truckName = truckDetail.name;
+      const truckRatings = findRating(truckDetail.ratings);
+      const truckTiming = truckDetail.timing;
+      const truckDescription = truckDetail.description;
+      const truckId = truckDetail._id;
+      const truckImg = truckDetail.imgUrl;
+      const truckMenu = truckDetail.menu;
+      const truckAddress = truckDetail.address;
+      const truckSchedule = truckDetail.schedule;
+      const paymentId = truckDetail.paymentId;
+      navigation.navigate("trucks", {
+        screen: "truckDetail",
+        params: {
+          screen: "truckNearMe",
+          truckName,
+          truckRatings,
+          truckTiming,
+          truckDescription,
+          truckId,
+          truckImg,
+          truckMenu,
+          truckAddress,
+          truckSchedule,
+          paymentId,
+        },
+      });
+    }
+  };
+
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
-
+      <Spinner
+        //visibility of Overlay Loading Spinner
+        visible={loading}
+        //Text with the Spinner
+        // textContent={'Loading...'}
+        color={colors.action}
+        // textStyle={styles.spinnerTextStyle}
+      />
       <View style={{ marginTop: statusBarHeight, paddingHorizontal: 16 }}>
         <HeaderComp handleSearchInput={handleSearchInput} onlySearch={true} />
         <View
@@ -286,10 +424,11 @@ const TrucksNearMe = () => {
             <Entypo name="chevron-small-down" size={30} color="black" />
           </TouchableOpacity>
           <ScrollView showsVerticalScrollIndicator={false}>
-            {truckListData?.map((item, index) => {
+            {filterTrucks?.map((item, index) => {
               return (
                 <View key={index}>
                   <TruckCard
+                    distanceAndTime={item.distanceAndTime}
                     truckName={item.name}
                     truckImg={item.imgUrl}
                     truckAddress={item.address}
@@ -322,16 +461,17 @@ const TrucksNearMe = () => {
             color="black"
           />
         </TouchableOpacity>
-        {truckListData.length > 0 && (
+        {filterTrucks.length > 0 && (
           <TruckCard
-            truckName={truckListData[0].name}
-            truckImg={truckListData[0].imgUrl}
-            truckAddress={truckListData[0].address}
-            truckRating={truckListData[0].ratings}
-            truckTime={truckListData[0].timing}
+            truckName={filterTrucks[0].name}
+            truckImg={filterTrucks[0].imgUrl}
+            truckAddress={filterTrucks[0].address}
+            truckRating={filterTrucks[0].ratings}
+            truckTime={filterTrucks[0].timing}
+            distanceAndTime={filterTrucks[0].distanceAndTime}
             // here we go with truck id later
             handleMakeOrderPress={() =>
-              handleMakeOrderPress(truckListData[0]._id)
+              handleMakeOrderPress(filterTrucks[0]._id)
             }
           />
         )}
@@ -353,7 +493,7 @@ const styles = StyleSheet.create({
   section: {
     flexDirection: "row",
     alignItems: "center",
-    marginTop: 3,
+    marginTop: 5,
     width: "90%",
   },
   footerHead: {
@@ -364,7 +504,7 @@ const styles = StyleSheet.create({
   },
   footerHeadBold: {
     color: colors.textColor,
-    fontSize: 13,
+    fontSize: 14,
     fontWeight: "500",
   },
   baseModal: {

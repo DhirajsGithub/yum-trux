@@ -14,7 +14,10 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import colors from "../../constants/colors";
 import { Entypo } from "@expo/vector-icons";
 import ButtonComp from "../../components/ButtonComp";
-import { createPaymentIntent } from "../../utils/user-http-requests";
+import {
+  createPaymentIntent,
+  generateAccessToken,
+} from "../../utils/user-http-requests";
 import { useStripe } from "@stripe/stripe-react-native";
 import { baseUrl } from "../../constants/baseUrl";
 import Spinner from "react-native-loading-spinner-overlay";
@@ -38,10 +41,16 @@ const PaymentMethodScreen = () => {
   const handleBtnPress = () => {
     navigation.goBack();
   };
-  const handlePaypalPress = () => {
-    alert(
-      "Paypal payment not available at this moment \n Sorry for inconvenience"
-    );
+  const handlePaypalPress = async () => {
+    try {
+      setLoading(true);
+      let res = await generateAccessToken();
+      let token = res;
+      setLoading(false);
+      console.log(token);
+    } catch (error) {
+      console.log(error);
+    }
   };
   const handleSuceesPaymentPress = () => {
     navigation.navigate("successOrder", {

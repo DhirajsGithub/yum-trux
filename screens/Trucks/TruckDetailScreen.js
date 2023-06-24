@@ -62,6 +62,9 @@ const TruckDetailScreen = () => {
     if (truckData.screen === "prvOrders") {
       navigation.navigate("previousOrders");
     }
+    if (truckData.screen === "truckNearMe") {
+      navigation.navigate("truckNearMe");
+    }
     navigation.goBack();
   };
   const handleSchedulePress = () => {

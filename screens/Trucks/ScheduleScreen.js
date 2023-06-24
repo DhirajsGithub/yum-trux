@@ -150,6 +150,7 @@ const ScheduleScreen = () => {
   const handleDonePress = () => {};
 
   const upcomingLocations = truckData.truckSchedule;
+  console.log(upcomingLocations);
 
   return (
     <View style={styles.container}>

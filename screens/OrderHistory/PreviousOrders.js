@@ -103,9 +103,6 @@ const PreviousOrders = () => {
   const [prvOrdersList, setPrvOrdersList] = useState([]);
   const [trucksList, setTruckList] = useState([]);
 
-  console.log(prvOrdersList);
-  console.log("shit");
-
   const navigation = useNavigation();
   useLayoutEffect(() => {
     navigation.setOptions({ headerShown: false });
@@ -346,7 +343,7 @@ const PreviousOrders = () => {
         <ScrollView showsVerticalScrollIndicator={false}>
           <View style={styles.orderList}>
             <ScrollView showsVerticalScrollIndicator={false}>
-              {prvOrdersList.map((item, index) => {
+              {prvOrdersList?.map((item, index) => {
                 return (
                   <>
                     <OrderCard
