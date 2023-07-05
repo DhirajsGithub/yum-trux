@@ -216,6 +216,12 @@ const capturePaypalPayment = async (access_token, orderId) => {
   }
 };
 
+const generatePaypalAccessToken = async () => {
+  let res = await fetch(baseUrl + "payments/generatePaypalAccessToken/");
+  res = await res.json();
+  return res;
+};
+
 export {
   loginUserHttp,
   signupUserHttp,
@@ -233,4 +239,5 @@ export {
   generatePaypalToken,
   createPaypalOrder,
   capturePaypalPayment,
+  generatePaypalAccessToken,
 };

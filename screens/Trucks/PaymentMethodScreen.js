@@ -22,6 +22,7 @@ import {
   capturePaypalPayment,
   createPaymentIntent,
   createPaypalOrder,
+  generatePaypalAccessToken,
   generatePaypalToken,
 } from "../../utils/user-http-requests";
 import { useStripe } from "@stripe/stripe-react-native";
@@ -54,40 +55,97 @@ const PaymentMethodScreen = () => {
 
   // -----------------PAYPAL-----------------
 
+  // const handlePaypalPress = async () => {
+  //   try {
+  //     setLoading(true);
+  //     let res = await generatePaypalToken();
+  //     setLoading(false);
+
+  //     let token = res.access_token;
+  //     setPaypalAccessToken(token);
+  //     if (token) {
+  //       setLoading(true);
+  //       let res = await createPaypalOrder(token, {
+  //         intent: "CAPTURE",
+  //         purchase_units: [
+  //           {
+  //             items: [
+  //               {
+  //                 name: "T-Shirt",
+  //                 description: "Green XL",
+  //                 quantity: "1",
+  //                 unit_amount: {
+  //                   currency_code: "USD",
+  //                   value: "250.00",
+  //                 },
+  //               },
+  //             ],
+  //             amount: {
+  //               currency_code: "USD",
+  //               value: "250.00",
+  //               breakdown: {
+  //                 item_total: {
+  //                   currency_code: "USD",
+  //                   value: "250.00",
+  //                 },
+  //               },
+  //             },
+  //           },
+  //         ],
+  //         application_context: {
+  //           return_url: "https://example.com/return",
+  //           cancel_url: "https://example.com/cancel",
+  //         },
+  //       });
+  //       setLoading(false);
+  // let approvedLink = res.links.find((link) => link.rel === "approve");
+  // if (approvedLink) {
+  //   setPaypalApprovedUrl(approvedLink.href);
+  // }
+  // }
+  //   } catch (error) {
+  //     setLoading(false);
+  //     console.log(error);
+  //   }
+  // };
+  console.log(params.totalWithTaxAndTip);
+  console.log(Number(params.totalWithTaxAndTip).toFixed(2));
   const handlePaypalPress = async () => {
+    let token = null;
     try {
       setLoading(true);
-      let res = await generatePaypalToken();
+      token = await generatePaypalAccessToken();
       setLoading(false);
-
-      let token = res.access_token;
-      setPaypalAccessToken(token);
-      if (token) {
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+    }
+    console.log(token);
+    if (token?.access_token) {
+      setPaypalAccessToken(token.access_token);
+      try {
         setLoading(true);
-        let res = await createPaypalOrder(token, {
+        let res = await createPaypalOrder(token.access_token, {
           intent: "CAPTURE",
           purchase_units: [
             {
-              items: [
-                {
-                  name: "T-Shirt",
-                  description: "Green XL",
-                  quantity: "1",
-                  unit_amount: {
-                    currency_code: "USD",
-                    value: "250.00",
-                  },
-                },
-              ],
               amount: {
                 currency_code: "USD",
-                value: "250.00",
-                breakdown: {
-                  item_total: {
-                    currency_code: "USD",
-                    value: "250.00",
+                value: Number(params.totalWithTaxAndTip.toFixed(2)),
+              },
+              payee: {
+                email_address: "sb-82oul26195667@business.example.com",
+              },
+              payment_instruction: {
+                disbursement_mode: "INSTANT",
+                platform_fees: [
+                  {
+                    amount: {
+                      currency_code: "USD",
+                      value: "00.00",
+                    },
                   },
-                },
+                ],
               },
             },
           ],
@@ -101,10 +159,12 @@ const PaymentMethodScreen = () => {
         if (approvedLink) {
           setPaypalApprovedUrl(approvedLink.href);
         }
+      } catch (error) {
+        setLoading(false);
+        console.log(error);
       }
-    } catch (error) {
-      setLoading(false);
-      console.log(error);
+    } else {
+      alert("Try again ");
     }
   };
   const onPaypalUrlChange = (webViewState) => {
@@ -116,26 +176,38 @@ const PaymentMethodScreen = () => {
     }
     if (webViewState?.url?.includes("https://example.com/return")) {
       const urlValue = queryString.parseUrl(webViewState.url);
-      console.log("my url value ", urlValue);
+      console.log("url value ", urlValue);
       const { token } = urlValue.query;
-      if (!!token) {
+      if (!!token && paypaylApprovedUrl && paypalAccessToken) {
         paypalPaymentStatus(token);
+        return;
       }
     }
   };
 
   const paypalPaymentStatus = async (id) => {
     try {
-      setLoading(true);
-      let res = await capturePaypalPayment(paypalAccessToken, id);
-      console.log("capture payment res ", res);
-      setLoading(false);
-      alert("Paypal payment success ✅");
-      clearPaypalState();
+      if (paypaylApprovedUrl && paypalAccessToken) {
+        setLoading(true);
+        let res = await capturePaypalPayment(paypalAccessToken, id);
+        console.log("capture payment res ", res);
+        clearPaypalState();
+        setLoading(false);
+        if (res?.status === "COMPLETED") {
+          alert("Paypal payment success ✅");
+          return;
+        } else {
+          alert("payee account is not verified with yumtrucks ❌");
+          return;
+        }
+      } else {
+        return;
+      }
     } catch (error) {
       setLoading(false);
-      alert("Paypal payment failed ❌");
+      alert("Paypal payment failed try again ❌");
       console.log(error);
+      return;
     }
   };
 
