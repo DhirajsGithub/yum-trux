@@ -519,7 +519,7 @@ const OrderScreen = () => {
               Total with tax and tip
             </Text>
             <Text style={{ fontSize: 22, fontWeight: "700" }}>
-              $ {totalWithTaxAndTip}
+              $ {totalWithTaxAndTip}0
             </Text>
           </View>
 

@@ -43,14 +43,14 @@ const TrucksFilterScreen = () => {
   const handleApplyPress = () => {
     alert(
       "filters " +
-        " " +
-        selectedMile +
-        " " +
-        priceFilter +
-        " " +
-        ratingFilter +
-        " " +
-        promOffer
+      " " +
+      selectedMile +
+      " " +
+      priceFilter +
+      " " +
+      ratingFilter +
+      " " +
+      promOffer
     );
   };
   return (
