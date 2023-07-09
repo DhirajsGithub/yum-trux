@@ -29,6 +29,7 @@ const TruckOverviewCard = ({
   homeComp,
   screen,
   paymentId,
+  paypalEmail,
 }) => {
   const navigation = useNavigation();
   const handleSchedulePress = () => {
@@ -54,6 +55,7 @@ const TruckOverviewCard = ({
       truckSchedule,
       screen,
       paymentId,
+      paypalEmail,
       // note to pass all this params when click on view truck from order history
     });
   };

@@ -222,6 +222,18 @@ const generatePaypalAccessToken = async () => {
   return res;
 };
 
+const addOrderToTruck = async (truckId, order) => {
+  let res = await fetch(baseUrl + "addOrderToTruck/" + truckId, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(order),
+  });
+  res = await res.json();
+  return res;
+};
+
 export {
   loginUserHttp,
   signupUserHttp,
@@ -240,4 +252,5 @@ export {
   createPaypalOrder,
   capturePaypalPayment,
   generatePaypalAccessToken,
+  addOrderToTruck,
 };

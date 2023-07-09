@@ -10,3 +10,5 @@ Need to replace :
 stripe api's
 paypal api's
 nodemailer email id
+
+order history page need to modify

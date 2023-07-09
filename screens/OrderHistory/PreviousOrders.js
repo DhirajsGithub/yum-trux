@@ -123,6 +123,7 @@ const PreviousOrders = () => {
         fetchUserLatestDetails();
         fetchTrucksList();
       } catch (error) {
+        setLoading(false);
         console.log(error);
       }
     }, [])
@@ -144,6 +145,7 @@ const PreviousOrders = () => {
       fetchUserLatestDetails();
       fetchTrucksList();
     } catch (error) {
+      setLoading(false);
       console.log(error);
     }
   }, []);
@@ -179,6 +181,7 @@ const PreviousOrders = () => {
       let truckName = truckDetail.name;
       let truckAddress = truckDetail.address;
       let paymentId = truckDetail.paymentId;
+      let paypalEmail = truckDetail.paypalEmail;
       let items = [];
       for (let item of Rowitems) {
         // from store order history menu item id
@@ -196,11 +199,13 @@ const PreviousOrders = () => {
               itemPrice: item2.price,
               itemDiscription: item2.description,
               paymentId,
+              paypalEmail,
             });
           }
         }
       }
       let tempOrder = {
+        id: rowOrderHistory[i].orderId,
         truckName,
         orderOn,
         totalPrice,
@@ -215,7 +220,7 @@ const PreviousOrders = () => {
 
   useEffect(() => {
     dispatch(setAllOrderHistoryProper(temp));
-    setPrvOrdersList(prvOrders);
+    setPrvOrdersList(temp);
   }, [trucksList, userDetails]);
 
   // const [searchInput, setSearchInput] = useState("");
@@ -251,6 +256,7 @@ const PreviousOrders = () => {
       const truckAddress = truckDetail.address;
       const truckSchedule = truckDetail.schedule;
       const paymentId = truckDetail.paymentId;
+      const paypalEmail = truckDetail.paypalEmail;
       navigation.navigate("trucks", {
         screen: "truckDetail",
         params: {
@@ -265,6 +271,7 @@ const PreviousOrders = () => {
           truckAddress,
           truckSchedule,
           paymentId,
+          paypalEmail,
         },
       });
     }
@@ -347,12 +354,12 @@ const PreviousOrders = () => {
                 return (
                   <>
                     <OrderCard
+                      key={item.id}
                       handleViewTruckPress={() =>
                         handleViewTruckPress(item.truckId)
                       }
                       handleReorderPress={() => handleReorderPress(item.items)}
                       imgUrl={item.truckImg}
-                      key={Math.random()}
                       truckName={item.truckName}
                       NoOfDishes={item.items?.length}
                       price={item.totalPrice}

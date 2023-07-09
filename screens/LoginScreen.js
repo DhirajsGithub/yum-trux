@@ -83,6 +83,7 @@ const LoginScreen = () => {
     try {
       loginUserFunc();
     } catch (error) {
+      setLoading(false);
       console.log(error);
     }
     // send http request

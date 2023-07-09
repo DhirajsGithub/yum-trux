@@ -28,6 +28,7 @@
       ],
       "package": "com.dhirajsexpo.YumTrux"
     },
+    
     "web": {
       "favicon": "./assets/favicon.png"
     },

@@ -17,8 +17,10 @@ import { Entypo } from "@expo/vector-icons";
 import ButtonComp from "../../components/ButtonComp";
 import { WebView } from "react-native-webview";
 import Constants from "expo-constants";
+import date from "date-and-time";
 
 import {
+  addToAllOrdersHttp,
   capturePaypalPayment,
   createPaymentIntent,
   createPaypalOrder,
@@ -37,6 +39,9 @@ const PaymentMethodScreen = () => {
   const userDetails = useSelector((state) => state.userSlice.userDetails);
   const params = useRoute().params;
   const paymentId = params.paymentId;
+  const paypalEmail = params.paypalEmail;
+  console.log("paypla email", paypalEmail);
+  console.log("stripe id ", paymentId);
   const truckName = params.truckName;
   const amount = params.totalWithTaxAndTip
     ? Number(params.totalWithTaxAndTip).toFixed(2) * 100
@@ -52,6 +57,16 @@ const PaymentMethodScreen = () => {
   const handleBtnPress = () => {
     navigation.goBack();
   };
+
+  // -------------------- success payment function -------------------
+
+  const handleSuceesPaymentPress = async () => {
+    // await addToAllOrdersFunc();
+    navigation.navigate("successOrder", {
+      ...params,
+    });
+  };
+  // -------------------------------------------------------------------------
 
   // -----------------PAYPAL-----------------
 
@@ -134,7 +149,7 @@ const PaymentMethodScreen = () => {
                 value: Number(params.totalWithTaxAndTip.toFixed(2)),
               },
               payee: {
-                email_address: "sb-82oul26195667@business.example.com",
+                email_address: paypalEmail,
               },
               payment_instruction: {
                 disbursement_mode: "INSTANT",
@@ -193,8 +208,13 @@ const PaymentMethodScreen = () => {
         console.log("capture payment res ", res);
         clearPaypalState();
         setLoading(false);
-        if (res?.status === "COMPLETED") {
+        if (
+          res?.status === "COMPLETED" ||
+          res?.details[0].issue === "ORDER_ALREADY_CAPTURED"
+        ) {
           alert("Paypal payment success ✅");
+          await handleSuceesPaymentPress();
+          // call a function which will store order to user and truck database
           return;
         } else {
           alert("payee account is not verified with yumtrucks ❌");
@@ -268,7 +288,7 @@ const PaymentMethodScreen = () => {
       Alert.alert("Success", "Your order is confirmed!", [
         {
           text: "OK",
-          onPress: handleSuceesPaymentPress,
+          onPress: async () => await handleSuceesPaymentPress(),
         },
       ]);
     }
@@ -284,12 +304,6 @@ const PaymentMethodScreen = () => {
     }
   };
   // -----------------------------------------------------------
-
-  const handleSuceesPaymentPress = () => {
-    navigation.navigate("successOrder", {
-      ...params,
-    });
-  };
 
   return (
     <View style={styles.container}>

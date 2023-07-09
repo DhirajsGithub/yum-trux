@@ -21,6 +21,7 @@ const ListComp = ({ trucksList, homeComp, screen }) => {
         data={tempList}
         renderItem={({ item }) => (
           <TruckOverviewCard
+            paypalEmail={item.paypalEmail}
             paymentId={item.paymentId}
             screen={screen}
             homeComp={homeComp}

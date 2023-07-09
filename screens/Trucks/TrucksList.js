@@ -33,6 +33,7 @@ const TrucksList = () => {
       try {
         fetchTrucksList();
       } catch (error) {
+        setLoading(false);
         console.log(error);
       }
     }, [])
@@ -60,6 +61,7 @@ const TrucksList = () => {
     try {
       fetchTrucksList();
     } catch (error) {
+      setLoading(false);
       console.log(error);
     }
   }, []);

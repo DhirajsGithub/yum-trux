@@ -76,7 +76,7 @@ const TrucksFilterScreen = () => {
           >
             <Text style={styles.subHeading}>Radius</Text>
             <ScrollView
-              showsHorizontalScrollIndicator={true}
+              showsHorizontalScrollIndicator={false}
               horizontal={true}
               style={styles.commonHorView}
             >
@@ -166,7 +166,11 @@ const TrucksFilterScreen = () => {
             ]}
           >
             <Text style={styles.subHeading}>Price</Text>
-            <ScrollView style={styles.commonHorView} horizontal={true}>
+            <ScrollView
+              showsHorizontalScrollIndicator={false}
+              style={styles.commonHorView}
+              horizontal={true}
+            >
               <RectangularDisplayFields
                 paddingHorizontal={20}
                 paddingVertical={9}
@@ -213,7 +217,11 @@ const TrucksFilterScreen = () => {
           </View>
           <View style={styles.commonView}>
             <Text style={styles.subHeading}>Rating</Text>
-            <ScrollView style={styles.commonHorView} horizontal={true}>
+            <ScrollView
+              showsHorizontalScrollIndicator={false}
+              style={styles.commonHorView}
+              horizontal={true}
+            >
               <RectangularDisplayFields
                 paddingHorizontal={20}
                 paddingVertical={9}

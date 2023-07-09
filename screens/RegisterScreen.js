@@ -78,6 +78,7 @@ const RegisterScreen = () => {
     try {
       await signUpUserFunc();
     } catch (error) {
+      setLoading(false);
       console.log(error);
     }
     // send http request

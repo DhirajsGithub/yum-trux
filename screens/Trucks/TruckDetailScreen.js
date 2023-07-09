@@ -170,6 +170,7 @@ const TruckDetailScreen = () => {
           truckImg: truckData.truckImg,
           truckAddress: truckData.truckAddress,
           paymentId: truckData.paymentId,
+          paypalEmail: truckData.paypalEmail,
           ...orderData,
         })
       );

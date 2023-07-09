@@ -137,9 +137,10 @@ const OrderScreen = () => {
   const truckLocation = currentOrders[0]?.truckAddress;
   const truckId = currentOrders[0]?.truckId;
   const paymentId = currentOrders[0]?.paymentId;
+  const paypalEmail = currentOrders[0]?.paypalEmail;
   console.log("from order screen " + paymentId);
   console.log("truck id from order screen " + truckId);
-
+  console.log(currentOrders);
   useLayoutEffect(() => {
     navigation.setOptions({ headerShown: false });
   }, []);
@@ -299,6 +300,7 @@ const OrderScreen = () => {
       truckImg,
       totalWithTaxAndTip,
       paymentId,
+      paypalEmail,
       truckId,
       newOrder: params.newOrder,
     });
