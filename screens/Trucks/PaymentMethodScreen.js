@@ -30,16 +30,21 @@ import {
 import { useStripe } from "@stripe/stripe-react-native";
 import { baseUrl } from "../../constants/baseUrl";
 import Spinner from "react-native-loading-spinner-overlay";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import queryString from "query-string";
+import { removeCurrentOrder } from "../../store/store-slice";
 
 const PaymentMethodScreen = () => {
+  const dispatch = useDispatch();
   const statusBarHeight = Constants.statusBarHeight;
-
   const userDetails = useSelector((state) => state.userSlice.userDetails);
+  const userSlice = useSelector((state) => state.userSlice);
+  const userId = userSlice.userDetails._id;
+  const currentOrders = userSlice.currentOrders;
   const params = useRoute().params;
   const paymentId = params.paymentId;
   const paypalEmail = params.paypalEmail;
+  console.log("orders param data ", params);
   console.log("paypla email", paypalEmail);
   console.log("stripe id ", paymentId);
   const truckName = params.truckName;
@@ -60,8 +65,44 @@ const PaymentMethodScreen = () => {
 
   // -------------------- success payment function -------------------
 
+  const orderSummaryToStore = () => {
+    let totalPrice = 0;
+    let tempMenuIds = [];
+    for (let item of currentOrders) {
+      tempMenuIds.push({
+        itemId: item.itemId,
+      });
+      totalPrice = totalPrice + item.itemPrice;
+    }
+    const tempDate = new Date();
+    let tim = date.format(tempDate, "hh:mm A");
+    let dat = date.format(tempDate, "MMM D");
+    const reqDate = tim + ", " + dat;
+    let reqData = {
+      items: tempMenuIds,
+      orderOn: reqDate,
+      totalPrice: parseFloat(totalPrice.toFixed(2)),
+      truckId: params.truckId,
+    };
+    return reqData;
+  };
+
+  const addToAllOrdersFunc = async () => {
+    const data = orderSummaryToStore();
+    if (currentOrders.length > 0) {
+      if (params?.newOrder === true) {
+        let res = await addToAllOrdersHttp(userId, data);
+        // dispatch(addToAllOrders());
+        dispatch(removeCurrentOrder());
+      }
+      if (params?.newOrder === false) {
+        dispatch(removeCurrentOrder());
+      }
+    }
+  };
+
   const handleSuceesPaymentPress = async () => {
-    // await addToAllOrdersFunc();
+    await addToAllOrdersFunc();
     navigation.navigate("successOrder", {
       ...params,
     });
@@ -133,7 +174,7 @@ const PaymentMethodScreen = () => {
       setLoading(false);
     } catch (error) {
       setLoading(false);
-      console.log(error);
+      console.log("error 1 ", error);
     }
     console.log(token);
     if (token?.access_token) {
@@ -176,7 +217,7 @@ const PaymentMethodScreen = () => {
         }
       } catch (error) {
         setLoading(false);
-        console.log(error);
+        console.log("error is " + error);
       }
     } else {
       alert("Try again ");
@@ -201,8 +242,8 @@ const PaymentMethodScreen = () => {
   };
 
   const paypalPaymentStatus = async (id) => {
-    try {
-      if (paypaylApprovedUrl && paypalAccessToken) {
+    if (paypaylApprovedUrl && paypalAccessToken) {
+      try {
         setLoading(true);
         let res = await capturePaypalPayment(paypalAccessToken, id);
         console.log("capture payment res ", res);
@@ -214,19 +255,21 @@ const PaymentMethodScreen = () => {
         ) {
           alert("Paypal payment success ✅");
           await handleSuceesPaymentPress();
+          clearPaypalState();
           // call a function which will store order to user and truck database
           return;
         } else {
+          clearPaypalState();
           alert("payee account is not verified with yumtrucks ❌");
           return;
         }
-      } else {
+      } catch (error) {
+        setLoading(false);
+        alert("Paypal payment failed try again ❌");
+        console.log(error);
         return;
       }
-    } catch (error) {
-      setLoading(false);
-      alert("Paypal payment failed try again ❌");
-      console.log(error);
+    } else {
       return;
     }
   };

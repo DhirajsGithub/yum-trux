@@ -11,6 +11,9 @@ import { addToAllOrders, removeCurrentOrder } from "../../store/store-slice";
 import { addToAllOrdersHttp } from "../../utils/user-http-requests";
 
 const SuccessOrderScreen = () => {
+  useLayoutEffect(() => {
+    navigation.setOptions({ headerShown: false });
+  }, []);
   const dispatch = useDispatch();
   const route = useRoute();
   const orderData = route.params;
@@ -42,9 +45,7 @@ const SuccessOrderScreen = () => {
     };
     return reqData;
   };
-  useLayoutEffect(() => {
-    navigation.setOptions({ headerShown: false });
-  }, []);
+
   const addToAllOrdersFunc = async () => {
     const data = orderSummaryToStore();
     if (currentOrders.length > 0) {
@@ -60,7 +61,7 @@ const SuccessOrderScreen = () => {
   };
   const handleDonePress = async () => {
     try {
-      await addToAllOrdersFunc();
+      // await addToAllOrdersFunc();
       navigation.navigate("reviewScreen", {
         ...orderData,
       });
