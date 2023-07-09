@@ -209,7 +209,6 @@ const capturePaypalPayment = async (access_token, orderId) => {
   try {
     let res = await fetch(url, reqOptions);
     res = await res.json();
-
     return res;
   } catch (error) {
     return error.message;
