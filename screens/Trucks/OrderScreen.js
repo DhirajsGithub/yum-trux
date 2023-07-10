@@ -138,9 +138,7 @@ const OrderScreen = () => {
   const truckId = currentOrders[0]?.truckId;
   const paymentId = currentOrders[0]?.paymentId;
   const paypalEmail = currentOrders[0]?.paypalEmail;
-  console.log("from order screen " + paymentId);
-  console.log("truck id from order screen " + truckId);
-  console.log(currentOrders);
+
   useLayoutEffect(() => {
     navigation.setOptions({ headerShown: false });
   }, []);
@@ -173,6 +171,7 @@ const OrderScreen = () => {
       orderSet.add(order.itemId);
     }
   }
+  // console.log("ordersArray", ordersArray);
   const handleAddPress = (itemId) => {
     dispatch(addQuantity(itemId));
   };
@@ -303,6 +302,7 @@ const OrderScreen = () => {
       paypalEmail,
       truckId,
       newOrder: params.newOrder,
+      cartOrders: ordersArray,
     });
   };
 

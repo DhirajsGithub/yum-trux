@@ -20,6 +20,7 @@ import Constants from "expo-constants";
 import date from "date-and-time";
 
 import {
+  addOrderToTruck,
   addToAllOrdersHttp,
   capturePaypalPayment,
   createPaymentIntent,
@@ -44,9 +45,8 @@ const PaymentMethodScreen = () => {
   const params = useRoute().params;
   const paymentId = params.paymentId;
   const paypalEmail = params.paypalEmail;
-  console.log("orders param data ", params);
-  console.log("paypla email", paypalEmail);
-  console.log("stripe id ", paymentId);
+  // console.log("orders param data ", params);
+  console.log("user Details ", userDetails);
   const truckName = params.truckName;
   const amount = params.totalWithTaxAndTip
     ? Number(params.totalWithTaxAndTip).toFixed(2) * 100
@@ -102,22 +102,47 @@ const PaymentMethodScreen = () => {
     }
   };
 
-  const handleSuceesPaymentPress = async (method) => {
-    if (method === "paypal") {
-      if (paypalAccessToken && paypaylApprovedUrl) {
-        await addToAllOrdersFunc();
-        navigation.navigate("successOrder", {
-          ...params,
-        });
-      }
-      return;
-    } else {
-      await addToAllOrdersFunc();
-      navigation.navigate("successOrder", {
-        ...params,
+  const addOrderToTruckFunc = async () => {
+    const tempDate = new Date();
+    let tim = date.format(tempDate, "hh:mm A");
+    let dat = date.format(tempDate, "MMM D");
+    const reqDate = tim + ", " + dat;
+    const items = [];
+    for (let item of params?.cartOrders) {
+      items.push({
+        itemId: item.itemId,
+        itemName: item.itemName,
+        itemPrice: item.itemPrice,
+        itemQuantity: item.quantity,
+        itemDiscription: item.itemDiscription,
       });
-      return;
     }
+    const data = {
+      orderOn: { date: dat, time: tim },
+      pickUpTime: {
+        date: params.pickUpDate.date,
+        time: params.pickUpTime.time,
+      },
+      items,
+      totalPrice: params.totalWithTaxAndTip,
+      customerDetails: {
+        name: userDetails.fullName,
+        email: userDetails.email,
+        phone: userDetails.phoneNo,
+        profileImg: userDetails.profileImg,
+        address: userDetails.address,
+      },
+    };
+    console.log("data to store ", data);
+    // let res = await addOrderToTruck();
+  };
+  addOrderToTruckFunc();
+  const handleSuceesPaymentPress = async () => {
+    await addToAllOrdersFunc();
+    navigation.navigate("successOrder", {
+      ...params,
+    });
+    return;
   };
   // -------------------------------------------------------------------------
 
@@ -281,7 +306,7 @@ const PaymentMethodScreen = () => {
           res?.details[0].issue === "ORDER_ALREADY_CAPTURED"
         ) {
           alert("Paypal payment success ✅");
-          await handleSuceesPaymentPress("paypal");
+          await handleSuceesPaymentPress();
           // call a function which will store order to user and truck database
           return;
         } else {
@@ -356,7 +381,7 @@ const PaymentMethodScreen = () => {
       Alert.alert("Success", "Your order is confirmed!", [
         {
           text: "OK",
-          onPress: async () => await handleSuceesPaymentPress("stripe"),
+          onPress: async () => await handleSuceesPaymentPress(),
         },
       ]);
     }
