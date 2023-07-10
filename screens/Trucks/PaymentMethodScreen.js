@@ -45,7 +45,7 @@ const PaymentMethodScreen = () => {
   const params = useRoute().params;
   const paymentId = params.paymentId;
   const paypalEmail = params.paypalEmail;
-  // console.log("orders param data ", params);
+  console.log("orders param data ", params);
   console.log("user Details ", userDetails);
   const truckName = params.truckName;
   const amount = params.totalWithTaxAndTip
@@ -106,7 +106,7 @@ const PaymentMethodScreen = () => {
     const tempDate = new Date();
     let tim = date.format(tempDate, "hh:mm A");
     let dat = date.format(tempDate, "MMM D");
-    const reqDate = tim + ", " + dat;
+
     const items = [];
     for (let item of params?.cartOrders) {
       items.push({
@@ -132,12 +132,23 @@ const PaymentMethodScreen = () => {
         profileImg: userDetails.profileImg,
         address: userDetails.address,
       },
+      truckId: params.truckId,
     };
     console.log("data to store ", data);
-    // let res = await addOrderToTruck();
+
+    try {
+      setLoading(true);
+      let res = await addOrderToTruck(params.truckId, data);
+      console.log(res);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+    }
   };
-  addOrderToTruckFunc();
+
   const handleSuceesPaymentPress = async () => {
+    await addOrderToTruckFunc();
     await addToAllOrdersFunc();
     navigation.navigate("successOrder", {
       ...params,
@@ -406,6 +417,7 @@ const PaymentMethodScreen = () => {
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
+
       <Modal visible={!!paypaylApprovedUrl}>
         <View style={{ flex: 1, marginTop: statusBarHeight + 10 }}>
           <WebView
