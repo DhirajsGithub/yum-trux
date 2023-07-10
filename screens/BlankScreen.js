@@ -25,6 +25,7 @@ const BlankScreen = () => {
     try {
       const jsonValue = await AsyncStorage.getItem("@yumtrux_user");
       const val = JSON.parse(jsonValue);
+
       if (val?.token) {
         try {
           await getUserData(val.userId);

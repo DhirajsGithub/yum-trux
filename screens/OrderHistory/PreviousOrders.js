@@ -347,10 +347,34 @@ const PreviousOrders = () => {
         {prvOrdersList.length === 0 && !loading && (
           <EmptyData msg="No truck found 😞" />
         )}
-        <ScrollView showsVerticalScrollIndicator={false}>
-          <View style={styles.orderList}>
-            <ScrollView showsVerticalScrollIndicator={false}>
-              {prvOrdersList?.map((item, index) => {
+
+        <View style={styles.orderList}>
+          {prvOrdersList?.length > 0 && (
+            <FlatList
+              contentContainerStyle={{ paddingBottom: "100%" }}
+              showsVerticalScrollIndicator={false}
+              data={prvOrdersList}
+              renderItem={({ item }) => (
+                <OrderCard
+                  key={item.id}
+                  handleViewTruckPress={() =>
+                    handleViewTruckPress(item.truckId)
+                  }
+                  handleReorderPress={() => handleReorderPress(item.items)}
+                  imgUrl={item.truckImg}
+                  truckName={item.truckName}
+                  NoOfDishes={item.items?.length}
+                  price={item.totalPrice}
+                  dateTime={item.orderOn}
+                />
+              )}
+              keyExtractor={(item) => item.id}
+            />
+          )}
+
+          {/* <ScrollView showsVerticalScrollIndicator={false}>
+            {prvOrdersList.length > 0 &&
+              prvOrdersList?.map((item, index) => {
                 return (
                   <>
                     <OrderCard
@@ -368,9 +392,8 @@ const PreviousOrders = () => {
                   </>
                 );
               })}
-            </ScrollView>
-          </View>
-        </ScrollView>
+          </ScrollView> */}
+        </View>
       </SafeAreaView>
     </View>
   );
@@ -386,7 +409,7 @@ const styles = StyleSheet.create({
     paddingBottom: 8,
   },
   orderList: {
-    marginBottom: "100%",
+    // marginBottom: "100%",
   },
   btnView: {
     flexDirection: "row",

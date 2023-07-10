@@ -51,7 +51,7 @@ const LoginScreen = () => {
     if (route.name === "login" && navigation.isFocused()) {
       BackHandler.addEventListener("hardwareBackPress", BackHandler.exitApp());
     }
-  }, []);
+  });
 
   const loginUserFunc = async () => {
     setLoading(true);
@@ -83,7 +83,6 @@ const LoginScreen = () => {
     try {
       loginUserFunc();
     } catch (error) {
-      setLoading(false);
       console.log(error);
     }
     // send http request

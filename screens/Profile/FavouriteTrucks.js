@@ -25,10 +25,10 @@ const FavouriteTrucks = () => {
   const navigation = useNavigation();
   const [loading, setLoading] = useState(false);
   const [filterFavTrucks, setFilterFavTrucks] = useState([]);
+
   useLayoutEffect(() => {
     navigation.setOptions({ headerShown: false });
   }, []);
-
   const fetchTrucksList = async () => {
     setLoading(true);
     let res = await truckListDetailHttp();
@@ -43,7 +43,7 @@ const FavouriteTrucks = () => {
       }
       setFilterFavTrucks(temp);
     } else {
-      filterFavTrucks([]);
+      setFilterFavTrucks([]);
     }
     setLoading(false);
   };
@@ -52,6 +52,7 @@ const FavouriteTrucks = () => {
       try {
         fetchTrucksList();
       } catch (error) {
+        setLoading(false);
         console.log(error);
       }
     }, [])
@@ -60,6 +61,7 @@ const FavouriteTrucks = () => {
     try {
       fetchTrucksList();
     } catch (error) {
+      setLoading(false);
       console.log(error);
     }
   }, [userDetails]);
@@ -116,10 +118,12 @@ const FavouriteTrucks = () => {
           </View>
         </View>
 
-        {filterFavTrucks.length === 0 && !loading && (
+        {filterFavTrucks?.length === 0 && !loading && (
           <EmptyData msg="No truck found 😞" />
         )}
-        <ListComp screen="favTruck" trucksList={filterFavTrucks} />
+        {filterFavTrucks?.length > 0 && (
+          <ListComp screen="favTruck" trucksList={filterFavTrucks} />
+        )}
       </SafeAreaView>
     </View>
   );

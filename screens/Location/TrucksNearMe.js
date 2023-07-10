@@ -423,7 +423,30 @@ const TrucksNearMe = () => {
           <TouchableOpacity onPress={handleSwipeDown}>
             <Entypo name="chevron-small-down" size={30} color="black" />
           </TouchableOpacity>
-          <ScrollView showsVerticalScrollIndicator={false}>
+
+          {filterTrucks?.length > 0 && (
+            <FlatList
+              contentContainerStyle={{ paddingBottom: "100%" }}
+              showsVerticalScrollIndicator={false}
+              data={filterTrucks}
+              keyExtractor={(item) => item._id}
+              renderItem={({ item }) => (
+                <TruckCard
+                  distanceAndTime={item.distanceAndTime}
+                  truckName={item.name}
+                  truckImg={item.imgUrl}
+                  truckAddress={item.address}
+                  truckRating={item.ratings}
+                  truckTime={item.timing}
+                  truckId={item._id}
+                  // here we go with truck id later
+                  handleMakeOrderPress={() => handleMakeOrderPress(item._id)}
+                />
+              )}
+            />
+          )}
+
+          {/* <ScrollView showsVerticalScrollIndicator={false}>
             {filterTrucks?.map((item, index) => {
               return (
                 <View key={index}>
@@ -441,7 +464,7 @@ const TrucksNearMe = () => {
                 </View>
               );
             })}
-          </ScrollView>
+          </ScrollView> */}
         </View>
       </Modal>
 

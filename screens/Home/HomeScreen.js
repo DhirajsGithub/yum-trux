@@ -140,11 +140,10 @@ const HomeScreen = () => {
         {filteredTrucks.length === 0 && !loading && (
           <EmptyData msg="No truck found 😞" />
         )}
-        <ScrollView>
-          <View>
-            <HomeTruckList truckList={filteredTrucks} homeComp={true} />
-          </View>
-        </ScrollView>
+
+        <View>
+          <HomeTruckList truckList={filteredTrucks} homeComp={true} />
+        </View>
       </SafeAreaView>
     </View>
   );
