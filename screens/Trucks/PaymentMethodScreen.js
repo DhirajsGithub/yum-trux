@@ -272,7 +272,7 @@ const PaymentMethodScreen = () => {
           console.log("error is " + error);
         }
       } else {
-        alert("Try again ");
+        alert("Can't proceed with paypal payment. Please try again later.");
       }
     } else {
       alert("Paypal payment is not available for this truck.");
@@ -439,7 +439,8 @@ const PaymentMethodScreen = () => {
             <View style={styles.paymentMethod}>
               <TouchableOpacity
                 onPress={handlePaypalPress}
-                style={styles.commonDiv}
+                disabled={loading}
+                style={{ ...styles.commonDiv, opacity: loading && 0.5 }}
               >
                 <View style={styles.nameIcon}>
                   <Image
@@ -452,7 +453,8 @@ const PaymentMethodScreen = () => {
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={handleCardsPress}
-                style={styles.commonDiv}
+                disabled={loading}
+                style={{ ...styles.commonDiv, opacity: loading && 0.5 }}
               >
                 <View style={styles.nameIcon}>
                   <Image
