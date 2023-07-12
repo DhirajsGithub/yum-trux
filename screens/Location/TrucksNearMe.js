@@ -19,7 +19,7 @@ import { StatusBar } from "expo-status-bar";
 import { SafeAreaView } from "react-native-safe-area-context";
 import colors from "../../constants/colors";
 import HeaderComp from "../../components/HeaderComp";
-import MapView, { Marker } from "react-native-maps";
+import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import { AirbnbRating } from "react-native-ratings";
 import { Ionicons } from "@expo/vector-icons";
 import { EvilIcons } from "@expo/vector-icons";
@@ -167,15 +167,15 @@ const TrucksNearMe = () => {
   const [errorMsg, setErrorMsg] = useState(null);
   const [tempLocations, setTempLocations] = useState([]);
 
-  // useFocusEffect(
-  //   React.useCallback(() => {
-  //     try {
-  //       fetchTrucksList();
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   }, [])
-  // );
+  useFocusEffect(
+    React.useCallback(() => {
+      try {
+        fetchTrucksList();
+      } catch (error) {
+        console.log(error);
+      }
+    }, [])
+  );
 
   const fetchTrucksList = async () => {
     setLoading(true);
@@ -187,7 +187,9 @@ const TrucksNearMe = () => {
           let res = await fetch(
             `https://maps.googleapis.com/maps/api/distancematrix/json?destinations=${truck.latLong.latitude},${truck.latLong.latitude}&origins=38.9668,35.253&units=imperial&key=AIzaSyB_vw8UYx_si6-K_eqhc8zsJ98orFLQtA4`
           );
+
           res = await res.json();
+          console.log(res);
           let distanceAndTime = {
             distance: 1000000,
             time: "Over sea",
@@ -197,8 +199,8 @@ const TrucksNearMe = () => {
               distance: res?.rows[0]?.elements[0]?.distance.text,
               time: res?.rows[0]?.elements[0]?.duration.text,
             };
+            temp.push({ ...truck, distanceAndTime });
           }
-          temp.push({ ...truck, distanceAndTime });
         }
       }
       setTempLocations(temp);
@@ -210,10 +212,9 @@ const TrucksNearMe = () => {
   };
 
   let filterTrucks = truckListData.sort((a, b) => {
-    console.log(Number(a?.distanceAndTime?.distance.split(" ")[0]));
     return (
-      Number(a?.distanceAndTime?.distance.split(" ")[0]) -
-      Number(b?.distanceAndTime?.distance.split(" ")[0])
+      Number(a?.distanceAndTime?.distance?.split(" ")[0]) -
+      Number(b?.distanceAndTime?.distance?.split(" ")[0])
     );
   });
 
@@ -361,6 +362,7 @@ const TrucksNearMe = () => {
       </View>
       <View style={{ marginTop: 5, flex: 1 }}>
         <MapView
+          provider={PROVIDER_GOOGLE}
           zoomEnabled={true}
           initialRegion={
             location && {
