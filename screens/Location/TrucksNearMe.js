@@ -185,11 +185,11 @@ const TrucksNearMe = () => {
       for (let truck of res.truckList) {
         if (truck.latLong.latitude && truck.latLong.latitude) {
           let res = await fetch(
-            `https://maps.googleapis.com/maps/api/distancematrix/json?destinations=${truck.latLong.latitude},${truck.latLong.latitude}&origins=38.9668,35.253&units=imperial&key=AIzaSyB_vw8UYx_si6-K_eqhc8zsJ98orFLQtA4`
+            `https://maps.googleapis.com/maps/api/distancematrix/json?destinations=${truck.latLong.latitude},${truck.latLong.latitude}&origins=38.9668,35.253&units=imperial&key=AIzaSyCgwqGtmAnaG3iFtWcw7xLS-1Idq_fxzx0`
           );
 
           res = await res.json();
-          console.log(res);
+          // console.log(res);
           let distanceAndTime = {
             distance: 1000000,
             time: "Over sea",
@@ -363,7 +363,6 @@ const TrucksNearMe = () => {
       <View style={{ marginTop: 5, flex: 1 }}>
         <MapView
           provider={PROVIDER_GOOGLE}
-          zoomEnabled={true}
           initialRegion={
             location && {
               latitude: location?.coords.latitude,
@@ -374,7 +373,6 @@ const TrucksNearMe = () => {
           }
           showsUserLocation={true}
           followsUserLocation={true}
-          oomEnabled={true}
           style={styles.map}
         >
           <Marker
