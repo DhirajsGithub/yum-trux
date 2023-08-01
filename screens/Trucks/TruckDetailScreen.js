@@ -59,15 +59,19 @@ const TruckDetailScreen = () => {
   const handleBackPress = () => {
     if (truckData.screen === "favTruck") {
       navigation.navigate("favouriteTrucks");
+      return;
     }
     if (truckData.screen === "prvOrders") {
       navigation.navigate("previousOrders");
+      return;
     }
     if (truckData.screen === "truckNearMe") {
       navigation.navigate("truckNearMe");
+      return;
     }
     if (truckData.screen === "home") {
       navigation.navigate("home");
+      return;
     }
     navigation.goBack();
   };
