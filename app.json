@@ -26,7 +26,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.dhirajsexpo.YumTrux",
+      "package": "com.omardakelbab123.YumTrux",
       "config": {
         "googleMaps": {
           "apiKey": "AIzaSyCgwqGtmAnaG3iFtWcw7xLS-1Idq_fxzx0"
@@ -59,7 +59,7 @@
     ],
     "extra": {
       "eas": {
-        "projectId": "1c13c3dc-8301-4b6b-b104-ee6c5a10f4e7"
+        "projectId": "43759770-3d3d-48aa-b252-01fa50191e4a"
       }
     }
   }

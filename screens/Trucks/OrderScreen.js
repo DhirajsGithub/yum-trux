@@ -119,7 +119,7 @@ const TipCard = ({
             color,
           }}
         >
-          My amount
+          Custom
         </Text>
       )}
     </TouchableOpacity>
@@ -402,7 +402,7 @@ const OrderScreen = () => {
                   color: colors.textColor,
                 }}
               >
-                {totalBeforeTax}
+                $ {totalBeforeTax?.toFixed(2)}
               </Text>
             </View>
             <View style={styles.cost1Flex}>
@@ -422,7 +422,7 @@ const OrderScreen = () => {
                   color: colors.textColor,
                 }}
               >
-                {taxAmount}
+                $ {taxAmount?.toFixed(2)}
               </Text>
             </View>
           </View>
@@ -523,53 +523,11 @@ const OrderScreen = () => {
             </Text>
           </View>
 
-          {/* <View>
-            <Text style={styles.pickupText}>Payment</Text>
-            <TouchableOpacity
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "center",
-                backgroundColor: colors.inputBg,
-                paddingHorizontal: 20,
-                paddingVertical: 18,
-                borderRadius: 30,
-                overflow: "hidden",
-                marginTop: 6,
-              }}
-              onPress={handlePaymenPress}
-            >
-              <View
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                }}
-              >
-                <Image
-                  style={{ width: 37, height: 15, marginRight: 10 }}
-                  source={require("../../assets/Images/vissa.png")}
-                />
-                <Text
-                  style={{
-                    color: colors.textColor,
-                    fontSize: 15,
-                    fontWeight: "500",
-                  }}
-                >
-                  **** 8879
-                </Text>
-              </View>
-              <Feather name="chevron-right" size={24} color={colors.black} />
-            </TouchableOpacity>
-          </View> */}
           <View style={{ marginTop: 16, marginBottom: "25%" }}>
             <ButtonComp handleBtnPress={handleBtnPress} height={50}>
               PLACE ORDER
             </ButtonComp>
           </View>
-          {/* <View style={{ marginBottom: 200 }}>
-            <Text>fs</Text>
-          </View> */}
         </ScrollView>
       </SafeAreaView>
     </View>

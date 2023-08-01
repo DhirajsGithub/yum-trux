@@ -162,11 +162,9 @@ const TrucksNearMe = () => {
   const [initialLatLong, setInitialLatLong] = useState(null);
   const [truckListData, setTruckListData] = useState([]);
   const [loading, setLoading] = useState(false);
-
+  const [truckCordinates, setTruckCordinates] = useState([]);
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
-  const [tempLocations, setTempLocations] = useState([]);
-
   useFocusEffect(
     React.useCallback(() => {
       try {
@@ -182,14 +180,20 @@ const TrucksNearMe = () => {
     let res = await truckListDetailHttp();
     if (res.status === "success") {
       let temp = [];
+      let tempCordinates = [];
       for (let truck of res.truckList) {
         if (truck.latLong.latitude && truck.latLong.latitude) {
+          tempCordinates.push({
+            latitude: truck.latLong.latitude,
+            longitude: truck.latLong.longitude,
+            color: "#" + Math.floor(Math.random() * 16777215).toString(16),
+          });
           let res = await fetch(
             `https://maps.googleapis.com/maps/api/distancematrix/json?destinations=${truck.latLong.latitude},${truck.latLong.latitude}&origins=38.9668,35.253&units=imperial&key=AIzaSyCgwqGtmAnaG3iFtWcw7xLS-1Idq_fxzx0`
           );
 
           res = await res.json();
-          // console.log(res);
+          console.log(res);
           let distanceAndTime = {
             distance: 1000000,
             time: "Over sea",
@@ -203,58 +207,29 @@ const TrucksNearMe = () => {
           }
         }
       }
-      setTempLocations(temp);
+      setTruckCordinates(tempCordinates);
       setTruckListData(temp);
     } else {
       setTruckListData([]);
     }
     setLoading(false);
   };
-
+  console.log("location is ", location);
   let filterTrucks = truckListData.sort((a, b) => {
     return (
       Number(a?.distanceAndTime?.distance?.split(" ")[0]) -
       Number(b?.distanceAndTime?.distance?.split(" ")[0])
     );
   });
-
-  // const addDistAndTime = async () => {
-  //   let c = tempLocations;
-  //   let i = 0;
-  // const apiBase = "https://maps.googleapis.com/maps/api/distancematrix/json";
-
-  //   // const origin = `&origins=${location?.coords?.latitude},${location?.coords?.longitude}&`;
-  //   const origin = "&origins=37.2309,38.6489&";
-  //   console.log(origin);
-  //   const apiKeyAnMode =
-  //     "key=AIzaSyB_vw8UYx_si6-K_eqhc8zsJ98orFLQtA4&mode=driving";
-  //   const steps = 4;
-  //   while (c.length > 0) {
-  //     c = tempLocations.slice(i, i + steps);
-  //     i = i + steps;
-  //     let destination = "?destinations=";
-  //     for (let loc of c) {
-  //       destination +=
-  //         String(loc.latLong.latitude) +
-  //         "," +
-  //         String(loc.latLong.longitude) +
-  //         "|";
-  //     }
-  //     destination.slice(0, destination.length);
-  //     const api = apiBase + destination + origin + apiKeyAnMode;
-  //     let res = await fetch(api);
-  //     res = await res.json();
-  //     console.log(res);
-  //   }
-  // };
-
+  console.log(truckCordinates);
   useEffect(() => {
     try {
       fetchTrucksList();
     } catch (error) {
+      setLoading(false);
       console.log(error);
     }
-  }, []);
+  }, [location]);
 
   useEffect(() => {
     (async () => {
@@ -375,37 +350,20 @@ const TrucksNearMe = () => {
           followsUserLocation={true}
           style={styles.map}
         >
-          <Marker
-            pinColor={"blue"}
-            title="Chinese Truck"
-            description="Food stall"
-            coordinate={{ latitude: 38.9632, longitude: 35.2423 }}
-          />
-          <Marker
-            pinColor={"yellow"}
-            title="Chinese Truck"
-            description="Food stall"
-            coordinate={
-              location
-                ? {
-                    latitude: location?.coords.latitude,
-                    longitude: location?.coords.longitude,
-                  }
-                : { latitude: 38.9632, longitude: 35.2423 }
-            }
-          />
-          <Marker
-            pinColor={"green"}
-            title="Mexican Truck"
-            description="Food stall"
-            coordinate={{ latitude: 38.9648, longitude: 35.2434 }}
-          />
-          <Marker
-            pinColor={"red"}
-            title="Veitamanian Truck"
-            description="Food stall"
-            coordinate={{ latitude: 38.9668, longitude: 35.253 }}
-          />
+          {truckCordinates?.map((cordinate, index) => {
+            return (
+              <Marker
+                key={index}
+                pinColor={cordinate.color}
+                title="Chinese Truck"
+                description="Food stall"
+                coordinate={{
+                  latitude: cordinate.latitude,
+                  longitude: cordinate.longitude,
+                }}
+              />
+            );
+          })}
         </MapView>
       </View>
 

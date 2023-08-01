@@ -39,6 +39,7 @@ const TabNavigator = () => {
       screenOptions={{
         tabBarStyle: { position: "absolute" },
       }}
+      initialRouteName="home"
     >
       <Tab.Screen
         name="trucks"

@@ -13,7 +13,7 @@ const MenuItem = ({
     <View style={styles.container}>
       <View style={styles.itemDetail}>
         <Text style={styles.nameText}>{itemName}</Text>
-        <Text style={styles.price}>$ {itemPrice}</Text>
+        <Text style={styles.price}>$ {itemPrice?.toFixed(2)}</Text>
         <Text style={styles.description}>{itemDiscription}</Text>
       </View>
 

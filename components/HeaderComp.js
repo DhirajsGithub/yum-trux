@@ -71,11 +71,11 @@ const HeaderComp = ({
           />
         </TouchableOpacity>
 
-        {isTrucksList && !onlySearch && (
+        {/* {isTrucksList && !onlySearch && (
           <TouchableOpacity onPress={handleFilterPress}>
             <MaterialIcons name="tune" size={24} color={colors.textColor} />
           </TouchableOpacity>
-        )}
+        )} */}
       </View>
     </View>
   );

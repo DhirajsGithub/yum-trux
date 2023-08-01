@@ -45,6 +45,7 @@ const TruckDetailScreen = () => {
   const route = useRoute();
   const truckData = route.params;
   console.log("from details screen " + truckData.paymentId);
+  console.log("from details screen " + truckData.paypalEmail);
   useLayoutEffect(() => {
     navigation.setOptions({ headerShown: false });
   }, []);
@@ -64,6 +65,9 @@ const TruckDetailScreen = () => {
     }
     if (truckData.screen === "truckNearMe") {
       navigation.navigate("truckNearMe");
+    }
+    if (truckData.screen === "home") {
+      navigation.navigate("home");
     }
     navigation.goBack();
   };
