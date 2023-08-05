@@ -187,24 +187,26 @@ const TrucksNearMe = () => {
             latitude: truck.latLong.latitude,
             longitude: truck.latLong.longitude,
             color: "#" + Math.floor(Math.random() * 16777215).toString(16),
+            truckName: truck.name,
+            truckDescription: truck.description,
           });
           let res = await fetch(
-            `https://maps.googleapis.com/maps/api/distancematrix/json?destinations=${truck.latLong.latitude},${truck.latLong.latitude}&origins=38.9668,35.253&units=imperial&key=AIzaSyCgwqGtmAnaG3iFtWcw7xLS-1Idq_fxzx0`
+            `https://maps.googleapis.com/maps/api/distancematrix/json?destinations=${truck.latLong.latitude},${truck.latLong.longitude}&origins=${location?.coords.latitude},${location?.coords.longitude}&units=imperial&key=AIzaSyCgwqGtmAnaG3iFtWcw7xLS-1Idq_fxzx0`
           );
-
           res = await res.json();
-          console.log(res);
+          console.log(" res is ", res);
           let distanceAndTime = {
-            distance: 1000000,
+            distance: "1000000 mi",
             time: "Over sea",
           };
           if (res?.rows[0]?.elements[0]?.distance) {
+            console.log("found ", res?.rows[0]?.elements[0]?.distance);
             distanceAndTime = {
               distance: res?.rows[0]?.elements[0]?.distance.text,
               time: res?.rows[0]?.elements[0]?.duration.text,
             };
-            temp.push({ ...truck, distanceAndTime });
           }
+          temp.push({ ...truck, distanceAndTime });
         }
       }
       setTruckCordinates(tempCordinates);
@@ -214,14 +216,14 @@ const TrucksNearMe = () => {
     }
     setLoading(false);
   };
-  console.log("location is ", location);
+
   let filterTrucks = truckListData.sort((a, b) => {
     return (
       Number(a?.distanceAndTime?.distance?.split(" ")[0]) -
       Number(b?.distanceAndTime?.distance?.split(" ")[0])
     );
   });
-  console.log(truckCordinates);
+
   useEffect(() => {
     try {
       fetchTrucksList();
@@ -355,8 +357,8 @@ const TrucksNearMe = () => {
               <Marker
                 key={index}
                 pinColor={cordinate.color}
-                title="Chinese Truck"
-                description="Food stall"
+                title={cordinate.truckName}
+                description={cordinate.truckDescription.slice(0, 40) + "..."}
                 coordinate={{
                   latitude: cordinate.latitude,
                   longitude: cordinate.longitude,
@@ -379,7 +381,7 @@ const TrucksNearMe = () => {
           }}
         >
           <TouchableOpacity onPress={handleSwipeDown}>
-            <Entypo name="chevron-small-down" size={30} color="black" />
+            <Entypo name="chevron-small-down" size={40} color="black" />
           </TouchableOpacity>
 
           {filterTrucks?.length > 0 && (
@@ -436,9 +438,9 @@ const TrucksNearMe = () => {
           }}
         >
           <Entypo
-            style={{ position: "absolute", zIndex: 1009, paddingVertical: 4 }}
+            style={{ position: "absolute", zIndex: 1009, paddingVertical: 6 }}
             name="chevron-small-up"
-            size={35}
+            size={40}
             color="black"
           />
         </TouchableOpacity>
@@ -492,7 +494,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     paddingHorizontal: 10,
     width: "100%",
-    bottom: Platform.OS === "android" ? "-2%" : "1%",
+    bottom: Platform.OS === "android" ? "-2%" : "3%",
     zIndex: 1000,
   },
 });

@@ -32,7 +32,7 @@ const OrderedItemCard = ({
     <View style={styles.orderedItemCard}>
       <View style={{ width: "60%" }}>
         <Text style={styles.pickupText}>{itemName}</Text>
-        <Text style={styles.truckDesc}>$ {itemPrice}</Text>
+        <Text style={styles.truckDesc}>$ {itemPrice?.toFixed(2)}</Text>
         <Text style={styles.truckDesc}>{itemDesc}</Text>
       </View>
       <View style={styles.itemQuantity}>

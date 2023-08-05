@@ -57,6 +57,7 @@ const TruckDetailScreen = () => {
     }
   }, [userDetails]);
   const handleBackPress = () => {
+    navigation.navigate("trucksList");
     if (truckData.screen === "favTruck") {
       navigation.navigate("favouriteTrucks");
       return;
@@ -73,7 +74,6 @@ const TruckDetailScreen = () => {
       navigation.navigate("home");
       return;
     }
-    navigation.goBack();
   };
   const handleSchedulePress = () => {
     navigation.navigate("scheduleScreen", {
