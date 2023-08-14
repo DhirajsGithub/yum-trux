@@ -150,7 +150,6 @@ export default function App() {
           <Stack.Navigator>
             <Stack.Screen name="loading" component={BlankScreen} />
             <Stack.Screen name="login" component={LoginScreen} />
-
             <Stack.Screen name="register" component={RegisterScreen} />
             <Stack.Screen name="forgotPass" component={ForgotPassword} />
             <Stack.Screen name="otpScreen" component={OtpScreen} />

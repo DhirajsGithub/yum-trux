@@ -24,7 +24,6 @@ const HeaderComp = ({
   const [searchInput, setSearchInput] = useState("");
   const handleSerachChange = (text) => {
     setSearchInput(text);
-    // handleSearchInput(text);
   };
   const handleSearchPress = () => {
     setShowSearch(!showSearch);
@@ -38,7 +37,7 @@ const HeaderComp = ({
     <View style={styles.container}>
       <View style={styles.commonView}>
         <Image
-          style={{ width: 57, height: 57, marginRight: 4 }}
+          style={{ width: 57, height: 57, marginRight: 4, marginBottom: 5 }}
           source={require("../assets/Images/logo.png")}
         />
         <Text style={styles.heading}>YumTrux</Text>

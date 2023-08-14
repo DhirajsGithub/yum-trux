@@ -40,7 +40,7 @@ const OtpScreen = () => {
   };
   const handleSavePress = async () => {
     if (password !== confirmPassword) {
-      setError("Password and Confirm password doesn't match");
+      setError("Password and Confirm password don't match");
       return;
     }
     try {
@@ -49,12 +49,17 @@ const OtpScreen = () => {
       console.log(res);
       setLoading(false);
       if (res.status === "error") {
-        setError(res.message);
+        // Corrected this line
+        setError(res.message); // Corrected this line
         return;
       }
-      if (res.status === "success" && res.email) {
+      if (res.status === "success") {
+        // Show success message here if needed
         navigation.navigate("login");
         return;
+      } else {
+        alert("Failed");
+        navigation.navigate("login");
       }
     } catch (error) {
       setLoading(false);
@@ -81,9 +86,9 @@ const OtpScreen = () => {
       </View>
 
       <ScrollView style={styles.safeArea}>
-        <Text style={styles.headText}>OTP</Text>
+        <Text style={styles.headText}>Recovery Code</Text>
         <Text style={styles.para}>
-          Enter OTP send to your email{" "}
+          Enter recovery code send to your email{" "}
           <Text style={{ fontWeight: "700", color: colors.textColor }}>
             {route.params.email}
           </Text>
@@ -134,7 +139,7 @@ const OtpScreen = () => {
           )}
 
           <TouchableOpacity onPress={handleSavePress} style={styles.btnView}>
-            <Text style={styles.btnText}>SAVE</Text>
+            <Text style={styles.btnText}>Save</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>

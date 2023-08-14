@@ -70,7 +70,7 @@ const ForgotPassword = () => {
       </View>
 
       <ScrollView style={styles.safeArea}>
-        <Text style={styles.headText}>ForgotPassword</Text>
+        <Text style={styles.headText}>Forgot Password</Text>
         <Text style={styles.para}>
           Enter your email and we will send you a reset code
         </Text>
@@ -97,7 +97,7 @@ const ForgotPassword = () => {
             </Text>
           )}
           <TouchableOpacity onPress={handleSendOtpPress} style={styles.btnView}>
-            <Text style={styles.btnText}>SEND OTP</Text>
+            <Text style={styles.btnText}>Send Recovery Code</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
