@@ -23,6 +23,8 @@ import { Provider } from "react-redux";
 import LocationMainScreen from "./screens/Location/LocationMainScreen";
 import BlankScreen from "./screens/BlankScreen";
 import { StripeProvider } from "@stripe/stripe-react-native";
+import ForgotPassword from "./screens/ForgotPassword/ForgotPassword";
+import OtpScreen from "./screens/ForgotPassword/OtpScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -150,6 +152,8 @@ export default function App() {
             <Stack.Screen name="login" component={LoginScreen} />
 
             <Stack.Screen name="register" component={RegisterScreen} />
+            <Stack.Screen name="forgotPass" component={ForgotPassword} />
+            <Stack.Screen name="otpScreen" component={OtpScreen} />
             <Stack.Screen name="main" component={TabNavigator} />
           </Stack.Navigator>
         </Provider>

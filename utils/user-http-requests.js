@@ -233,6 +233,38 @@ const addOrderToTruck = async (truckId, order) => {
   return res;
 };
 
+const sendOtp = async (email) => {
+  let res = await fetch(baseUrl + "generalRoutes/sendEmailForPasswordReset/", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      email: email,
+      userOrTruck: "user",
+    }),
+  });
+  res = await res.json();
+  return res;
+};
+
+const passwordReset = async (otp, email, newPassword) => {
+  let res = await fetch(baseUrl + "generalRoutes/passwordReset/", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      email: email,
+      inputOtp: otp,
+      newPassword: newPassword,
+      userOrTruck: "user",
+    }),
+  });
+  res = await res.json();
+  return res;
+};
+
 export {
   loginUserHttp,
   signupUserHttp,
@@ -252,4 +284,6 @@ export {
   capturePaypalPayment,
   generatePaypalAccessToken,
   addOrderToTruck,
+  sendOtp,
+  passwordReset,
 };

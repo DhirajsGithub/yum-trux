@@ -91,6 +91,10 @@ const LoginScreen = () => {
   const handleCreateProfilePress = () => {
     navigation.navigate("register");
   };
+
+  const handleForgotPassPress = () => {
+    navigation.navigate("forgotPass");
+  };
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
@@ -139,6 +143,11 @@ const LoginScreen = () => {
               </Text>
             </TouchableOpacity>
           </View>
+          <View style={styles.fogotPassView}>
+            <TouchableOpacity onPress={handleForgotPassPress}>
+              <Text style={styles.fogotPass}>Fotgot Password?</Text>
+            </TouchableOpacity>
+          </View>
           <View style={styles.btn}>
             <ButtonComp height={60} handleBtnPress={handleLoginBtnPress}>
               Login
@@ -176,12 +185,22 @@ const styles = StyleSheet.create({
   contentProfile: {
     flexDirection: "row",
     justifyContent: "center",
-    marginBottom: "60%",
   },
   btn: {
     // flex: 1,
     marginBottom: "15%",
+    marginTop: "60%",
     // flexDirection: "column",
     // justifyContent: "flex-end",
+  },
+  fogotPassView: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+    marginTop: 10,
+  },
+  fogotPass: {
+    // textAlign: "center",
+    textDecorationLine: "underline",
   },
 });

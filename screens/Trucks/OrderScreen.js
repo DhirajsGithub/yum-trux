@@ -212,21 +212,23 @@ const OrderScreen = () => {
   const dateNow = new Date();
   const [pickUpDate, setPickUpDate] = useState({
     show: false,
-    date: date.format(dateNow, "D MMM"),
+    date: new Date(),
   });
   const [pickUpTime, setPickUpTime] = useState({
     show: false,
-    time: date.format(dateNow, "hh:mm A"),
+    time: new Date(),
   });
   const handlePickupDate = (obj, daa) => {
+    // console.log(obj);
+    console.log("daa ", daa);
     if (daa) {
-      setPickUpDate({ show: false, date: date.format(daa, "D MMM") });
+      setPickUpDate({ show: false, date: daa });
     }
   };
 
   const handlePicupTime = (obj, daa) => {
     if (daa) {
-      setPickUpTime({ show: false, time: date.format(daa, "hh:mm A") });
+      setPickUpTime({ show: false, time: daa });
     }
   };
   const showPickupDate = () => {
@@ -258,27 +260,6 @@ const OrderScreen = () => {
     }
   };
 
-  // const handlePaymenPress = () => {
-  //   if (pickUpTime.time === "") {
-  //     alert("pick a valid time");
-  //     return;
-  //   } else if (pickUpDate.date === "") {
-  //     alert("pick a valid date");
-  //     return;
-  //   } else if (typeof totalWithTaxAndTip !== "number") {
-  //     alert("Total price must be a Number");
-  //     return;
-  //   }
-  //   navigation.navigate("paymentMethod", {
-  //     truckName,
-  //     truckDescription,
-  //     truckLocation,
-  //     pickUpTime,
-  //     truckImg,
-  //     totalWithTaxAndTip,
-  //   });
-  // };
-
   const handleBtnPress = () => {
     if (pickUpTime.time === "time") {
       alert("pick a valid time");
@@ -290,12 +271,20 @@ const OrderScreen = () => {
       alert("Total price must be a Number");
       return;
     }
+    console.log(date.format(pickUpTime?.time, "hh:mm A"));
+    console.log(date.format(pickUpDate?.date, "D MMM"));
     navigation.navigate("paymentMethod", {
       truckName,
       truckDescription,
       truckLocation,
-      pickUpTime,
-      pickUpDate,
+      pickUpTime: {
+        ...pickUpTime,
+        time: date.format(pickUpTime?.time, "hh:mm A"),
+      },
+      pickUpDate: {
+        ...pickUpDate,
+        date: date.format(pickUpDate?.date, "D MMM"),
+      },
       truckImg,
       totalWithTaxAndTip,
       paymentId,
@@ -337,7 +326,7 @@ const OrderScreen = () => {
                 style={styles.timeDateTouch}
                 onPress={showPickupDate}
               >
-                <Text>{pickUpDate.date}</Text>
+                <Text>{date.format(pickUpDate?.date, "D MMM")}</Text>
               </TouchableOpacity>
               <View>
                 <Text>|</Text>
@@ -346,7 +335,7 @@ const OrderScreen = () => {
                 style={styles.timeDateTouch}
                 onPress={showPickupTime}
               >
-                <Text>{pickUpTime.time}</Text>
+                <Text>{date.format(pickUpTime?.time, "hh:mm A")}</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -356,7 +345,7 @@ const OrderScreen = () => {
               onChange={handlePickupDate}
               mode="date"
               display="spinner"
-              value={new Date("01-03-2023")}
+              value={pickUpDate.date}
             />
           )}
           {pickUpTime.show && (
@@ -364,7 +353,7 @@ const OrderScreen = () => {
               onChange={handlePicupTime}
               display="spinner"
               mode="time"
-              value={new Date()}
+              value={pickUpTime.time}
             />
           )}
           <View style={styles.ordersView}>

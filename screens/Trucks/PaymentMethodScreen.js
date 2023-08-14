@@ -45,8 +45,7 @@ const PaymentMethodScreen = () => {
   const params = useRoute().params;
   const paymentId = params.paymentId;
   const paypalEmail = params.paypalEmail;
-  console.log("orders param data ", params);
-  console.log("user Details ", userDetails);
+  console.log("params", params);
   const truckName = params.truckName;
   const amount = params.totalWithTaxAndTip
     ? Number(params.totalWithTaxAndTip).toFixed(2) * 100
@@ -134,7 +133,6 @@ const PaymentMethodScreen = () => {
       },
       truckId: params.truckId,
     };
-    console.log("data to store ", data);
 
     try {
       setLoading(true);
@@ -212,8 +210,6 @@ const PaymentMethodScreen = () => {
   //     console.log(error);
   //   }
   // };
-  console.log(params.totalWithTaxAndTip);
-  console.log(Number(params.totalWithTaxAndTip).toFixed(2));
   const handlePaypalPress = async () => {
     if (paypalEmail && paypalEmail.length > 0) {
       setPaypalPaymentSuccess(false);
