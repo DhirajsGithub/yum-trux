@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View, Image } from "react-native";
 import React from "react";
 import colors from "../constants/colors";
 
@@ -8,13 +8,22 @@ const MenuItem = ({
   itemDiscription,
   itemId,
   handleAddPress,
+  img,
 }) => {
+  console.log(img);
   return (
     <View style={styles.container}>
-      <View style={styles.itemDetail}>
-        <Text style={styles.nameText}>{itemName}</Text>
-        <Text style={styles.price}>$ {itemPrice?.toFixed(2)}</Text>
-        <Text style={styles.description}>{itemDiscription}</Text>
+      <View style={styles.menuItem}>
+        {img ? (
+          <Image source={{ uri: img }} style={styles.image} />
+        ) : (
+          <Text style={styles.image}>null</Text>
+        )}
+        <View style={styles.itemDetail}>
+          <Text style={styles.nameText}>{itemName}</Text>
+          <Text style={styles.price}>$ {itemPrice?.toFixed(2)}</Text>
+          <Text style={styles.description}>{itemDiscription}</Text>
+        </View>
       </View>
 
       <TouchableOpacity
@@ -72,5 +81,14 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "400",
     color: "#454545",
+  },
+  image: {
+    width: 70,
+    height: 70,
+    marginRight: 10,
+  },
+  menuItem: {
+    flexDirection: "row",
+    width: "70%",
   },
 });

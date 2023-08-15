@@ -17,6 +17,7 @@ const MenuList = ({ menuList, handleAddPress }) => {
     <View style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
         {menuList.map((item, index) => {
+     
           return (
             <MenuItem
               key={index}
@@ -25,6 +26,7 @@ const MenuList = ({ menuList, handleAddPress }) => {
               itemDiscription={item.description}
               handleAddPress={handleAddPress}
               itemId={item.id}
+              img={item.imgUrl}
             />
           );
         })}
