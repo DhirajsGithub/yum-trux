@@ -25,6 +25,7 @@ const MenuList = ({ menuList, handleAddPress }) => {
               itemDiscription={item.description}
               handleAddPress={handleAddPress}
               itemId={item.id}
+              imgUrl={item.imgUrl}
             />
           );
         })}

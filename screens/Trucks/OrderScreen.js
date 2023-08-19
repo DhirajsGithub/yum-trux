@@ -27,25 +27,39 @@ const OrderedItemCard = ({
   itemDesc,
   handleRemovePress,
   handleAddPress,
+  imgUrl,
 }) => {
   return (
     <View style={styles.orderedItemCard}>
-      <View style={{ width: "60%" }}>
-        <Text style={styles.pickupText}>{itemName}</Text>
-        <Text style={styles.truckDesc}>$ {itemPrice?.toFixed(2)}</Text>
-        <Text style={styles.truckDesc}>{itemDesc}</Text>
+      <View style={styles.imgBtnName}>
+        <Image
+          source={{
+            uri:
+              imgUrl?.length > 0
+                ? imgUrl
+                : "https://www.hatasi.com.vn/wp-content/uploads/2021/11/landscape-placeholder.png",
+          }}
+          style={styles.image}
+        />
+        <View style={{ width: "33%" }}>
+          <Text style={[styles.pickupText]}>{itemName}</Text>
+          <Text style={styles.truckDesc}>$ {itemPrice?.toFixed(2)}</Text>
+        </View>
+        <View style={styles.itemQuantity}>
+          <TouchableOpacity onPress={handleRemovePress}>
+            <Feather name="minus" size={20} color={colors.white} />
+          </TouchableOpacity>
+          <Text
+            style={{ fontSize: 17, fontWeight: "400", color: colors.white }}
+          >
+            {quantity}
+          </Text>
+          <TouchableOpacity onPress={handleAddPress}>
+            <Feather name="plus" size={20} color={colors.white} />
+          </TouchableOpacity>
+        </View>
       </View>
-      <View style={styles.itemQuantity}>
-        <TouchableOpacity onPress={handleRemovePress}>
-          <Feather name="minus" size={20} color={colors.white} />
-        </TouchableOpacity>
-        <Text style={{ fontSize: 17, fontWeight: "400", color: colors.white }}>
-          {quantity}
-        </Text>
-        <TouchableOpacity onPress={handleAddPress}>
-          <Feather name="plus" size={20} color={colors.white} />
-        </TouchableOpacity>
-      </View>
+      <Text style={[styles.truckDesc, { marginTop: 5 }]}>{itemDesc}</Text>
     </View>
   );
 };
@@ -361,6 +375,7 @@ const OrderScreen = () => {
               return (
                 <View key={index}>
                   <OrderedItemCard
+                    imgUrl={item.imgUrl}
                     quantity={item.quantity}
                     itemName={item.itemName}
                     itemDesc={item.itemDiscription}
@@ -591,10 +606,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   orderedItemCard: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    // display: "flex",
+    // flexDirection: "row",
+    // justifyContent: "space-between",
+    // alignItems: "center",
     marginTop: 20,
   },
   ordersView: {
@@ -621,5 +636,19 @@ const styles = StyleSheet.create({
     backgroundColor: colors.inputBg,
     borderRadius: 16,
     overflow: "hidden",
+  },
+  image: {
+    width: 100,
+    height: 80,
+    marginRight: 20,
+    borderRadius: 10,
+    maxWidth: "35%",
+  },
+  imgBtnName: {
+    display: "flex",
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
 });

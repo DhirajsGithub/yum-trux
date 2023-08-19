@@ -23,10 +23,8 @@ import {
   addOrderToTruck,
   addToAllOrdersHttp,
   capturePaypalPayment,
-  createPaymentIntent,
   createPaypalOrder,
   generatePaypalAccessToken,
-  generatePaypalToken,
 } from "../../utils/user-http-requests";
 import { useStripe } from "@stripe/stripe-react-native";
 import { baseUrl } from "../../constants/baseUrl";

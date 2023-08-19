@@ -197,6 +197,7 @@ const PreviousOrders = () => {
               itemName: item2.name,
               itemId: item2.id,
               itemPrice: item2.price,
+              imgUrl: item2.imgUrl,
               itemDiscription: item2.description,
               paymentId,
               paypalEmail,

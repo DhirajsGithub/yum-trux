@@ -1,6 +1,7 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
 import colors from "../constants/colors";
+import { Image } from "react-native";
 
 const MenuItem = ({
   itemName,
@@ -8,23 +9,44 @@ const MenuItem = ({
   itemDiscription,
   itemId,
   handleAddPress,
+  imgUrl,
 }) => {
   return (
     <View style={styles.container}>
-      <View style={styles.itemDetail}>
+      <View style={styles.imgNameBtn}>
+        <View>
+          <Image
+            source={{
+              uri:
+                imgUrl?.length > 0
+                  ? imgUrl
+                  : "https://www.hatasi.com.vn/wp-content/uploads/2021/11/landscape-placeholder.png",
+            }}
+            style={styles.image}
+          />
+        </View>
+        <View style={styles.itemDetail}>
+          <Text style={styles.description}>{itemDiscription}</Text>
+        </View>
+      </View>
+      <View style={styles.imgNameBtn}>
         <Text style={styles.nameText}>{itemName}</Text>
         <Text style={styles.price}>$ {itemPrice?.toFixed(2)}</Text>
-        <Text style={styles.description}>{itemDiscription}</Text>
+        <TouchableOpacity
+          onPress={() =>
+            handleAddPress({
+              itemName,
+              itemPrice,
+              itemDiscription,
+              itemId,
+              imgUrl,
+            })
+          }
+          style={styles.btn}
+        >
+          <Text style={styles.text}>ADD</Text>
+        </TouchableOpacity>
       </View>
-
-      <TouchableOpacity
-        onPress={() =>
-          handleAddPress({ itemName, itemPrice, itemDiscription, itemId })
-        }
-        style={styles.btn}
-      >
-        <Text style={styles.text}>ADD</Text>
-      </TouchableOpacity>
     </View>
   );
 };
@@ -33,16 +55,22 @@ export default MenuItem;
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "space-between",
-    alignItems: "center",
+    // flexDirection: "row",
+    // flexWrap: "wrap",
+    // justifyContent: "space-between",
+    // alignItems: "center",
     borderBottomColor: colors.borderBottom,
     paddingVertical: 9,
     borderBottomWidth: 1,
   },
   itemDetail: {
-    width: "65%",
+    // width: "65%",
+  },
+  imgNameBtn: {
+    flexDirection: "row",
+    // flexWrap: "wrap",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   btn: {
     minWidth: "30%",
@@ -64,13 +92,20 @@ const styles = StyleSheet.create({
     color: colors.textColor,
   },
   price: {
-    fontSize: 14,
-    fontWeight: "400",
+    fontSize: 15,
+    fontWeight: "600",
     color: colors.textColor,
   },
   description: {
     fontSize: 14,
     fontWeight: "400",
     color: "#454545",
+    flexWrap: "wrap",
+  },
+  image: {
+    width: 100,
+    height: 80,
+    marginRight: 20,
+    borderRadius: 10,
   },
 });
