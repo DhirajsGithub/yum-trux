@@ -1,7 +1,6 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View, Image } from "react-native";
 import React from "react";
 import colors from "../constants/colors";
-import { Image } from "react-native";
 
 const MenuItem = ({
   itemName,
@@ -107,5 +106,14 @@ const styles = StyleSheet.create({
     height: 80,
     marginRight: 20,
     borderRadius: 10,
+  },
+  image: {
+    width: 70,
+    height: 70,
+    marginRight: 10,
+  },
+  menuItem: {
+    flexDirection: "row",
+    width: "70%",
   },
 });
