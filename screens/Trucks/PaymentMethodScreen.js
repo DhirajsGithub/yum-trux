@@ -102,7 +102,7 @@ const PaymentMethodScreen = () => {
   const addOrderToTruckFunc = async () => {
     const tempDate = new Date();
     let tim = date.format(tempDate, "hh:mm A");
-    let dat = date.format(tempDate, "MMM D");
+    let dat = date.format(tempDate, "MMM D YYYY");
 
     const items = [];
     for (let item of params?.cartOrders) {
@@ -115,9 +115,10 @@ const PaymentMethodScreen = () => {
       });
     }
     const data = {
-      orderOn: { date: dat, time: tim },
+      orderOn: { fullDate: new Date(), date: dat, time: tim },
       pickUpTime: {
-        date: params.pickUpDate.date,
+        fullDate: new Date(),
+        date: params.pickUpDate.date + ", " + new Date().getFullYear(),
         time: params.pickUpTime.time,
       },
       items,
