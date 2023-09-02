@@ -100,8 +100,9 @@ const HomeScreen = () => {
       .includes(searchInput?.toLowerCase());
 
     const categoryFilter =
-      truck?.name?.toLowerCase().includes(category?.toLowerCase()) ||
-      category === "all";
+      truck?.name
+        ?.toLowerCase()
+        .includes(category?.split(" ")[0].toLowerCase()) || category === "all";
     return categoryFilter && searchFilter;
   });
   console.log(category);
@@ -139,7 +140,7 @@ const HomeScreen = () => {
               setModalVisible(!modalVisible);
             }}
           >
-            <View style={{ marginTop: statusBarHeight + 20 }}>
+            <View style={{ marginTop: statusBarHeight + 10 }}>
               <TouchableOpacity onPress={() => setModalVisible(false)}>
                 <Ionicons
                   style={{ textAlign: "center" }}
@@ -150,7 +151,7 @@ const HomeScreen = () => {
               </TouchableOpacity>
               <Text style={styles.categoriesName}>Categories</Text>
 
-              <ScrollView>
+              <ScrollView showsVerticalScrollIndicator={false}>
                 <View style={styles.modalCat}>
                   <View style={{ width: "50%" }}>
                     <HomeHeaderCard
@@ -186,17 +187,19 @@ const HomeScreen = () => {
           <View style={styles.head1} horizontal={true}>
             {categories?.slice(0, 2).map((item, index) => {
               return (
-                <HomeHeaderCard
-                  id={item.categoryId}
-                  truckName={item.name + " Trucks"}
-                  handleOnPress={handleTruckPress}
-                  comp={
-                    <Image
-                      style={{ width: 58, height: 58 }}
-                      source={{ uri: item.imgUrl }}
-                    />
-                  }
-                />
+                <View style={{ width: "50%" }}>
+                  <HomeHeaderCard
+                    id={item.categoryId}
+                    truckName={item.name + " Trucks"}
+                    handleOnPress={handleTruckPress}
+                    comp={
+                      <Image
+                        style={{ width: 58, height: 58 }}
+                        source={{ uri: item.imgUrl }}
+                      />
+                    }
+                  />
+                </View>
               );
             })}
           </View>
@@ -204,24 +207,29 @@ const HomeScreen = () => {
           <ScrollView horizontal={true}>
             {categories?.slice(2, 4).map((item, index) => {
               return (
-                <HomeHeaderCard
-                  id={item.categoryId}
-                  truckName={item.name + " Trucks"}
-                  handleOnPress={handleTruckPress}
-                  comp={
-                    <Image
-                      style={{ width: 40, height: 39 }}
-                      source={{ uri: item.imgUrl }}
-                    />
-                  }
-                />
+                <View style={{ width: "35%" }}>
+                  <HomeHeaderCard
+                    id={item.categoryId}
+                    truckName={item.name + " Trucks"}
+                    handleOnPress={handleTruckPress}
+                    comp={
+                      <Image
+                        style={{ width: 38, height: 37 }}
+                        source={{ uri: item.imgUrl }}
+                      />
+                    }
+                  />
+                </View>
               );
             })}
 
-            <HomeHeaderCard
-              truckName="ALL Catego..."
-              handleOnPress={() => setModalVisible(true)}
-            />
+            <View style={{ width: "30%" }}>
+              <HomeHeaderCard
+                id={"allCate"}
+                truckName="ALL Catego..."
+                handleOnPress={() => setModalVisible(true)}
+              />
+            </View>
           </ScrollView>
         </View>
         {filteredTrucks.length === 0 && !loading && (
@@ -261,6 +269,7 @@ const styles = StyleSheet.create({
     // alignContent: "center",
     justifyContent: "center",
     flexWrap: "wrap",
+    paddingBottom: "20%",
   },
   categoriesName: {
     // backgroundColor: colors.lightBlack,

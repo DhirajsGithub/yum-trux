@@ -12,3 +12,4 @@ paypal api's
 nodemailer email id
 
 order history page need to modify
+- user with status inactive need to be logout and never should be login
