@@ -235,6 +235,12 @@ const passwordReset = async (otp, email, newPassword) => {
   return res;
 };
 
+const categoryListHttp = async () => {
+  let res = await fetch(baseUrl + "admin/getCategories/");
+  res = await res.json();
+  return res;
+};
+
 export {
   loginUserHttp,
   signupUserHttp,
@@ -256,4 +262,5 @@ export {
   addOrderToTruck,
   sendOtp,
   passwordReset,
+  categoryListHttp,
 };

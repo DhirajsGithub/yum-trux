@@ -18,7 +18,8 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     justifyContent: "center",
     alignItems: "center",
-    minWidth: 260,
+    minWidth: "80%",
+    // maxWidth: "90%",
   },
   text: {
     paddingHorizontal: 10,

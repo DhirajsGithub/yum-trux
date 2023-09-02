@@ -4,11 +4,11 @@ import {
   StyleSheet,
   Text,
   Touchable,
+  TouchableOpacity,
   View,
 } from "react-native";
 import React from "react";
 import TruckOverviewCard from "./TruckOverviewCard";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/native";
 
 const HomeTruckList = ({ truckList, homeComp }) => {

@@ -63,7 +63,7 @@ const TruckCard = ({
 
         marginVertical: 10,
         backgroundColor: colors.white,
-        elevation: 14,
+        elevation: 5,
         shadowColor: "#171717",
         shadowOffset: { width: -3, height: 4 },
         shadowOpacity: 0.2,
@@ -81,16 +81,16 @@ const TruckCard = ({
           <Text
             style={{
               color: colors.textColor,
-              fontSize: 20,
+              fontSize: 18,
               fontWeight: "600",
-              width: 180,
+              width: "100%",
             }}
           >
             {truckName} Truck
           </Text>
           <View style={{ left: "-20%" }}>
             <AirbnbRating
-              size={17}
+              size={12}
               defaultRating={findRating(truckRating)}
               showRating={false}
               isDisabled={true}
@@ -119,7 +119,7 @@ const TruckCard = ({
         </View>
         <View>
           <Image
-            style={{ width: 105, height: 85, borderRadius: 5 }}
+            style={{ width: "100%", height: 80, borderRadius: 5 }}
             source={{
               uri: truckImg,
             }}
@@ -135,11 +135,11 @@ const TruckCard = ({
           >
             <MaterialCommunityIcons
               name="map-marker-distance"
-              size={18}
+              size={15}
               color="black"
             />
-            <Text style={{ fontSize: 16, fontWeight: 500 }}>
-              &nbsp; &nbsp;{distanceAndTime?.distance}
+            <Text style={{ fontSize: 14, fontWeight: 500 }}>
+              {distanceAndTime?.distance}
             </Text>
           </View>
         </View>

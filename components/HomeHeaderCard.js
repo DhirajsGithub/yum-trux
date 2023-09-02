@@ -10,7 +10,7 @@ const HomeHeaderCard = ({ truckName, handleOnPress, comp }) => {
         onPress={() => handleOnPress(truckName)}
         style={styles.content}
       >
-        <Text style={styles.text}>{truckName} trucks</Text>
+        <Text style={styles.text}>{truckName}</Text>
         {comp}
       </TouchableOpacity>
     </View>
@@ -22,6 +22,7 @@ export default HomeHeaderCard;
 const styles = StyleSheet.create({
   container: {
     // flexDirection: "row",
+
     flexGrow: 1,
     marginHorizontal: 5,
     marginVertical: 8,

@@ -1,4 +1,11 @@
-import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import React, { useEffect, useLayoutEffect, useState } from "react";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -8,8 +15,17 @@ import colors from "../../constants/colors";
 import HomeHeaderCard from "../../components/HomeHeaderCard";
 import HomeTruckList from "../../components/HomeTruckList";
 import EmptyData from "../../components/EmptyData";
-import { truckListDetailHttp } from "../../utils/user-http-requests";
+import {
+  categoryListHttp,
+  truckListDetailHttp,
+} from "../../utils/user-http-requests";
 import Spinner from "react-native-loading-spinner-overlay/lib";
+import { useSelector } from "react-redux";
+import Modal from "react-native-modal";
+import Constants from "expo-constants";
+import { Ionicons } from "@expo/vector-icons";
+
+const statusBarHeight = Constants.statusBarHeight;
 
 const HomeScreen = () => {
   const navigation = useNavigation();
@@ -20,17 +36,34 @@ const HomeScreen = () => {
     navigation.setOptions({ headerShown: false });
   }, []);
   const [truckListNew, setTruckListNew] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [modalVisible, setModalVisible] = useState(false);
 
   useFocusEffect(
     React.useCallback(() => {
+      setSearchInput("");
+      setCategory("");
       try {
+        fetchCategories();
         fetchTrucksList();
       } catch (error) {
+        setLoading(false);
         console.log(error);
       }
     }, [])
   );
 
+  const fetchCategories = async () => {
+    setLoading(true);
+    let res = await categoryListHttp();
+    setLoading(false);
+    if (res.status === "success" && res?.categories?.length > 0) {
+      setCategories(res.categories ? res.categories?.reverse() : []);
+    } else {
+      setCategories([]);
+    }
+  };
+  console.log(categories);
   const fetchTrucksList = async () => {
     setLoading(true);
     let res = await truckListDetailHttp();
@@ -44,14 +77,17 @@ const HomeScreen = () => {
 
   useEffect(() => {
     try {
+      fetchCategories();
       fetchTrucksList();
     } catch (error) {
+      setLoading(false);
       console.log(error);
     }
   }, []);
 
   const handleSettingPress = () => {};
   const handleTruckPress = (name) => {
+    setModalVisible(false);
     setCategory(name);
   };
 
@@ -65,9 +101,10 @@ const HomeScreen = () => {
 
     const categoryFilter =
       truck?.name?.toLowerCase().includes(category?.toLowerCase()) ||
-      category === "More";
+      category === "all";
     return categoryFilter && searchFilter;
   });
+  console.log(category);
 
   return (
     <View style={styles.container}>
@@ -90,51 +127,101 @@ const HomeScreen = () => {
             />
           </View>
 
-          <View style={styles.head1}>
-            <HomeHeaderCard
-              truckName="Mexican"
-              handleOnPress={handleTruckPress}
-              comp={
-                <Image
-                  style={{ width: 58, height: 58 }}
-                  source={require("../../assets/Images/taco.png")}
+          <Modal
+            animationIn="slideInUp"
+            animationOut="slideOutDown"
+            animationInTiming={500}
+            animationOutTiming={500}
+            transparent={true}
+            isVisible={modalVisible}
+            onRequestClose={() => {
+              Alert.alert("Modal has been closed.");
+              setModalVisible(!modalVisible);
+            }}
+          >
+            <View style={{ marginTop: statusBarHeight + 20 }}>
+              <TouchableOpacity onPress={() => setModalVisible(false)}>
+                <Ionicons
+                  style={{ textAlign: "center" }}
+                  name="close-circle"
+                  size={30}
+                  color="white"
                 />
-              }
-            />
-            <HomeHeaderCard
-              truckName="Chinese"
-              handleOnPress={handleTruckPress}
-              comp={
-                <Image
-                  style={{ width: 58, height: 58 }}
-                  source={require("../../assets/Images/noodles.png")}
+              </TouchableOpacity>
+              <Text style={styles.categoriesName}>Categories</Text>
+
+              <ScrollView>
+                <View style={styles.modalCat}>
+                  <View style={{ width: "50%" }}>
+                    <HomeHeaderCard
+                      truckName="All Trucks"
+                      handleOnPress={() => {
+                        handleTruckPress("all");
+                        setModalVisible(false);
+                      }}
+                    />
+                  </View>
+                  {categories?.map((item, index) => {
+                    return (
+                      <View style={{ width: "50%" }}>
+                        <HomeHeaderCard
+                          id={item.categoryId}
+                          truckName={item.name + " Trucks"}
+                          handleOnPress={handleTruckPress}
+                          comp={
+                            <Image
+                              style={{ width: 58, height: 58 }}
+                              source={{ uri: item.imgUrl }}
+                            />
+                          }
+                        />
+                      </View>
+                    );
+                  })}
+                </View>
+              </ScrollView>
+            </View>
+          </Modal>
+
+          <View style={styles.head1} horizontal={true}>
+            {categories?.slice(0, 2).map((item, index) => {
+              return (
+                <HomeHeaderCard
+                  id={item.categoryId}
+                  truckName={item.name + " Trucks"}
+                  handleOnPress={handleTruckPress}
+                  comp={
+                    <Image
+                      style={{ width: 58, height: 58 }}
+                      source={{ uri: item.imgUrl }}
+                    />
+                  }
                 />
-              }
-            />
+              );
+            })}
           </View>
 
           <ScrollView horizontal={true}>
-            <HomeHeaderCard
-              truckName="Japanese"
-              handleOnPress={handleTruckPress}
-              comp={
-                <Image
-                  style={{ width: 39, height: 39 }}
-                  source={require("../../assets/Images/sushi.png")}
+            {categories?.slice(2, 4).map((item, index) => {
+              return (
+                <HomeHeaderCard
+                  id={item.categoryId}
+                  truckName={item.name + " Trucks"}
+                  handleOnPress={handleTruckPress}
+                  comp={
+                    <Image
+                      style={{ width: 40, height: 39 }}
+                      source={{ uri: item.imgUrl }}
+                    />
+                  }
                 />
-              }
-            />
+              );
+            })}
+
             <HomeHeaderCard
-              truckName="Vietnamese"
-              handleOnPress={handleTruckPress}
-              comp={
-                <Image
-                  style={{ width: 30, height: 30 }}
-                  source={require("../../assets/Images/goi-cuon.png")}
-                />
-              }
+              truckName="ALL Catego..."
+              handleOnPress={() => setModalVisible(true)}
             />
-            <HomeHeaderCard truckName="More" handleOnPress={handleTruckPress} />
           </ScrollView>
         </View>
         {filteredTrucks.length === 0 && !loading && (
@@ -160,9 +247,28 @@ const styles = StyleSheet.create({
   head1: {
     flexDirection: "row",
     justifyContent: "space-between",
+    width: "100%",
+    flex: "wrap",
   },
   headFile: {
     paddingHorizontal: 10,
+    width: "100%",
     // paddingTop: 5,
+  },
+  modalCat: {
+    flex: 1,
+    flexDirection: "row",
+    // alignContent: "center",
+    justifyContent: "center",
+    flexWrap: "wrap",
+  },
+  categoriesName: {
+    // backgroundColor: colors.lightBlack,
+    color: "white",
+    // padding: 10,
+    marginBottom: 10,
+    textAlign: "center",
+    fontSize: 22,
+    fontWeight: "700",
   },
 });
