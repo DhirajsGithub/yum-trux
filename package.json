@@ -52,7 +52,9 @@
     "react-redux": "^8.0.5",
     "redux-logger": "^3.0.6",
     "sha1": "^1.1.1",
-    "uniqid": "^5.4.0"
+    "uniqid": "^5.4.0",
+    "expo-notifications": "~0.18.1",
+    "expo-device": "~5.2.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"

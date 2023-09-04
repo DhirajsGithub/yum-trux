@@ -17,6 +17,7 @@ import HomeTruckList from "../../components/HomeTruckList";
 import EmptyData from "../../components/EmptyData";
 import {
   categoryListHttp,
+  getUserStatus,
   truckListDetailHttp,
 } from "../../utils/user-http-requests";
 import Spinner from "react-native-loading-spinner-overlay/lib";
@@ -28,6 +29,8 @@ import { Ionicons } from "@expo/vector-icons";
 const statusBarHeight = Constants.statusBarHeight;
 
 const HomeScreen = () => {
+  const userDetails = useSelector((state) => state.userSlice.userDetails);
+  const userId = userDetails._id;
   const navigation = useNavigation();
   const [searchInput, setSearchInput] = useState("");
   const [category, setCategory] = useState("");
@@ -39,11 +42,19 @@ const HomeScreen = () => {
   const [categories, setCategories] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
 
+  const fetchUserStatus = async () => {
+    const res = await getUserStatus(userId);
+    if (res.status && res.status === "inactive") {
+      navigation.navigate("login");
+    }
+  };
+
   useFocusEffect(
     React.useCallback(() => {
       setSearchInput("");
       setCategory("");
       try {
+        fetchUserStatus();
         fetchCategories();
         fetchTrucksList();
       } catch (error) {
@@ -63,7 +74,6 @@ const HomeScreen = () => {
       setCategories([]);
     }
   };
-  console.log(categories);
   const fetchTrucksList = async () => {
     setLoading(true);
     let res = await truckListDetailHttp();
@@ -105,7 +115,6 @@ const HomeScreen = () => {
         .includes(category?.split(" ")[0].toLowerCase()) || category === "all";
     return categoryFilter && searchFilter;
   });
-  console.log(category);
 
   return (
     <View style={styles.container}>
@@ -153,7 +162,7 @@ const HomeScreen = () => {
 
               <ScrollView showsVerticalScrollIndicator={false}>
                 <View style={styles.modalCat}>
-                  <View style={{ width: "50%" }}>
+                  <View key="allTrucksXYZ" style={{ width: "50%" }}>
                     <HomeHeaderCard
                       truckName="All Trucks"
                       handleOnPress={() => {
@@ -164,7 +173,7 @@ const HomeScreen = () => {
                   </View>
                   {categories?.map((item, index) => {
                     return (
-                      <View style={{ width: "50%" }}>
+                      <View key={item.categoryId} style={{ width: "50%" }}>
                         <HomeHeaderCard
                           id={item.categoryId}
                           truckName={item.name + " Trucks"}
@@ -187,7 +196,7 @@ const HomeScreen = () => {
           <View style={styles.head1} horizontal={true}>
             {categories?.slice(0, 2).map((item, index) => {
               return (
-                <View style={{ width: "50%" }}>
+                <View key={item.categoryId} style={{ width: "50%" }}>
                   <HomeHeaderCard
                     id={item.categoryId}
                     truckName={item.name + " Trucks"}
@@ -207,7 +216,7 @@ const HomeScreen = () => {
           <ScrollView horizontal={true}>
             {categories?.slice(2, 4).map((item, index) => {
               return (
-                <View style={{ width: "35%" }}>
+                <View key={item.categoryId} style={{ width: "35%" }}>
                   <HomeHeaderCard
                     id={item.categoryId}
                     truckName={item.name + " Trucks"}
@@ -223,7 +232,7 @@ const HomeScreen = () => {
               );
             })}
 
-            <View style={{ width: "30%" }}>
+            <View key="allCate" style={{ width: "30%" }}>
               <HomeHeaderCard
                 id={"allCate"}
                 truckName="ALL Catego..."

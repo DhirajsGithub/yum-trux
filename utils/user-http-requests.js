@@ -241,6 +241,12 @@ const categoryListHttp = async () => {
   return res;
 };
 
+const getUserStatus = async (userId) => {
+  let res = await fetch(baseUrl + "userStatus/" + userId);
+  res = await res.json();
+  return res;
+};
+
 export {
   loginUserHttp,
   signupUserHttp,
@@ -263,4 +269,5 @@ export {
   sendOtp,
   passwordReset,
   categoryListHttp,
+  getUserStatus,
 };

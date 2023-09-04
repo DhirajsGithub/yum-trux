@@ -5,7 +5,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useDispatch } from "react-redux";
 import { setUserDetails } from "../store/store-slice";
 import { baseUrl } from "../constants/baseUrl";
-import { getUserDetailsHttp } from "../utils/user-http-requests";
+import { getUserDetailsHttp, getUserStatus } from "../utils/user-http-requests";
 
 const BlankScreen = () => {
   const dispatch = useDispatch();
@@ -21,11 +21,18 @@ const BlankScreen = () => {
       alert("Internal server error");
     }
   };
+  const fetchUserStatus = async (userId) => {
+    const res = await getUserStatus(userId);
+    if (res.status && res.status === "inactive") {
+      navigation.navigate("login");
+      return;
+    }
+  };
   const getData = async () => {
     try {
       const jsonValue = await AsyncStorage.getItem("@yumtrux_user");
       const val = JSON.parse(jsonValue);
-
+      fetchUserStatus(val.userId);
       if (val?.token) {
         try {
           await getUserData(val.userId);
