@@ -67,7 +67,9 @@ const TrucksList = () => {
   }, []);
   const handleSearchInput = (text) => {
     const filterTrucks = trucksDataUnFilter.filter((truck) => {
-      return truck.name?.toLowerCase().includes(text?.toLowerCase());
+      return (truck?.name + truck?.category)
+        ?.toLowerCase()
+        .includes(text?.toLowerCase());
     });
     setTrucksData(filterTrucks);
   };

@@ -48,7 +48,7 @@ const HomeScreen = () => {
       navigation.navigate("login");
     }
   };
-
+  console.log(category);
   useFocusEffect(
     React.useCallback(() => {
       setSearchInput("");
@@ -105,12 +105,12 @@ const HomeScreen = () => {
     setSearchInput(text);
   };
   const filteredTrucks = truckListNew?.filter((truck) => {
-    const searchFilter = truck.name
+    const searchFilter = (truck?.name + truck?.category)
       ?.toLowerCase()
       .includes(searchInput?.toLowerCase());
 
     const categoryFilter =
-      truck?.name
+      truck?.category
         ?.toLowerCase()
         .includes(category?.split(" ")[0].toLowerCase()) || category === "all";
     return categoryFilter && searchFilter;

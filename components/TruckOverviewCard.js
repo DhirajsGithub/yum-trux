@@ -63,7 +63,7 @@ const TruckOverviewCard = ({
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headTitle}>{truckName} truck</Text>
+        <Text style={styles.headTitle}>{truckName}</Text>
         {!homeComp && (
           <TouchableOpacity
             onPress={handleSchedulePress}

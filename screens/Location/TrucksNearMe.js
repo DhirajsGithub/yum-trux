@@ -86,7 +86,7 @@ const TruckCard = ({
               width: "100%",
             }}
           >
-            {truckName} Truck
+            {truckName}
           </Text>
           <View style={{ left: "-20%" }}>
             <AirbnbRating
@@ -161,8 +161,11 @@ const TrucksNearMe = () => {
 
   const [initialLatLong, setInitialLatLong] = useState(null);
   const [truckListData, setTruckListData] = useState([]);
-  const [loading, setLoading] = useState(false);
   const [truckCordinates, setTruckCordinates] = useState([]);
+  const [tempTruckListData, setTempTruckListData] = useState([]);
+  const [tempTruckCordinates, setTempTruckCordinates] = useState([]);
+  const [loading, setLoading] = useState(false);
+
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
   useFocusEffect(
@@ -188,6 +191,7 @@ const TrucksNearMe = () => {
             longitude: truck.latLong.longitude,
             color: "#" + Math.floor(Math.random() * 16777215).toString(16),
             truckName: truck.name,
+            category: truck.category,
             truckDescription: truck.description,
           });
           let res = await fetch(
@@ -211,8 +215,11 @@ const TrucksNearMe = () => {
       }
       setTruckCordinates(tempCordinates);
       setTruckListData(temp);
+      setTempTruckListData(temp);
+      setTempTruckCordinates(tempCordinates);
     } else {
       setTruckListData([]);
+      setTruckCordinates([]);
     }
     setLoading(false);
   };
@@ -255,9 +262,7 @@ const TrucksNearMe = () => {
     setModalVisible(false);
   };
   const [searchInput, setSearchInput] = useState("");
-  const handleSearchInput = (text) => {
-    setSearchInput(text);
-  };
+
   const statusBarHeight = Constants.statusBarHeight;
 
   const handleMakeOrderPress = (truckId) => {
@@ -275,6 +280,7 @@ const TrucksNearMe = () => {
       }
       return 0;
     };
+    console.log("truck detail ", truckDetail);
     if (truckDetail) {
       const truckName = truckDetail.name;
       const truckRatings = findRating(truckDetail.ratings);
@@ -286,6 +292,8 @@ const TrucksNearMe = () => {
       const truckAddress = truckDetail.address;
       const truckSchedule = truckDetail.schedule;
       const paymentId = truckDetail.paymentId;
+      const paypalEmail = truckDetail.paypalEmail;
+      const category = truckDetail.category;
       navigation.navigate("trucks", {
         screen: "truckDetail",
         params: {
@@ -300,9 +308,27 @@ const TrucksNearMe = () => {
           truckAddress,
           truckSchedule,
           paymentId,
+          paypalEmail,
+          category,
         },
       });
     }
+  };
+
+  const handleSearchInput = (text) => {
+    setSearchInput(text);
+    let filterTruckCordinates = tempTruckCordinates.filter((truck) => {
+      return (truck?.truckName + truck?.category)
+        ?.toLowerCase()
+        .includes(text.toLowerCase());
+    });
+    setTruckCordinates(filterTruckCordinates);
+    let filterTruckListData = tempTruckListData.filter((truck) => {
+      return (truck?.name + truck?.category)
+        ?.toLowerCase()
+        .includes(text.toLowerCase());
+    });
+    setTruckListData(filterTruckListData);
   };
 
   return (

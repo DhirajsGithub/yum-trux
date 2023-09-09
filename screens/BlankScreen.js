@@ -15,15 +15,17 @@ const BlankScreen = () => {
   }, []);
   const getUserData = async (userId) => {
     let res = await getUserDetailsHttp(userId);
-    if (res.status === "success") {
+    console.log(res);
+    if (res.status === "success" && res.user) {
       dispatch(setUserDetails(res.user));
     } else {
-      alert("Internal server error");
+      navigation.navigate("login");
     }
+    return res;
   };
   const fetchUserStatus = async (userId) => {
     const res = await getUserStatus(userId);
-    if (res.status && res.status === "inactive") {
+    if ((res.status && res.status === "inactive") || !res.status) {
       navigation.navigate("login");
       return;
     }
@@ -35,8 +37,10 @@ const BlankScreen = () => {
       fetchUserStatus(val.userId);
       if (val?.token) {
         try {
-          await getUserData(val.userId);
-          navigation.navigate("main");
+          let res = await getUserData(val.userId);
+          if (res.status === "success" && res.user) {
+            navigation.navigate("main");
+          }
         } catch (error) {
           console.log(error);
         }

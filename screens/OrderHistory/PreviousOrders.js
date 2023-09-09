@@ -182,6 +182,7 @@ const PreviousOrders = () => {
       let truckAddress = truckDetail.address;
       let paymentId = truckDetail.paymentId;
       let paypalEmail = truckDetail.paypalEmail;
+      let category = truckDetail.category;
       let items = [];
       for (let item of Rowitems) {
         // from store order history menu item id
@@ -201,6 +202,7 @@ const PreviousOrders = () => {
               itemDiscription: item2.description,
               paymentId,
               paypalEmail,
+              category,
             });
           }
         }
@@ -213,7 +215,9 @@ const PreviousOrders = () => {
         items,
         truckId,
         truckImg,
+        paypalEmail,
         paymentId,
+        category,
       };
       temp.push(tempOrder);
     }
@@ -227,7 +231,9 @@ const PreviousOrders = () => {
   // const [searchInput, setSearchInput] = useState("");
   const handleSearchInput = (text) => {
     const filterTrucks = prvOrders.filter((truck) => {
-      return truck.truckName?.toLowerCase().includes(text?.toLowerCase());
+      return (truck?.truckName + truck?.category)
+        ?.toLowerCase()
+        .includes(text?.toLowerCase());
     });
     setPrvOrdersList(filterTrucks);
   };
@@ -258,6 +264,7 @@ const PreviousOrders = () => {
       const truckSchedule = truckDetail.schedule;
       const paymentId = truckDetail.paymentId;
       const paypalEmail = truckDetail.paypalEmail;
+      let category = truckDetail.category;
       navigation.navigate("trucks", {
         screen: "truckDetail",
         params: {
@@ -273,6 +280,7 @@ const PreviousOrders = () => {
           truckSchedule,
           paymentId,
           paypalEmail,
+          category,
         },
       });
     }

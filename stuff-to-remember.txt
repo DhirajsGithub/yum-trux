@@ -10,6 +10,7 @@ Need to replace :
 stripe api's
 paypal api's
 nodemailer email id
+default profile image for user and truck and truck owner 
 
 order history page need to modify
 - user with status inactive need to be logout and never should be login
