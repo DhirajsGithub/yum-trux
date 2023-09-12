@@ -18,7 +18,7 @@ const BlankScreen = () => {
     setLoading(true);
     let res = await getUserDetailsHttp(userId);
     setLoading(false);
-    console.log(res);
+
     if (res.status === "success" && res.user) {
       dispatch(setUserDetails(res.user));
     } else {
@@ -29,8 +29,9 @@ const BlankScreen = () => {
   const fetchUserStatus = async (userId) => {
     setLoading(true);
     const res = await getUserStatus(userId);
+
     setLoading(false);
-    if ((res.status && res.status === "inactive") || !res.status) {
+    if ((res.status && res.status === "inactive") || !res) {
       navigation.navigate("login");
       return;
     }
@@ -39,10 +40,11 @@ const BlankScreen = () => {
     try {
       const jsonValue = await AsyncStorage.getItem("@yumtrux_user");
       const val = JSON.parse(jsonValue);
-      fetchUserStatus(val.userId);
+
       if (val?.token) {
         try {
           setLoading(true);
+          // await fetchUserStatus(val.userId);
           let res = await getUserData(val.userId);
           setLoading(false);
           if (res.status === "success" && res.user) {
@@ -59,7 +61,6 @@ const BlankScreen = () => {
       }
     } catch (e) {
       setLoading(false);
-      console.log(e);
     }
   };
   useEffect(() => {

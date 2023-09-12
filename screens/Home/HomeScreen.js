@@ -46,6 +46,7 @@ const HomeScreen = () => {
     const res = await getUserStatus(userId);
     if (res.status && res.status === "inactive") {
       navigation.navigate("login");
+      alert("Your account is inactive. Please contact admin.");
     }
   };
   console.log(category);
