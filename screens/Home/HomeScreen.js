@@ -266,7 +266,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     width: "100%",
-    flex: "wrap",
+    flexWrap: "wrap",
   },
   headFile: {
     paddingHorizontal: 10,
@@ -276,15 +276,12 @@ const styles = StyleSheet.create({
   modalCat: {
     flex: 1,
     flexDirection: "row",
-    // alignContent: "center",
     justifyContent: "center",
     flexWrap: "wrap",
     paddingBottom: "20%",
   },
   categoriesName: {
-    // backgroundColor: colors.lightBlack,
     color: "white",
-    // padding: 10,
     marginBottom: 10,
     textAlign: "center",
     fontSize: 22,

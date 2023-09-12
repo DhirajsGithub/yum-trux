@@ -187,8 +187,12 @@ const TrucksNearMe = () => {
       for (let truck of res.truckList) {
         if (truck.latLong.latitude && truck.latLong.latitude) {
           tempCordinates.push({
-            latitude: truck.latLong.latitude,
-            longitude: truck.latLong.longitude,
+            latitude: truck.latLong.latitude
+              ? parseFloat(truck.latLong.latitude)
+              : 0,
+            longitude: truck.latLong.longitude
+              ? parseFloat(truck.latLong.longitude)
+              : 0,
             color: "#" + Math.floor(Math.random() * 16777215).toString(16),
             truckName: truck.name,
             category: truck.category,
@@ -198,13 +202,12 @@ const TrucksNearMe = () => {
             `https://maps.googleapis.com/maps/api/distancematrix/json?destinations=${truck.latLong.latitude},${truck.latLong.longitude}&origins=${location?.coords.latitude},${location?.coords.longitude}&units=imperial&key=AIzaSyCgwqGtmAnaG3iFtWcw7xLS-1Idq_fxzx0`
           );
           res = await res.json();
-          console.log(" res is ", res);
+
           let distanceAndTime = {
             distance: "1000000 mi",
             time: "Over sea",
           };
           if (res?.rows[0]?.elements[0]?.distance) {
-            console.log("found ", res?.rows[0]?.elements[0]?.distance);
             distanceAndTime = {
               distance: res?.rows[0]?.elements[0]?.distance.text,
               time: res?.rows[0]?.elements[0]?.duration.text,
@@ -280,7 +283,7 @@ const TrucksNearMe = () => {
       }
       return 0;
     };
-    console.log("truck detail ", truckDetail);
+
     if (truckDetail) {
       const truckName = truckDetail.name;
       const truckRatings = findRating(truckDetail.ratings);
@@ -368,8 +371,12 @@ const TrucksNearMe = () => {
           provider={PROVIDER_GOOGLE}
           initialRegion={
             location && {
-              latitude: location?.coords.latitude,
-              longitude: location?.coords.longitude,
+              latitude: location?.coords.latitude
+                ? location?.coords.latitude
+                : 0,
+              longitude: location?.coords.longitude
+                ? location?.coords.longitude
+                : 0,
               latitudeDelta: 0,
               longitudeDelta: 0,
             }
@@ -386,8 +393,8 @@ const TrucksNearMe = () => {
                 title={cordinate.truckName}
                 description={cordinate.truckDescription.slice(0, 40) + "..."}
                 coordinate={{
-                  latitude: cordinate.latitude,
-                  longitude: cordinate.longitude,
+                  latitude: cordinate.latitude ? cordinate.latitude : 0,
+                  longitude: cordinate.longitude ? cordinate.longitude : 0,
                 }}
               />
             );

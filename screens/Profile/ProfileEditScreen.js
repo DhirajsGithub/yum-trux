@@ -95,7 +95,7 @@ const ProfileEditScreen = () => {
       const img = result.assets[0];
       const fileInfo = await getFileInfo(img.uri);
       const imgSize = fileInfo.size / 1024 / 1024;
-      console.log(imgSize);
+
       if (imgSize > 2) {
         alert("Image size too large, try image with size less than 5 mb");
         return;
@@ -113,7 +113,7 @@ const ProfileEditScreen = () => {
 
           if (uplaodImgStatus.url) {
             let uploadImg = await uploadProfileImg(userId, uplaodImgStatus.url);
-            console.log(uploadImg);
+
             if (uploadImg.status === "success") {
               let res2 = await getUserDetailsHttp(userId);
               if (res2.status === "success") {
