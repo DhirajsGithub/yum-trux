@@ -247,6 +247,18 @@ const getUserStatus = async (userId) => {
   return res;
 };
 
+const addExpoPushToken = async (userId, expoPushToken) => {
+  let res = await fetch(baseUrl + "addExpoPushToken/" + userId, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ expoPushToken }),
+  });
+  res = await res.json();
+  return res;
+};
+
 export {
   loginUserHttp,
   signupUserHttp,
@@ -270,4 +282,5 @@ export {
   passwordReset,
   categoryListHttp,
   getUserStatus,
+  addExpoPushToken,
 };
