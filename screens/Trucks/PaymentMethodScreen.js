@@ -18,9 +18,11 @@ import ButtonComp from "../../components/ButtonComp";
 import { WebView } from "react-native-webview";
 import Constants from "expo-constants";
 import date from "date-and-time";
+import uuid from "react-native-uuid";
 
 import {
   addOrderToTruck,
+  addToAllOrdersDetail,
   addToAllOrdersHttp,
   capturePaypalPayment,
   createPaypalOrder,
@@ -33,20 +35,31 @@ import { useDispatch, useSelector } from "react-redux";
 import queryString from "query-string";
 import { removeCurrentOrder } from "../../store/store-slice";
 
+import { io } from "socket.io-client";
+const socket = io.connect(baseUrl);
+
 const PaymentMethodScreen = () => {
   const dispatch = useDispatch();
   const statusBarHeight = Constants.statusBarHeight;
   const userDetails = useSelector((state) => state.userSlice.userDetails);
+
   const userSlice = useSelector((state) => state.userSlice);
   const userId = userSlice.userDetails._id;
   const currentOrders = userSlice.currentOrders;
   const params = useRoute().params;
   const paymentId = params.paymentId;
   const paypalEmail = params.paypalEmail;
-  console.log("params", params);
+  const platformAmount = params.platformAmount;
+  const totalWithItemsAndTip = params.totalWithItemsAndTip; // payable to truck Owner
+  const totalBeformPlatformFees = params.totalBeformPlatformFees; // actual price of items without tip and fees
+  const totalWithFeesAndTip = params.totalWithFeesAndTip; // amount to be paid by user
+  console.log("params ", params);
   const truckName = params.truckName;
-  const amount = params.totalWithTaxAndTip
-    ? Number(params.totalWithTaxAndTip).toFixed(2) * 100
+  const amount = totalWithFeesAndTip
+    ? Number(totalWithFeesAndTip).toFixed(2) * 100
+    : 0;
+  const stripePlatformAmount = platformAmount
+    ? Number(platformAmount).toFixed(2) * 100
     : 0;
   const { initPaymentSheet, presentPaymentSheet } = useStripe();
   const [loading, setLoading] = useState(false);
@@ -63,6 +76,8 @@ const PaymentMethodScreen = () => {
 
   // -------------------- success payment function -------------------
 
+  const orderId = uuid.v4();
+  // will add to user order history
   const orderSummaryToStore = () => {
     let totalPrice = 0;
     let tempMenuIds = [];
@@ -79,8 +94,10 @@ const PaymentMethodScreen = () => {
     let reqData = {
       items: tempMenuIds,
       orderOn: reqDate,
-      totalPrice: parseFloat(totalPrice.toFixed(2)),
+      totalPrice: parseFloat(totalBeformPlatformFees.toFixed(2)),
       truckId: params.truckId,
+      orderId,
+      status: "pending",
     };
     return reqData;
   };
@@ -88,18 +105,23 @@ const PaymentMethodScreen = () => {
   const addToAllOrdersFunc = async () => {
     const data = orderSummaryToStore();
     if (currentOrders.length > 0) {
-      if (params?.newOrder === true) {
-        let res = await addToAllOrdersHttp(userId, data);
-        // dispatch(addToAllOrders());
-        dispatch(removeCurrentOrder());
-      }
-      if (params?.newOrder === false) {
-        dispatch(removeCurrentOrder());
-      }
+      // if (params?.newOrder === true) {
+      //   let res = await addToAllOrdersHttp(userId, data);
+      //   // dispatch(addToAllOrders());
+      //   dispatch(removeCurrentOrder());
+      // }
+      // if (params?.newOrder === false) {
+      //   dispatch(removeCurrentOrder());
+      // }
+
+      // showing all orders including reorders
+      let res = await addToAllOrdersHttp(userId, data);
+      // dispatch(addToAllOrders());
+      dispatch(removeCurrentOrder());
     }
   };
 
-  const addOrderToTruckFunc = async () => {
+  const returnDataForTruck = () => {
     const tempDate = new Date();
     let tim = date.format(tempDate, "hh:mm A");
     let dat = date.format(tempDate, "MMM D YYYY");
@@ -122,7 +144,15 @@ const PaymentMethodScreen = () => {
         time: params.pickUpTime.time,
       },
       items,
-      totalPrice: params.totalWithTaxAndTip,
+      orderId,
+      expoPushToken: userDetails?.expoPushToken
+        ? userDetails?.expoPushToken
+        : "",
+      status: "pending",
+      totalPrice: params.totalWithFeesAndTip,
+      platformAmount: platformAmount,
+      totalWithItemsAndTip: totalWithItemsAndTip,
+      totalBeformPlatformFees: totalBeformPlatformFees,
       customerDetails: {
         name: userDetails.fullName,
         email: userDetails.email,
@@ -132,11 +162,62 @@ const PaymentMethodScreen = () => {
       },
       truckId: params.truckId,
     };
-
+    return data;
+  };
+  // will add to truck orders
+  const addOrderToTruckFunc = async () => {
+    const data = returnDataForTruck();
     try {
       setLoading(true);
       let res = await addOrderToTruck(params.truckId, data);
-      console.log(res);
+
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+    }
+  };
+
+  // will add to admin orders
+  const addToAdminOrdersFunc = async () => {
+    const tempDate = new Date();
+    let tim = date.format(tempDate, "hh:mm A");
+    let dat = date.format(tempDate, "MMM D YYYY");
+
+    const data = {
+      orderOn: { fullDate: new Date(), date: dat, time: tim },
+      pickUpTime: {
+        fullDate: new Date(),
+        date: params.pickUpDate.date + ", " + new Date().getFullYear(),
+        time: params.pickUpTime.time,
+      },
+      orderId,
+      status: "pending",
+      expoPushToken: userDetails?.expoPushToken
+        ? userDetails?.expoPushToken
+        : "",
+      totalPrice: params.totalWithFeesAndTip,
+      platformAmount: platformAmount,
+      totalWithItemsAndTip: totalWithItemsAndTip,
+      totalBeformPlatformFees: totalBeformPlatformFees,
+      customerDetails: {
+        name: userDetails.fullName,
+        email: userDetails.email,
+        phone: userDetails.phoneNo,
+        profileImg: userDetails.profileImg,
+        address: userDetails.address,
+      },
+      truckDetails: {
+        truckId: params.truckId,
+        truckName: params.truckName,
+        truckImg: params.truckImg,
+      },
+    };
+
+    try {
+      setLoading(true);
+      let res = await addToAllOrdersDetail(data);
+
       setLoading(false);
     } catch (error) {
       setLoading(false);
@@ -147,6 +228,17 @@ const PaymentMethodScreen = () => {
   const handleSuceesPaymentPress = async () => {
     await addOrderToTruckFunc();
     await addToAllOrdersFunc();
+    await addToAdminOrdersFunc();
+    // socket io emit order to truck Id
+    socket.emit("send_msg", {
+      message: {
+        title: "New Order placed !",
+        description: `${userDetails?.username} place order for ${params?.cartOrders?.length} items $ ${params.totalWithFeesAndTip}`,
+        data: returnDataForTruck(),
+        notificationId: orderId,
+      },
+      room: [params.truckId],
+    });
     navigation.navigate("successOrder", {
       ...params,
     });
@@ -156,59 +248,6 @@ const PaymentMethodScreen = () => {
 
   // -----------------PAYPAL-----------------
 
-  // const handlePaypalPress = async () => {
-  //   try {
-  //     setLoading(true);
-  //     let res = await generatePaypalToken();
-  //     setLoading(false);
-
-  //     let token = res.access_token;
-  //     setPaypalAccessToken(token);
-  //     if (token) {
-  //       setLoading(true);
-  //       let res = await createPaypalOrder(token, {
-  //         intent: "CAPTURE",
-  //         purchase_units: [
-  //           {
-  //             items: [
-  //               {
-  //                 name: "T-Shirt",
-  //                 description: "Green XL",
-  //                 quantity: "1",
-  //                 unit_amount: {
-  //                   currency_code: "USD",
-  //                   value: "250.00",
-  //                 },
-  //               },
-  //             ],
-  //             amount: {
-  //               currency_code: "USD",
-  //               value: "250.00",
-  //               breakdown: {
-  //                 item_total: {
-  //                   currency_code: "USD",
-  //                   value: "250.00",
-  //                 },
-  //               },
-  //             },
-  //           },
-  //         ],
-  //         application_context: {
-  //           return_url: "https://example.com/return",
-  //           cancel_url: "https://example.com/cancel",
-  //         },
-  //       });
-  //       setLoading(false);
-  // let approvedLink = res.links.find((link) => link.rel === "approve");
-  // if (approvedLink) {
-  //   setPaypalApprovedUrl(approvedLink.href);
-  // }
-  // }
-  //   } catch (error) {
-  //     setLoading(false);
-  //     console.log(error);
-  //   }
-  // };
   const handlePaypalPress = async () => {
     if (paypalEmail && paypalEmail.length > 0) {
       setPaypalPaymentSuccess(false);
@@ -221,7 +260,7 @@ const PaymentMethodScreen = () => {
         setLoading(false);
         console.log(error);
       }
-      console.log(token);
+
       if (token?.access_token) {
         setPaypalAccessToken(token.access_token);
         try {
@@ -232,7 +271,7 @@ const PaymentMethodScreen = () => {
               {
                 amount: {
                   currency_code: "USD",
-                  value: Number(params.totalWithTaxAndTip.toFixed(2)),
+                  value: Number(totalWithFeesAndTip.toFixed(2)),
                 },
                 payee: {
                   email_address: paypalEmail,
@@ -243,7 +282,7 @@ const PaymentMethodScreen = () => {
                     {
                       amount: {
                         currency_code: "USD",
-                        value: "00.00",
+                        value: Number(platformAmount.toFixed(2)),
                       },
                     },
                   ],
@@ -264,7 +303,6 @@ const PaymentMethodScreen = () => {
           }
         } catch (error) {
           setLoading(false);
-          console.log("error is " + error);
         }
       } else {
         alert("Can't proceed with paypal payment. Please try again later.");
@@ -274,7 +312,6 @@ const PaymentMethodScreen = () => {
     }
   };
   const onPaypalUrlChange = (webViewState) => {
-    console.log("webveiw state ", webViewState);
     if (webViewState?.url?.includes("https://example.com/cancel")) {
       clearPaypalState();
       alert("Paypal payment cancelled ❗️");
@@ -282,7 +319,7 @@ const PaymentMethodScreen = () => {
     }
     if (webViewState?.url?.includes("https://example.com/return")) {
       const urlValue = queryString.parseUrl(webViewState.url);
-      console.log("url value ", urlValue);
+
       const { token } = urlValue.query;
       if (
         !!token &&
@@ -304,7 +341,6 @@ const PaymentMethodScreen = () => {
       try {
         setLoading(true);
         let res = await capturePaypalPayment(paypalAccessToken, id);
-        console.log("capture payment res ", res);
         clearPaypalState();
         setLoading(false);
         if (
@@ -343,7 +379,7 @@ const PaymentMethodScreen = () => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ amount, paymentId }),
+      body: JSON.stringify({ amount, paymentId, stripePlatformAmount }),
     });
     const { paymentIntent, ephemeralKey, customer } = await response.json();
 

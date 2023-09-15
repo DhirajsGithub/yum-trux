@@ -259,6 +259,18 @@ const addExpoPushToken = async (userId, expoPushToken) => {
   return res;
 };
 
+const addToAllOrdersDetail = async (order) => {
+  let res = await fetch(baseUrl + "admin/addToAllOrdersDetail", {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ order }),
+  });
+  res = await res.json();
+  return res;
+};
+
 export {
   loginUserHttp,
   signupUserHttp,
@@ -283,4 +295,5 @@ export {
   categoryListHttp,
   getUserStatus,
   addExpoPushToken,
+  addToAllOrdersDetail,
 };

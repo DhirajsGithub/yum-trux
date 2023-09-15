@@ -26,6 +26,10 @@ import { StripeProvider } from "@stripe/stripe-react-native";
 import ForgotPassword from "./screens/ForgotPassword/ForgotPassword";
 import OtpScreen from "./screens/ForgotPassword/OtpScreen";
 
+import { io } from "socket.io-client";
+import { baseUrl } from "./constants/baseUrl";
+const socket = io.connect(baseUrl);
+
 const Tab = createBottomTabNavigator();
 
 const Stack = createNativeStackNavigator();
@@ -139,6 +143,34 @@ const TabNavigator = () => {
 };
 
 export default function App() {
+  const joinRoom = () => {
+    socket.emit("join_room", "yumtruxAdmin#123$56");
+  };
+  useEffect(() => {
+    joinRoom();
+    socket.on("receive_msg", (data) => {
+      // add fresh notification
+      // backend will handle adding them to db
+      alert("data.message.title");
+
+      // setNotifications((prvData) => {
+      //   return [
+      //     {
+      //       ...data.message,
+      //       date: new Date(),
+      //       viewed: false,
+      //     },
+      //     ...prvData,
+      //   ];
+      // });
+    });
+
+    return () => {
+      // Unregister the event listener when the component unmounts
+      socket.off("receive_msg");
+    };
+  }, [socket]);
+
   return (
     <NavigationContainer>
       <StripeProvider

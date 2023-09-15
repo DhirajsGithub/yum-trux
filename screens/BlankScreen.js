@@ -86,7 +86,6 @@ const BlankScreen = () => {
   const [notification, setNotification] = useState(false);
   const notificationListener = useRef();
   const responseListener = useRef();
-  console.log(expoPushToken.data);
 
   useEffect(() => {
     registerForPushNotificationsAsync().then((token) =>
@@ -140,7 +139,6 @@ const BlankScreen = () => {
           setLoading(true);
           if (expoPushToken?.data) {
             let res1 = await addExpoPushToken(val.userId, expoPushToken.data);
-            console.log(res1);
           }
           let res = await getUserData(val.userId);
           setLoading(false);

@@ -200,28 +200,32 @@ const OrderScreen = () => {
   };
 
   // note toFixed will convet number to string hence after applying toFoxed make sure to parse the string to float or int
-  let totalBeforeTax = currentOrders?.reduce((totalPrice, currentOrder) => {
-    return totalPrice + currentOrder.itemPrice;
-  }, 0);
-  totalBeforeTax = parseFloat(totalBeforeTax.toFixed(2));
-  const taxPercentage = 10;
+  let totalBeformPlatformFees = currentOrders?.reduce(
+    (totalPrice, currentOrder) => {
+      return totalPrice + currentOrder.itemPrice;
+    },
+    0
+  );
+  totalBeformPlatformFees = parseFloat(totalBeformPlatformFees.toFixed(2));
+  const platformPercentage = 15;
 
   const [tipCardPress, setTipCardPress] = useState(0);
   const handleTipPress = (data) => {
     setTipCardPress(data);
   };
-  const taxAmount = parseFloat(
-    ((taxPercentage / 100) * totalBeforeTax).toFixed(2)
+  const platformAmount = parseFloat(
+    ((platformPercentage / 100) * totalBeformPlatformFees).toFixed(2)
   );
   let tipShit = 0;
   if (tipCardPress === true) {
     tipShit = myAmount.length > 0 && parseFloat(myAmount);
   } else {
-    tipShit = totalBeforeTax * (tipCardPress / 100);
+    tipShit = totalBeformPlatformFees * (tipCardPress / 100);
   }
-  let totalWithTaxAndTip = taxAmount + totalBeforeTax + tipShit;
-
-  totalWithTaxAndTip = parseFloat(totalWithTaxAndTip.toFixed(2));
+  let totalWithFeesAndTip = platformAmount + totalBeformPlatformFees + tipShit;
+  totalWithFeesAndTip = parseFloat(totalWithFeesAndTip.toFixed(2));
+  let totalWithItemsAndTip = totalBeformPlatformFees + tipShit;
+  totalWithItemsAndTip = parseFloat(totalWithItemsAndTip.toFixed(2));
 
   const dateNow = new Date();
   const [pickUpDate, setPickUpDate] = useState({
@@ -281,7 +285,7 @@ const OrderScreen = () => {
     } else if (pickUpDate.date === "date") {
       alert("pick a valid date");
       return;
-    } else if (typeof totalWithTaxAndTip !== "number") {
+    } else if (typeof totalWithFeesAndTip !== "number") {
       alert("Total price must be a Number");
       return;
     }
@@ -300,7 +304,10 @@ const OrderScreen = () => {
         date: date.format(pickUpDate?.date, "D MMM"),
       },
       truckImg,
-      totalWithTaxAndTip,
+      totalWithFeesAndTip,
+      platformAmount,
+      totalWithItemsAndTip,
+      totalBeformPlatformFees,
       paymentId,
       paypalEmail,
       truckId,
@@ -397,7 +404,7 @@ const OrderScreen = () => {
                   color: colors.textColor,
                 }}
               >
-                Total before tax
+                Total before platform fees
               </Text>
               <Text
                 style={{
@@ -406,7 +413,7 @@ const OrderScreen = () => {
                   color: colors.textColor,
                 }}
               >
-                $ {totalBeforeTax?.toFixed(2)}
+                $ {totalBeformPlatformFees?.toFixed(2)}
               </Text>
             </View>
             <View style={styles.cost1Flex}>
@@ -417,7 +424,7 @@ const OrderScreen = () => {
                   color: colors.textColor,
                 }}
               >
-                Tax amount
+                Platform fees
               </Text>
               <Text
                 style={{
@@ -426,7 +433,7 @@ const OrderScreen = () => {
                   color: colors.textColor,
                 }}
               >
-                $ {taxAmount?.toFixed(2)}
+                $ {platformAmount?.toFixed(2)}
               </Text>
             </View>
           </View>
@@ -449,7 +456,7 @@ const OrderScreen = () => {
               handleTipPress={handleTipPress}
               isTip={true}
               tipPer={10}
-              tipAmount={(0.1 * totalBeforeTax)?.toFixed(2)}
+              tipAmount={(0.1 * totalBeformPlatformFees)?.toFixed(2)}
               noTip={false}
               myAmount={false}
               backgroundColor={
@@ -461,7 +468,7 @@ const OrderScreen = () => {
               handleTipPress={handleTipPress}
               isTip={true}
               tipPer={15}
-              tipAmount={(0.15 * totalBeforeTax)?.toFixed(2)}
+              tipAmount={(0.15 * totalBeformPlatformFees)?.toFixed(2)}
               noTip={false}
               myAmount={false}
               backgroundColor={
@@ -473,7 +480,7 @@ const OrderScreen = () => {
               handleTipPress={handleTipPress}
               isTip={true}
               tipPer={20}
-              tipAmount={(0.2 * totalBeforeTax)?.toFixed(2)}
+              tipAmount={(0.2 * totalBeformPlatformFees)?.toFixed(2)}
               noTip={false}
               myAmount={false}
               backgroundColor={
@@ -520,10 +527,10 @@ const OrderScreen = () => {
             }}
           >
             <Text style={{ fontSize: 20, fontWeight: "600" }}>
-              Total with tax and tip
+              Total with fees and tip
             </Text>
             <Text style={{ fontSize: 22, fontWeight: "700" }}>
-              $ {totalWithTaxAndTip?.toFixed(2)}
+              $ {totalWithFeesAndTip?.toFixed(2)}
             </Text>
           </View>
 
