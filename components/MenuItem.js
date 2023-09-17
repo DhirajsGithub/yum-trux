@@ -13,7 +13,7 @@ const MenuItem = ({
   return (
     <View style={styles.container}>
       <View style={styles.imgNameBtn}>
-        <View>
+        <View style={{ width: "25%" }}>
           <Image
             source={{
               uri:
@@ -24,7 +24,7 @@ const MenuItem = ({
             style={styles.image}
           />
         </View>
-        <View style={styles.itemDetail}>
+        <View style={{ width: "75%" }}>
           <Text style={styles.description}>{itemDiscription}</Text>
         </View>
       </View>
@@ -62,12 +62,10 @@ const styles = StyleSheet.create({
     paddingVertical: 9,
     borderBottomWidth: 1,
   },
-  itemDetail: {
-    // width: "65%",
-  },
+
   imgNameBtn: {
     flexDirection: "row",
-    // flexWrap: "wrap",
+
     justifyContent: "space-between",
     alignItems: "center",
   },
@@ -86,11 +84,14 @@ const styles = StyleSheet.create({
     color: colors.white,
   },
   nameText: {
+    textAlign: "left",
+    width: "50%",
     fontSize: 20,
     fontWeight: "700",
     color: colors.textColor,
   },
   price: {
+    maxWidth: "20%",
     fontSize: 15,
     fontWeight: "600",
     color: colors.textColor,
@@ -99,18 +100,12 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "400",
     color: "#454545",
-    flexWrap: "wrap",
-  },
-  image: {
-    width: 100,
-    height: 80,
-    marginRight: 20,
-    borderRadius: 10,
   },
   image: {
     width: 70,
     height: 70,
     marginRight: 10,
+    borderRadius: 10,
   },
   menuItem: {
     flexDirection: "row",

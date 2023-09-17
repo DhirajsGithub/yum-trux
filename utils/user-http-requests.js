@@ -85,13 +85,13 @@ const removeFromFavTruckHttp = async (userId, truckId) => {
   return res;
 };
 
-const addToAllOrdersHttp = async (userId, data) => {
+const addToAllOrdersHttp = async (userId, data, notification) => {
   let res = await fetch(baseUrl + "orderHistory/" + userId, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ order: data }),
+    body: JSON.stringify({ order: data, notification }),
   });
   res = await res.json();
   return res;
@@ -191,13 +191,13 @@ const generatePaypalAccessToken = async () => {
   return res;
 };
 
-const addOrderToTruck = async (truckId, order) => {
+const addOrderToTruck = async (truckId, order, notification) => {
   let res = await fetch(baseUrl + "truck/addOrderToTruck/" + truckId, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ order }),
+    body: JSON.stringify({ order, notification }),
   });
   res = await res.json();
   return res;
@@ -259,6 +259,7 @@ const addExpoPushToken = async (userId, expoPushToken) => {
   return res;
 };
 
+// for admin orders
 const addToAllOrdersDetail = async (order) => {
   let res = await fetch(baseUrl + "admin/addToAllOrdersDetail", {
     method: "PUT",
@@ -266,6 +267,17 @@ const addToAllOrdersDetail = async (order) => {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({ order }),
+  });
+  res = await res.json();
+  return res;
+};
+const addUserNotification = async (userId, notification) => {
+  let res = await fetch(baseUrl + "addNotification/", {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ ids: [userId], notification }),
   });
   res = await res.json();
   return res;
@@ -296,4 +308,5 @@ export {
   getUserStatus,
   addExpoPushToken,
   addToAllOrdersDetail,
+  addUserNotification,
 };

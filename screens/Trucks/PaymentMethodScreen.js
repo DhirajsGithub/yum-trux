@@ -24,6 +24,7 @@ import {
   addOrderToTruck,
   addToAllOrdersDetail,
   addToAllOrdersHttp,
+  addUserNotification,
   capturePaypalPayment,
   createPaypalOrder,
   generatePaypalAccessToken,
@@ -53,14 +54,15 @@ const PaymentMethodScreen = () => {
   const totalWithItemsAndTip = params.totalWithItemsAndTip; // payable to truck Owner
   const totalBeformPlatformFees = params.totalBeformPlatformFees; // actual price of items without tip and fees
   const totalWithFeesAndTip = params.totalWithFeesAndTip; // amount to be paid by user
-  console.log("params ", params);
   const truckName = params.truckName;
   const amount = totalWithFeesAndTip
-    ? Number(totalWithFeesAndTip).toFixed(2) * 100
+    ? Math.round(totalWithFeesAndTip * 100)
     : 0;
   const stripePlatformAmount = platformAmount
-    ? Number(platformAmount).toFixed(2) * 100
+    ? Math.round(platformAmount * 100)
     : 0;
+  // console.log(amount);
+
   const { initPaymentSheet, presentPaymentSheet } = useStripe();
   const [loading, setLoading] = useState(false);
   const [paypalAccessToken, setPaypalAccessToken] = useState(null);
@@ -115,7 +117,12 @@ const PaymentMethodScreen = () => {
       // }
 
       // showing all orders including reorders
-      let res = await addToAllOrdersHttp(userId, data);
+      let res = await addToAllOrdersHttp(userId, data, {
+        title: "Order placed !",
+        description: `Your order is placed for ${params?.cartOrders?.length} items for $ ${params.totalWithFeesAndTip}`,
+        data: "data",
+        notificationId: orderId,
+      });
       // dispatch(addToAllOrders());
       dispatch(removeCurrentOrder());
     }
@@ -159,6 +166,7 @@ const PaymentMethodScreen = () => {
         phone: userDetails.phoneNo,
         profileImg: userDetails.profileImg,
         address: userDetails.address,
+        userId: userDetails._id,
       },
       truckId: params.truckId,
     };
@@ -169,7 +177,12 @@ const PaymentMethodScreen = () => {
     const data = returnDataForTruck();
     try {
       setLoading(true);
-      let res = await addOrderToTruck(params.truckId, data);
+      let res = await addOrderToTruck(params.truckId, data, {
+        title: "New Order placed !",
+        description: `${userDetails?.username} place order for ${params?.cartOrders?.length} items $ ${params.totalWithFeesAndTip}`,
+        data: returnDataForTruck(),
+        notificationId: orderId,
+      });
 
       setLoading(false);
     } catch (error) {
@@ -206,6 +219,7 @@ const PaymentMethodScreen = () => {
         phone: userDetails.phoneNo,
         profileImg: userDetails.profileImg,
         address: userDetails.address,
+        userId: userDetails._id,
       },
       truckDetails: {
         truckId: params.truckId,
@@ -226,11 +240,11 @@ const PaymentMethodScreen = () => {
   };
 
   const handleSuceesPaymentPress = async () => {
-    await addOrderToTruckFunc();
-    await addToAllOrdersFunc();
-    await addToAdminOrdersFunc();
+    await addOrderToTruckFunc(); // will add to truck orders also it will push to truck's notfication field
+    await addToAllOrdersFunc(); // will add to order history of user also it will push to user's notification field
+    await addToAdminOrdersFunc(); // will add to admin orders
     // socket io emit order to truck Id
-    socket.emit("send_msg", {
+    await socket.emit("send_msg", {
       message: {
         title: "New Order placed !",
         description: `${userDetails?.username} place order for ${params?.cartOrders?.length} items $ ${params.totalWithFeesAndTip}`,

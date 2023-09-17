@@ -95,7 +95,9 @@ const PreviousOrders = () => {
   const dispatch = useDispatch();
   const userSlice = useSelector((state) => state.userSlice);
   const userDetails = userSlice.userDetails;
-  const rowOrderHistory = userDetails.orderHistory;
+  const rowOrderHistory = userDetails.orderHistory
+    ? userDetails.orderHistory
+    : [];
   const userId = userDetails._id;
   const prvOrders = userSlice.allOrders;
   const currentOrders = userSlice.currentOrders;
