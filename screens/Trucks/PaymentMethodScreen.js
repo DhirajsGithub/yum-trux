@@ -24,7 +24,6 @@ import {
   addOrderToTruck,
   addToAllOrdersDetail,
   addToAllOrdersHttp,
-  addUserNotification,
   capturePaypalPayment,
   createPaypalOrder,
   generatePaypalAccessToken,
@@ -173,16 +172,20 @@ const PaymentMethodScreen = () => {
     return data;
   };
   // will add to truck orders
-  const addOrderToTruckFunc = async () => {
+  const addOrderToTruckFunc = async (obj) => {
     const data = returnDataForTruck();
     try {
       setLoading(true);
-      let res = await addOrderToTruck(params.truckId, data, {
-        title: "New Order placed !",
-        description: `${userDetails?.username} place order for ${params?.cartOrders?.length} items $ ${params.totalWithFeesAndTip}`,
-        data: returnDataForTruck(),
-        notificationId: orderId,
-      });
+      let res = await addOrderToTruck(
+        params.truckId,
+        { ...data, paymentMethod: obj },
+        {
+          title: "New Order placed !",
+          description: `${userDetails?.username} place order for ${params?.cartOrders?.length} items $ ${params.totalWithFeesAndTip}`,
+          data: "data",
+          notificationId: orderId,
+        }
+      );
 
       setLoading(false);
     } catch (error) {
@@ -192,7 +195,7 @@ const PaymentMethodScreen = () => {
   };
 
   // will add to admin orders
-  const addToAdminOrdersFunc = async () => {
+  const addToAdminOrdersFunc = async (obj) => {
     const tempDate = new Date();
     let tim = date.format(tempDate, "hh:mm A");
     let dat = date.format(tempDate, "MMM D YYYY");
@@ -226,6 +229,7 @@ const PaymentMethodScreen = () => {
         truckName: params.truckName,
         truckImg: params.truckImg,
       },
+      paymentMethod: obj,
     };
 
     try {
@@ -239,10 +243,10 @@ const PaymentMethodScreen = () => {
     }
   };
 
-  const handleSuceesPaymentPress = async () => {
-    await addOrderToTruckFunc(); // will add to truck orders also it will push to truck's notfication field
-    await addToAllOrdersFunc(); // will add to order history of user also it will push to user's notification field
-    await addToAdminOrdersFunc(); // will add to admin orders
+  const handleSuceesPaymentPress = async (obj) => {
+    await addOrderToTruckFunc(obj); // will add to truck orders also it will push to truck's notfication field
+    await addToAllOrdersFunc(obj); // will add to order history of user also it will push to user's notification field
+    await addToAdminOrdersFunc(obj); // will add to admin orders
     // socket io emit order to truck Id
     await socket.emit("send_msg", {
       message: {
@@ -361,8 +365,11 @@ const PaymentMethodScreen = () => {
           res?.status === "COMPLETED" ||
           res?.details[0].issue === "ORDER_ALREADY_CAPTURED"
         ) {
+          await handleSuceesPaymentPress({
+            mode: "paypal",
+            email: paypalEmail,
+          });
           alert("Paypal payment success ✅");
-          await handleSuceesPaymentPress();
           // call a function which will store order to user and truck database
           return;
         } else {
@@ -434,10 +441,14 @@ const PaymentMethodScreen = () => {
     if (error) {
       Alert.alert(`Error code: ${error.code}`, error.message + " ❗️");
     } else {
+      await handleSuceesPaymentPress({
+        mode: "card",
+        paymentId: paymentId,
+      });
       Alert.alert("Success", "Your order is confirmed! ✅", [
         {
           text: "OK",
-          onPress: async () => await handleSuceesPaymentPress(),
+          onPress: () => null,
         },
       ]);
     }
