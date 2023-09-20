@@ -254,6 +254,7 @@ const PaymentMethodScreen = () => {
         description: `${userDetails?.username} place order for ${params?.cartOrders?.length} items $ ${params.totalWithFeesAndTip}`,
         data: returnDataForTruck(),
         notificationId: orderId,
+        isOrder: true,
       },
       room: [params.truckId],
     });
