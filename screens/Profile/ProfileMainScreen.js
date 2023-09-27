@@ -1,6 +1,7 @@
 import {
   Alert,
   BackHandler,
+  Linking,
   ScrollView,
   StyleSheet,
   Text,
@@ -20,6 +21,7 @@ import { Ionicons } from "@expo/vector-icons";
 import colors from "../../constants/colors";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useSelector } from "react-redux";
+import { adminUrl } from "../../constants/baseUrl";
 
 const ProfileMainScreen = () => {
   const userDetails = useSelector((state) => state.userSlice.userDetails);
@@ -60,7 +62,9 @@ const ProfileMainScreen = () => {
       },
     ]);
   };
-  const handleSupportPress = () => {};
+  const handleSupportPress = () => {
+    Linking.openURL(adminUrl + "support");
+  };
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />

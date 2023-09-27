@@ -41,6 +41,7 @@ const HomeScreen = () => {
   const [truckListNew, setTruckListNew] = useState([]);
   const [categories, setCategories] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
+  const [notficationModal, setNotifcationModal] = useState(false);
 
   const fetchUserStatus = async () => {
     const res = await getUserStatus(userId);
@@ -117,6 +118,10 @@ const HomeScreen = () => {
     return categoryFilter && searchFilter;
   });
 
+  const handleNotificationPress = () => {
+    setNotifcationModal(true);
+  };
+
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
@@ -135,6 +140,7 @@ const HomeScreen = () => {
               isTrucksList={false}
               handleSettingPress={handleSettingPress}
               handleSearchInput={handleSearchInput}
+              handleNotificationPress={handleNotificationPress}
             />
           </View>
 
@@ -146,7 +152,6 @@ const HomeScreen = () => {
             transparent={true}
             isVisible={modalVisible}
             onRequestClose={() => {
-              Alert.alert("Modal has been closed.");
               setModalVisible(!modalVisible);
             }}
           >

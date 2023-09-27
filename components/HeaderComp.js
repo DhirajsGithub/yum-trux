@@ -11,15 +11,9 @@ import React, { useEffect, useState } from "react";
 import { Feather } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import colors from "../constants/colors";
+import { Ionicons } from "@expo/vector-icons";
 
-const HeaderComp = ({
-  isTrucksList,
-  // handleSearchPress,
-  handleFilterPress,
-  handleSettingPress,
-  onlySearch,
-  handleSearchInput,
-}) => {
+const HeaderComp = ({ handleSearchInput, handleNotificationPress }) => {
   const [showSearch, setShowSearch] = useState(false);
   const [searchInput, setSearchInput] = useState("");
   const handleSerachChange = (text) => {
@@ -65,6 +59,14 @@ const HeaderComp = ({
           <Feather
             style={{ marginRight: 12 }}
             name="search"
+            size={24}
+            color={colors.textColor}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={handleNotificationPress}>
+          <Ionicons
+            name="notifications-outline"
+            style={{ marginRight: 12 }}
             size={24}
             color={colors.textColor}
           />
