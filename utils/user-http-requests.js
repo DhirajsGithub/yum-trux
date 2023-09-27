@@ -283,6 +283,31 @@ const addUserNotification = async (userId, notification) => {
   return res;
 };
 
+const getUserNotfications = async (userId) => {
+  let res = await fetch(baseUrl + "getNotifications/" + userId);
+  res = await res.json();
+  return res;
+};
+
+const updateUserNotification = async (
+  userId,
+  notificationId,
+  deleteNotification
+) => {
+  console.log(deleteNotification);
+  let res = await fetch(
+    baseUrl + "updateNotification/" + userId + "/" + notificationId,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ deleteNotification }),
+    }
+  );
+  return res.json();
+};
+
 export {
   loginUserHttp,
   signupUserHttp,
@@ -309,4 +334,6 @@ export {
   addExpoPushToken,
   addToAllOrdersDetail,
   addUserNotification,
+  getUserNotfications,
+  updateUserNotification,
 };

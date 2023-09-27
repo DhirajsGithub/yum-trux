@@ -140,7 +140,6 @@ const HomeScreen = () => {
               isTrucksList={false}
               handleSettingPress={handleSettingPress}
               handleSearchInput={handleSearchInput}
-              handleNotificationPress={handleNotificationPress}
             />
           </View>
 

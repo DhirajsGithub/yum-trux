@@ -28,6 +28,7 @@ import OtpScreen from "./screens/ForgotPassword/OtpScreen";
 
 import { io } from "socket.io-client";
 import { baseUrl } from "./constants/baseUrl";
+import Notification from "./screens/Notification/Notification";
 const socket = io.connect(baseUrl);
 
 const Tab = createBottomTabNavigator();
@@ -186,6 +187,7 @@ export default function App() {
             <Stack.Screen name="forgotPass" component={ForgotPassword} />
             <Stack.Screen name="otpScreen" component={OtpScreen} />
             <Stack.Screen name="main" component={TabNavigator} />
+            <Stack.Screen name="notification" component={Notification} />
           </Stack.Navigator>
         </Provider>
       </StripeProvider>

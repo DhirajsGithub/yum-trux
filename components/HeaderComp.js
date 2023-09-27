@@ -12,8 +12,10 @@ import { Feather } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import colors from "../constants/colors";
 import { Ionicons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 
-const HeaderComp = ({ handleSearchInput, handleNotificationPress }) => {
+const HeaderComp = ({ handleSearchInput }) => {
+  const navigation = useNavigation();
   const [showSearch, setShowSearch] = useState(false);
   const [searchInput, setSearchInput] = useState("");
   const handleSerachChange = (text) => {
@@ -21,6 +23,9 @@ const HeaderComp = ({ handleSearchInput, handleNotificationPress }) => {
   };
   const handleSearchPress = () => {
     setShowSearch(!showSearch);
+  };
+  const handleNotificationPress = () => {
+    navigation.navigate("notification");
   };
 
   useEffect(() => {
