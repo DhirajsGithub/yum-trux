@@ -55,9 +55,7 @@ const ProfileEditScreen = () => {
     address: false,
   });
   const [image, setImage] = useState("");
-  const [imgUrl, setImgUrl] = useState(
-    "https://res.cloudinary.com/dk8hyxr2z/image/upload/v1685710777/yumtrux_users/defaultProfileImg_rrndub.webp"
-  );
+  const [imgUrl, setImgUrl] = useState(userDetails.profileImg);
 
   useEffect(() => {
     setFullName(userDetails.fullName);

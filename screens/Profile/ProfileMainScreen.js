@@ -25,9 +25,7 @@ import { adminUrl } from "../../constants/baseUrl";
 
 const ProfileMainScreen = () => {
   const userDetails = useSelector((state) => state.userSlice.userDetails);
-  const [imgUrl, setImgUrl] = useState(
-    "https://res.cloudinary.com/dk8hyxr2z/image/upload/v1685710777/yumtrux_users/defaultProfileImg_rrndub.webp"
-  );
+  const [imgUrl, setImgUrl] = useState(userDetails.profileImg);
   useEffect(() => {
     setImgUrl(userDetails.profileImg);
   }, [userDetails]);

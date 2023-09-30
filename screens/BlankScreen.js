@@ -168,7 +168,9 @@ const BlankScreen = () => {
   return (
     <View style={styles.container}>
       {loading && <Text style={{ color: "white" }}>Loading...</Text>}
-      {!loading && <Text style={{ color: "white" }}>Blank Screen</Text>}
+      {!loading && (
+        <Text style={{ color: "white" }}>Check your internet connection</Text>
+      )}
     </View>
   );
 };
