@@ -11,7 +11,7 @@ import {
 import React, { useEffect, useLayoutEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useNavigation } from "@react-navigation/native";
+import { StackActions, useNavigation } from "@react-navigation/native";
 import { Image } from "react-native";
 import { Fontisto } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -38,13 +38,17 @@ const ProfileMainScreen = () => {
   const handleEditProfilePress = () => {
     navigation.navigate("profileEdit");
   };
-  const handlePaymentMethodPress = () => {};
+  const handlePaymentMethodPress = () => {
+    navigation.navigate("paymentMethod");
+  };
   const handleFavouritePress = () => {
     navigation.navigate("favouriteTrucks");
   };
   const logoutFunction = async () => {
     try {
       await AsyncStorage.removeItem("@yumtrux_user");
+
+      navigation.dispatch(StackActions.popToTop());
       navigation.navigate("login");
     } catch (exception) {
       console.log(exception);

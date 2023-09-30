@@ -24,6 +24,7 @@ import {
 } from "../../store/store-slice";
 import EmptyData from "../../components/EmptyData";
 import { FontAwesome5 } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import Spinner from "react-native-loading-spinner-overlay/lib";
 import {
   getUserDetailsHttp,
@@ -38,6 +39,7 @@ const OrderCard = ({
   dateTime,
   handleReorderPress,
   handleViewTruckPress,
+  orderStatus,
 }) => {
   return (
     <View style={styles.orderCard}>
@@ -50,11 +52,20 @@ const OrderCard = ({
             }}
           />
         </View>
-        <View>
+        <View style={{ maxWidth: "60%" }}>
           <Text style={styles.trckNameText}>{truckName}</Text>
-          <Text style={styles.smallText}>{NoOfDishes} dishes</Text>
-          <Text style={styles.smallText}>$ {price}</Text>
+          <View
+            style={{ flexDirection: "row", justifyContent: "space-between" }}
+          >
+            <Text style={styles.smallText}>{NoOfDishes} dishes</Text>
+            <Text
+              style={[styles.smallText, { fontSize: 15, color: "#404040" }]}
+            >
+              $ {price}
+            </Text>
+          </View>
           <Text style={styles.smallText}>{dateTime}</Text>
+          <Text style={styles.orderStatus}>{orderStatus}</Text>
         </View>
       </View>
       <View style={styles.btns}>
@@ -171,7 +182,7 @@ const PreviousOrders = () => {
   for (let i = rowOrderHistory.length - 1; i >= 0; i--) {
     let truckId = rowOrderHistory[i].truckId;
     let truckDetail = findTruckDetails(truckId);
-
+    let orderStatus = rowOrderHistory[i].status;
     if (truckDetail) {
       let totalPrice = parseFloat(rowOrderHistory[i].totalPrice.toFixed(2));
       let truckId = rowOrderHistory[i].truckId;
@@ -185,6 +196,7 @@ const PreviousOrders = () => {
       let paymentId = truckDetail.paymentId;
       let paypalEmail = truckDetail.paypalEmail;
       let category = truckDetail.category;
+
       let items = [];
       for (let item of Rowitems) {
         // from store order history menu item id
@@ -220,7 +232,9 @@ const PreviousOrders = () => {
         paypalEmail,
         paymentId,
         category,
+        orderStatus,
       };
+      console.log(tempOrder);
       temp.push(tempOrder);
     }
   }
@@ -228,7 +242,7 @@ const PreviousOrders = () => {
   useEffect(() => {
     dispatch(setAllOrderHistoryProper(temp));
     setPrvOrdersList(temp);
-  }, [trucksList, userDetails]);
+  }, [trucksList]);
 
   // const [searchInput, setSearchInput] = useState("");
   const handleSearchInput = (text) => {
@@ -317,9 +331,20 @@ const PreviousOrders = () => {
     }
     navigation.navigate("trucks", {
       screen: "order",
+
       // passing params of newOrder as false to not store this order again in allOrders !
-      params: { newOrder: false },
+      params: { newOrder: false, screen: "prvOrders" },
     });
+  };
+
+  const handleReloadPress = () => {
+    try {
+      fetchUserLatestDetails();
+      fetchTrucksList();
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+    }
   };
 
   return (
@@ -337,23 +362,42 @@ const PreviousOrders = () => {
         <HeaderComp handleSearchInput={handleSearchInput} onlySearch={true} />
 
         <View
-          style={{ flexDirection: "row", alignItems: "center", marginTop: 10 }}
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            marginTop: 10,
+            justifyContent: "space-between",
+          }}
         >
-          <Text
+          <View
             style={{
-              fontSize: 20,
-              fontWeight: "700",
-              color: colors.textColor,
-              marginRight: 10,
+              flexDirection: "row",
+              alignItems: "center",
             }}
           >
-            Order History
-          </Text>
-          <FontAwesome5
-            name="clipboard-list"
-            size={18}
-            color={colors.textColor}
-          />
+            <Text
+              style={{
+                fontSize: 20,
+                fontWeight: "700",
+                color: colors.textColor,
+                marginRight: 10,
+              }}
+            >
+              Order History
+            </Text>
+            <FontAwesome5
+              name="clipboard-list"
+              size={18}
+              color={colors.textColor}
+            />
+          </View>
+          <TouchableOpacity onPress={handleReloadPress}>
+            <Ionicons
+              name="refresh-circle"
+              size={28}
+              color={colors.textColor}
+            />
+          </TouchableOpacity>
         </View>
         {prvOrdersList.length === 0 && !loading && (
           <EmptyData msg="No truck found 😞" />
@@ -371,6 +415,7 @@ const PreviousOrders = () => {
                   handleViewTruckPress={() =>
                     handleViewTruckPress(item.truckId)
                   }
+                  orderStatus={item.orderStatus}
                   handleReorderPress={() => handleReorderPress(item.items)}
                   imgUrl={item.truckImg}
                   truckName={item.truckName}
@@ -438,28 +483,42 @@ const styles = StyleSheet.create({
     // borderRadius: 20,
   },
   trckNameText: {
-    width: 120,
+    maxWidth: 130,
     color: colors.textColor,
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: "700",
   },
   smallText: {
     color: "#6B6B6B",
     fontSize: 13,
-    fontWeight: "400",
+    fontWeight: "500",
   },
   btns: {
     display: "flex",
     rowGap: 8,
+    minWidth: "30%",
   },
   imgDesc: {
     flexDirection: "row",
     alignItems: "center",
+    maxWidth: "60%",
   },
   orderCard: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
     marginTop: 24,
+  },
+  orderStatus: {
+    color: colors.white,
+    fontSize: 14,
+    fontWeight: "500",
+    backgroundColor: "#404040",
+    borderRadius: 10,
+    textAlign: "center",
+    paddingHorizontal: 2,
+    paddingVertical: 2,
+    marginTop: 5,
+    overflow: "hidden",
   },
 });

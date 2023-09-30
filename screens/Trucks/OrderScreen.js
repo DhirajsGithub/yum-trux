@@ -185,7 +185,6 @@ const OrderScreen = () => {
       orderSet.add(order.itemId);
     }
   }
-  // console.log("ordersArray", ordersArray);
   const handleAddPress = (itemId) => {
     dispatch(addQuantity(itemId));
   };
@@ -237,8 +236,6 @@ const OrderScreen = () => {
     time: new Date(),
   });
   const handlePickupDate = (obj, daa) => {
-    // console.log(obj);
-    console.log("daa ", daa);
     if (daa) {
       setPickUpDate({ show: false, date: daa });
     }
@@ -289,8 +286,7 @@ const OrderScreen = () => {
       alert("Total price must be a Number");
       return;
     }
-    console.log(date.format(pickUpTime?.time, "hh:mm A"));
-    console.log(date.format(pickUpDate?.date, "D MMM"));
+
     navigation.navigate("paymentMethod", {
       truckName,
       truckDescription,

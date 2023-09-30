@@ -37,6 +37,7 @@
     "logger": "^0.0.1",
     "query-string": "^8.1.0",
     "react": "18.2.0",
+    "react-hook-form": "^7.46.2",
     "react-native": "0.71.8",
     "react-native-base64": "^0.2.1",
     "react-native-crypto": "^2.2.0",
@@ -58,6 +59,7 @@
     "react-native-webview": "11.26.0",
     "react-redux": "^8.0.5",
     "redux-logger": "^3.0.6",
+    "rn-credit-card": "^1.0.4",
     "sha1": "^1.1.1",
     "socket.io-client": "^4.7.2",
     "uniqid": "^5.4.0"

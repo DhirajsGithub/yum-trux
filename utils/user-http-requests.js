@@ -159,7 +159,6 @@ const createPaypalOrder = async (access_token, data) => {
   try {
     let res = await fetch(url, reqOptions);
     res = await res.json();
-    console.log(res);
     return res;
   } catch (error) {
     return error.message;
@@ -294,7 +293,6 @@ const updateUserNotification = async (
   notificationId,
   deleteNotification
 ) => {
-  console.log(deleteNotification);
   let res = await fetch(
     baseUrl + "updateNotification/" + userId + "/" + notificationId,
     {
@@ -305,6 +303,17 @@ const updateUserNotification = async (
       body: JSON.stringify({ deleteNotification }),
     }
   );
+  return res.json();
+};
+
+const udpateUesrPaymentMethod = async (userId, paymentDetails) => {
+  let res = await fetch(baseUrl + "updatePaymentDetails/" + userId, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ paymentDetails }),
+  });
   return res.json();
 };
 
@@ -336,4 +345,5 @@ export {
   addUserNotification,
   getUserNotfications,
   updateUserNotification,
+  udpateUesrPaymentMethod,
 };

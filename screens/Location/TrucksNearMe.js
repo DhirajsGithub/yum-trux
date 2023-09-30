@@ -168,15 +168,15 @@ const TrucksNearMe = () => {
 
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
-  useFocusEffect(
-    React.useCallback(() => {
-      try {
-        fetchTrucksList();
-      } catch (error) {
-        console.log(error);
-      }
-    }, [])
-  );
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     try {
+  //       fetchTrucksList();
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   }, [])
+  // );
 
   const fetchTrucksList = async () => {
     setLoading(true);

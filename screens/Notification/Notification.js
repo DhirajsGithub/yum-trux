@@ -110,13 +110,17 @@ const Notification = () => {
           <Ionicons
             name="chevron-back-circle"
             size={32}
-            color={colors.action}
+            color={colors.textColor}
           />
         </TouchableOpacity>
       ),
       headerRight: () => (
         <TouchableOpacity onPress={handleRefreshPress}>
-          <Ionicons name="md-refresh-circle" size={32} color={colors.action} />
+          <Ionicons
+            name="md-refresh-circle"
+            size={32}
+            color={colors.textColor}
+          />
         </TouchableOpacity>
       ),
     });

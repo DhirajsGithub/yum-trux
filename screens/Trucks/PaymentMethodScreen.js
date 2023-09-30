@@ -268,6 +268,15 @@ const PaymentMethodScreen = () => {
   // -----------------PAYPAL-----------------
 
   const handlePaypalPress = async () => {
+    if (
+      !userDetails?.email ||
+      !userDetails?.fullName === 0 ||
+      !userDetails?.phoneNo ||
+      !userDetails?.address
+    ) {
+      alert("Please update your profile first");
+      return;
+    }
     if (paypalEmail && paypalEmail.length > 0) {
       setPaypalPaymentSuccess(false);
       let token = null;
@@ -455,6 +464,15 @@ const PaymentMethodScreen = () => {
     }
   };
   const handleCardsPress = async () => {
+    if (
+      !userDetails?.email ||
+      !userDetails?.fullName === 0 ||
+      !userDetails?.phoneNo ||
+      !userDetails?.address
+    ) {
+      alert("Please update your profile first");
+      return;
+    }
     if (paymentId && paymentId.length > 0) {
       try {
         setLoading(true);
