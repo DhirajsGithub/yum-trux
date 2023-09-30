@@ -127,18 +127,7 @@ const ProfileMainScreen = () => {
               </View>
             </View>
             <View style={styles.borderBottom}></View>
-            <View style={styles.section}>
-              <View style={styles.touchableView}>
-                <TouchableOpacity
-                  onPress={handleFavouritePress}
-                  style={styles.sectionRow}
-                >
-                  <View style={styles.icon}>
-                    <EvilIcons name="star" size={24} color={colors.white} />
-                  </View>
-                  <Text style={styles.mainText}>Favorite</Text>
-                </TouchableOpacity>
-              </View>
+            {/* <View style={styles.section}>
               <View style={styles.touchableView}>
                 <TouchableOpacity
                   onPress={handlePaymentMethodPress}
@@ -154,9 +143,20 @@ const ProfileMainScreen = () => {
                   <Text style={styles.mainText}>Manage payment method</Text>
                 </TouchableOpacity>
               </View>
-            </View>
-            <View style={styles.borderBottom}></View>
+            </View> */}
+            {/* <View style={styles.borderBottom}></View> */}
             <View style={styles.section}>
+              <View style={styles.touchableView}>
+                <TouchableOpacity
+                  onPress={handleFavouritePress}
+                  style={styles.sectionRow}
+                >
+                  <View style={styles.icon}>
+                    <EvilIcons name="star" size={24} color={colors.white} />
+                  </View>
+                  <Text style={styles.mainText}>Favorite</Text>
+                </TouchableOpacity>
+              </View>
               <View style={styles.touchableView}>
                 <TouchableOpacity
                   onPress={handleSupportPress}
@@ -172,6 +172,7 @@ const ProfileMainScreen = () => {
                   <Text style={styles.mainText}>Support</Text>
                 </TouchableOpacity>
               </View>
+              <View style={styles.borderBottom}></View>
               <View style={styles.touchableView}>
                 <TouchableOpacity
                   onPress={handleLogoutPress}
