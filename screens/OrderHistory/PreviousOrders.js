@@ -130,17 +130,17 @@ const PreviousOrders = () => {
     }
   };
 
-  useFocusEffect(
-    React.useCallback(() => {
-      try {
-        fetchUserLatestDetails();
-        fetchTrucksList();
-      } catch (error) {
-        setLoading(false);
-        console.log(error);
-      }
-    }, [])
-  );
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     try {
+  //       fetchUserLatestDetails();
+  //       fetchTrucksList();
+  //     } catch (error) {
+  //       setLoading(false);
+  //       console.log(error);
+  //     }
+  //   }, [])
+  // );
 
   const fetchTrucksList = async () => {
     setLoading(true);
@@ -406,6 +406,8 @@ const PreviousOrders = () => {
         <View style={styles.orderList}>
           {prvOrdersList?.length > 0 && (
             <FlatList
+              onRefresh={handleReloadPress}
+              refreshing={loading}
               contentContainerStyle={{ paddingBottom: "100%" }}
               showsVerticalScrollIndicator={false}
               data={prvOrdersList}

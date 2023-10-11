@@ -24,6 +24,7 @@ import { AirbnbRating } from "react-native-ratings";
 import { Ionicons } from "@expo/vector-icons";
 import { EvilIcons } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
+
 import { Image } from "react-native";
 import ButtonComp from "../../components/ButtonComp";
 import { trucksList } from "../../data/trucks";
@@ -170,11 +171,11 @@ const TrucksNearMe = () => {
   const [errorMsg, setErrorMsg] = useState(null);
   // useFocusEffect(
   //   React.useCallback(() => {
-  //     try {
-  //       fetchTrucksList();
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
+  // try {
+  //   fetchTrucksList();
+  // } catch (error) {
+  //   console.log(error);
+  // }
   //   }, [])
   // );
 
@@ -334,6 +335,14 @@ const TrucksNearMe = () => {
     setTruckListData(filterTruckListData);
   };
 
+  const handleRefreshPress = () => {
+    try {
+      fetchTrucksList();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
@@ -352,6 +361,7 @@ const TrucksNearMe = () => {
             flexDirection: "row",
             justifyContent: "space-between",
             alignItems: "center",
+            alignContent: "center",
           }}
         >
           <Text
@@ -364,6 +374,13 @@ const TrucksNearMe = () => {
           >
             Trucks near you
           </Text>
+          <TouchableOpacity disabled={loading} onPress={handleRefreshPress}>
+            <Ionicons
+              name="md-refresh-circle"
+              size={28}
+              color={colors.textColor}
+            />
+          </TouchableOpacity>
         </View>
       </View>
       <View style={{ marginTop: 5, flex: 1 }}>

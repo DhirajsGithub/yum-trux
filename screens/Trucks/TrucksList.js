@@ -28,16 +28,16 @@ const TrucksList = () => {
   const [loading, setLoading] = useState(false);
   const [trucksData, setTrucksData] = useState([]);
   const [trucksDataUnFilter, setTrucksDataUnFilter] = useState([]);
-  useFocusEffect(
-    React.useCallback(() => {
-      try {
-        fetchTrucksList();
-      } catch (error) {
-        setLoading(false);
-        console.log(error);
-      }
-    }, [])
-  );
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     try {
+  //       fetchTrucksList();
+  //     } catch (error) {
+  //       setLoading(false);
+  //       console.log(error);
+  //     }
+  //   }, [])
+  // );
 
   const fetchTrucksList = async () => {
     setLoading(true);
@@ -100,6 +100,15 @@ const TrucksList = () => {
     BackHandler.addEventListener("hardwareBackPress", handleBackPress);
   }, []);
 
+  const handleRefreshFunc = async () => {
+    try {
+      fetchTrucksList();
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
@@ -123,7 +132,11 @@ const TrucksList = () => {
         {trucksData.length === 0 && !loading && (
           <EmptyData msg="No truck found 😞" />
         )}
-        <ListComp screen="truckList" trucksList={trucksData} />
+        <ListComp
+          handleRefreshFunc={handleRefreshFunc}
+          screen="truckList"
+          trucksList={trucksData}
+        />
       </SafeAreaView>
     </View>
   );

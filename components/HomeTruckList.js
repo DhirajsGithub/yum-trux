@@ -7,11 +7,12 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import TruckOverviewCard from "./TruckOverviewCard";
 import { useNavigation } from "@react-navigation/native";
 
-const HomeTruckList = ({ truckList, homeComp }) => {
+const HomeTruckList = ({ truckList, homeComp, handleRefreshFunc }) => {
+  const [refresh, setRefresh] = useState(false);
   const navigation = useNavigation();
   const findRating = (ratingLi) => {
     if (ratingLi?.length > 0) {
@@ -70,6 +71,16 @@ const HomeTruckList = ({ truckList, homeComp }) => {
       });
     }
   };
+
+  const handleRefresh = async () => {
+    try {
+      setRefresh(true);
+      await handleRefreshFunc();
+      setRefresh(false);
+    } catch (error) {
+      setRefresh(false);
+    }
+  };
   return (
     <View style={styles.container}>
       {truckList?.length > 0 && (
@@ -78,6 +89,8 @@ const HomeTruckList = ({ truckList, homeComp }) => {
           showsVerticalScrollIndicator={false}
           data={truckList}
           keyExtractor={(item) => item._id}
+          refreshing={refresh}
+          onRefresh={handleRefresh}
           renderItem={({ item }) => (
             <TouchableOpacity
               onPress={() => handleHomeTruckCardPress(item._id)}

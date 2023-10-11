@@ -5,11 +5,12 @@ import {
   View,
   VirtualizedList,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import TruckOverviewCard from "./TruckOverviewCard";
 
-const ListComp = ({ trucksList, homeComp, screen }) => {
+const ListComp = ({ trucksList, homeComp, screen, handleRefreshFunc }) => {
   const tempList = trucksList;
+  const [refresh, setRefresh] = useState(false);
 
   const findRating = (ratingLi) => {
     if (ratingLi.length > 0) {
@@ -24,6 +25,16 @@ const ListComp = ({ trucksList, homeComp, screen }) => {
   const getItem = (data, index) => {
     return data[index];
   };
+
+  const handleRefresh = async () => {
+    try {
+      setRefresh(true);
+      await handleRefreshFunc();
+      setRefresh(false);
+    } catch (error) {
+      setRefresh(false);
+    }
+  };
   return (
     <View style={styles.container}>
       {tempList?.length > 0 && (
@@ -34,6 +45,8 @@ const ListComp = ({ trucksList, homeComp, screen }) => {
           initialNumToRender={4}
           getItemCount={() => tempList.length}
           getItem={getItem}
+          refreshing={refresh}
+          onRefresh={handleRefresh}
           renderItem={({ item }) => (
             <TruckOverviewCard
               paypalEmail={item.paypalEmail}
@@ -61,6 +74,6 @@ export default ListComp;
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: 180,
+    marginBottom: "100%",
   },
 });

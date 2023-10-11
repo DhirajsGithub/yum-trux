@@ -50,21 +50,21 @@ const HomeScreen = () => {
       alert("Your account is inactive. Please contact admin.");
     }
   };
-  console.log(category);
-  useFocusEffect(
-    React.useCallback(() => {
-      setSearchInput("");
-      setCategory("");
-      try {
-        fetchUserStatus();
-        fetchCategories();
-        fetchTrucksList();
-      } catch (error) {
-        setLoading(false);
-        console.log(error);
-      }
-    }, [])
-  );
+  // console.log(category);
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     setSearchInput("");
+  //     setCategory("");
+  //     try {
+  //       fetchUserStatus();
+  //       fetchCategories();
+  //       fetchTrucksList();
+  //     } catch (error) {
+  //       setLoading(false);
+  //       console.log(error);
+  //     }
+  //   }, [])
+  // );
 
   const fetchCategories = async () => {
     setLoading(true);
@@ -120,6 +120,19 @@ const HomeScreen = () => {
 
   const handleNotificationPress = () => {
     setNotifcationModal(true);
+  };
+
+  const handleRefreshFunc = async () => {
+    setSearchInput("");
+    setCategory("");
+    try {
+      await fetchUserStatus();
+      await fetchCategories();
+      await fetchTrucksList();
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+    }
   };
 
   return (
@@ -251,7 +264,11 @@ const HomeScreen = () => {
         )}
 
         <View>
-          <HomeTruckList truckList={filteredTrucks} homeComp={true} />
+          <HomeTruckList
+            handleRefreshFunc={handleRefreshFunc}
+            truckList={filteredTrucks}
+            homeComp={true}
+          />
         </View>
       </SafeAreaView>
     </View>
