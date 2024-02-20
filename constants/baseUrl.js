@@ -1,6 +1,5 @@
-const baseUrl = "http://10.196.9.57:8000/";
+const baseUrl = "https://api.yumtrux.com/";
 const payPalBaseUrl = "https://api-m.sandbox.paypal.com/";
-// const baseUrl = "https://api.yumtrux.com/";
 
-const adminUrl = "http://localhost:3000/";
+const adminUrl = "https://admin.yumtrux.com/";
 export { baseUrl, payPalBaseUrl, adminUrl };

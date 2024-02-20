@@ -47,7 +47,7 @@ const HomeScreen = () => {
     const res = await getUserStatus(userId);
     if (res.status && res.status === "inactive") {
       navigation.navigate("login");
-      alert("Your account is inactive. Please contact admin.");
+      alert("Your account is inactive. Please contact support team via support@yumtrux.com");
     }
   };
   // console.log(category);

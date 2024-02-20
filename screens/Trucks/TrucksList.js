@@ -118,7 +118,7 @@ const TrucksList = () => {
         //Text with the Spinner
         // textContent={'Loading...'}
         color={colors.action}
-        // textStyle={styles.spinnerTextStyle}
+      // textStyle={styles.spinnerTextStyle}
       />
       <SafeAreaView>
         <View style={{ marginHorizontal: 16 }}>
@@ -148,5 +148,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.white,
+
   },
 });

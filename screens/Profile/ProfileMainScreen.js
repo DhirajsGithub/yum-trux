@@ -1,6 +1,8 @@
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import {
   Alert,
   BackHandler,
+  Image,
   Linking,
   ScrollView,
   StyleSheet,
@@ -8,50 +10,58 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useEffect, useLayoutEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StackActions, useNavigation } from "@react-navigation/native";
-import { Image } from "react-native";
 import { Fontisto } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { EvilIcons } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
-import colors from "../../constants/colors";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useSelector } from "react-redux";
 import { adminUrl } from "../../constants/baseUrl";
+import colors from "../../constants/colors";
 
 const ProfileMainScreen = () => {
   const userDetails = useSelector((state) => state.userSlice.userDetails);
   const [imgUrl, setImgUrl] = useState(userDetails.profileImg);
+  const navigation = useNavigation();
+
   useEffect(() => {
     setImgUrl(userDetails.profileImg);
   }, [userDetails]);
-  const navigation = useNavigation();
+
   useLayoutEffect(() => {
     navigation.setOptions({ headerShown: false });
   }, []);
+
   const handleEditProfilePress = () => {
     navigation.navigate("profileEdit");
   };
+
   const handlePaymentMethodPress = () => {
     navigation.navigate("paymentMethod");
   };
+
   const handleFavouritePress = () => {
     navigation.navigate("favouriteTrucks");
   };
+
+  const handleSupportPress = () => {
+    Linking.openURL(adminUrl + "support");
+  };
+
   const logoutFunction = async () => {
     try {
       await AsyncStorage.removeItem("@yumtrux_user");
-
       navigation.dispatch(StackActions.popToTop());
       navigation.navigate("login");
     } catch (exception) {
       console.log(exception);
     }
   };
+
   const handleLogoutPress = async () => {
     Alert.alert("Alert", "Are you sure you want to logout", [
       {
@@ -64,9 +74,39 @@ const ProfileMainScreen = () => {
       },
     ]);
   };
-  const handleSupportPress = () => {
-    Linking.openURL(adminUrl + "support");
+
+  const handleDeleteAccountPress = async () => {
+    Alert.alert(
+      "Alert",
+      "Are you sure you want to delete your account? This action cannot be undone.",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Delete Account",
+          onPress: deleteAccount,
+          style: "destructive",
+        },
+      ]
+    );
   };
+
+  const deleteAccount = async () => {
+    try {
+      // Perform the logic to delete the account here
+      // Example:
+      await api.deleteAccount(userDetails.userId);
+      await AsyncStorage.removeItem("@yumtrux_user");
+      navigation.dispatch(StackActions.popToTop());
+      navigation.navigate("login");
+    } catch (error) {
+      console.log("Error deleting account: ", error);
+      // Handle error appropriately
+    }
+  };
+
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
@@ -81,7 +121,7 @@ const ProfileMainScreen = () => {
             <Text style={styles.name}>
               {userDetails?.fullName?.length > 0
                 ? userDetails.fullName
-                : "Upate Profile"}
+                : "Update Profile"}
             </Text>
             <Image
               style={{ width: 91, height: 91, borderRadius: 100 }}
@@ -101,12 +141,16 @@ const ProfileMainScreen = () => {
               </View>
               <View style={styles.sectionRow}>
                 <View style={styles.icon}>
-                  <Fontisto name="mobile-alt" size={18} color={colors.white} />
+                  <Fontisto
+                    name="mobile-alt"
+                    size={18}
+                    color={colors.white}
+                  />
                 </View>
                 <Text style={styles.mainText}>
                   {userDetails?.phoneNo?.length > 0
                     ? userDetails.phoneNo
-                    : "Upate Profile"}
+                    : "Update Profile"}
                 </Text>
               </View>
               <View style={styles.sectionRow}>
@@ -120,29 +164,11 @@ const ProfileMainScreen = () => {
                 <Text style={styles.mainText}>
                   {userDetails?.address?.length > 0
                     ? userDetails.address
-                    : "Upate Profile"}
+                    : "Update Profile"}
                 </Text>
               </View>
             </View>
             <View style={styles.borderBottom}></View>
-            {/* <View style={styles.section}>
-              <View style={styles.touchableView}>
-                <TouchableOpacity
-                  onPress={handlePaymentMethodPress}
-                  style={styles.sectionRow}
-                >
-                  <View style={styles.icon}>
-                    <Ionicons
-                      name="wallet-outline"
-                      size={20}
-                      color={colors.white}
-                    />
-                  </View>
-                  <Text style={styles.mainText}>Manage payment method</Text>
-                </TouchableOpacity>
-              </View>
-            </View> */}
-            {/* <View style={styles.borderBottom}></View> */}
             <View style={styles.section}>
               <View style={styles.touchableView}>
                 <TouchableOpacity
@@ -184,6 +210,21 @@ const ProfileMainScreen = () => {
                     />
                   </View>
                   <Text style={styles.mainText}>Logout</Text>
+                </TouchableOpacity>
+              </View>
+              <View style={styles.touchableView}>
+                <TouchableOpacity
+                  onPress={handleDeleteAccountPress}
+                  style={styles.sectionRow}
+                >
+                  <View style={styles.icon}>
+                    <MaterialIcons
+                      name="delete"
+                      size={20}
+                      color={colors.white}
+                    />
+                  </View>
+                  <Text style={styles.mainText}>Delete Account</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -240,7 +281,6 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
   icon: {
-    // padding: 2,
     width: 35,
     height: 35,
     flexDirection: "row",

@@ -10,7 +10,7 @@ import React, { useEffect, useLayoutEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { Button } from "react-native";
 import colors from "../../constants/colors";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, EvilIcons } from "@expo/vector-icons";
 import { useSelector } from "react-redux";
 import {
   getUserNotfications,
@@ -81,7 +81,7 @@ const NotificationItem = ({
       >
         <Text style={styles.title}>{title}</Text>
         <TouchableOpacity onPress={() => handleNotiPress("delete")}>
-          <Ionicons name="ios-trash-sharp" size={24} color="#ef5350" />
+          <EvilIcons name="trash" size={24} color="#ef5350" />
         </TouchableOpacity>
       </View>
 
@@ -116,11 +116,12 @@ const Notification = () => {
       ),
       headerRight: () => (
         <TouchableOpacity onPress={handleRefreshPress}>
-          <Ionicons
+          {/* <Ionicons
             name="md-refresh-circle"
             size={32}
             color={colors.textColor}
-          />
+          /> */}
+          <EvilIcons name="refresh" size={28} color={colors.textColor} />
         </TouchableOpacity>
       ),
     });
@@ -173,7 +174,7 @@ const Notification = () => {
         //Text with the Spinner
         // textContent={'Loading...'}
         color={colors.action}
-        // textStyle={styles.spinnerTextStyle}
+      // textStyle={styles.spinnerTextStyle}
       />
       <FlatList
         showsVerticalScrollIndicator={false}

@@ -55,7 +55,7 @@ const LoginScreen = () => {
 
   const loginUserFunc = async () => {
     setLoading(true);
-    let res = await loginUserHttp({ email, password });
+    let res = await loginUserHttp({ email: email.toLowerCase(), password });
     setLoading(false);
     if (res.status === "success") {
       try {
@@ -94,6 +94,10 @@ const LoginScreen = () => {
 
   const handleForgotPassPress = () => {
     navigation.navigate("forgotPass");
+  };
+
+  const handleGoToHomePress = () => {
+    navigation.navigate("main"); // Replace "HomeScreen" with the name of your Home Screen
   };
   return (
     <View style={styles.container}>
@@ -153,6 +157,10 @@ const LoginScreen = () => {
               Login
             </ButtonComp>
           </View>
+
+          <TouchableOpacity onPress={handleGoToHomePress}>
+        <Text style={styles.goToHomeText}>Go to Home Screen</Text>
+      </TouchableOpacity>
         </ScrollView>
       </SafeAreaView>
     </View>
@@ -192,6 +200,14 @@ const styles = StyleSheet.create({
     marginTop: "60%",
     // flexDirection: "column",
     // justifyContent: "flex-end",
+  },
+  goToHomeText: {
+    textAlign: "center",
+    textDecorationLine: "underline",
+    marginTop: 10,
+    color: colors.textColor,
+    fontSize: 15,
+    fontWeight: "500",
   },
   fogotPassView: {
     display: "flex",

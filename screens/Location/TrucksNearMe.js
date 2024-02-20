@@ -45,6 +45,7 @@ const TruckCard = ({
   truckRating,
   distanceAndTime,
 }) => {
+  const { height } = Dimensions.get('window');
   const findRating = (ratingLi) => {
     if (ratingLi.length > 0) {
       let sum = 0;
@@ -145,7 +146,7 @@ const TruckCard = ({
           </View>
         </View>
       </View>
-      <View style={{ marginTop: 24, marginBottom: 8 }}>
+      <View style={{ marginTop: 24, marginBottom: 0.05 * height, }}>
         <ButtonComp height={46} handleBtnPress={handleMakeOrderPress}>
           MAKE ORDER
         </ButtonComp>
@@ -248,7 +249,7 @@ const TrucksNearMe = () => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
-        setErrorMsg("Permission to access location was denied");
+        setErrorMsg("We need your location to find trucks nearby. Please enable location services in your device settings.");
         return;
       }
 
@@ -352,7 +353,7 @@ const TrucksNearMe = () => {
         //Text with the Spinner
         // textContent={'Loading...'}
         color={colors.action}
-        // textStyle={styles.spinnerTextStyle}
+      // textStyle={styles.spinnerTextStyle}
       />
       <View style={{ marginTop: statusBarHeight, paddingHorizontal: 16 }}>
         <HeaderComp handleSearchInput={handleSearchInput} onlySearch={true} />
@@ -375,11 +376,12 @@ const TrucksNearMe = () => {
             Trucks near you
           </Text>
           <TouchableOpacity disabled={loading} onPress={handleRefreshPress}>
-            <Ionicons
+            {/* <Ionicons
               name="md-refresh-circle"
               size={28}
               color={colors.textColor}
-            />
+            /> */}
+            <EvilIcons name="refresh" size={28} color={colors.textColor} />
           </TouchableOpacity>
         </View>
       </View>

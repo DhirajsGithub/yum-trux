@@ -1,7 +1,8 @@
 {
   "expo": {
     "name": "YumTrux",
-    "slug": "YumTrux",
+    "slug": "yumtrux",
+    "description": "YumTrux is a food delivery app that connects you with the best local restaurants and food delivery services.",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -12,7 +13,6 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-   
     "assetBundlePatterns": [
       "**/*"
     ],
@@ -20,6 +20,14 @@
       "supportsTablet": true,
       "config": {
         "googleMapsApiKey": "AIzaSyCgwqGtmAnaG3iFtWcw7xLS-1Idq_fxzx0"
+      },
+      "buildNumber": "0",
+      "bundleIdentifier": "com.yumtrux1.app",
+      "entitlements": {
+        "aps-environment": "development",
+        "com.apple.developer.in-app-payments": [
+          "merchant.pk_test_51NH2dbEGDgrKEqaABDf0SgAHZm4RdgsG4rBsACqYQJEcx4pJHpR5FcYjZ7DToCPq95za1V4KBXAFBkZg8FJoCMvS00MewMEOuM"
+        ]
       }
     },
     "android": {
@@ -27,12 +35,18 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.omardakelbab123.YumTrux",
+      "package": "com.yumtrux1.app",
       "config": {
         "googleMaps": {
           "apiKey": "AIzaSyCgwqGtmAnaG3iFtWcw7xLS-1Idq_fxzx0"
         }
-      }
+      },
+      "permissions": [
+        "android.permission.RECORD_AUDIO",
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.FOREGROUND_SERVICE"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -53,20 +67,20 @@
       [
         "expo-location",
         {
-          "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location."
+          "locationAlwaysAndWhenInUsePermission": "Grant $(PRODUCT_NAME) permission to access your location. Utilizing your location enables $(PRODUCT_NAME) to identify nearby trucks. Kindly enable location services in your device settings."
         }
       ],
       [
         "@stripe/stripe-react-native",
         {
-          "merchantIdentifier": "string | string []",
+          "merchantIdentifier": "merchant.pk_test_51NH2dbEGDgrKEqaABDf0SgAHZm4RdgsG4rBsACqYQJEcx4pJHpR5FcYjZ7DToCPq95za1V4KBXAFBkZg8FJoCMvS00MewMEOuM",
           "enableGooglePay": true
         }
       ]
     ],
     "extra": {
       "eas": {
-        "projectId": "43759770-3d3d-48aa-b252-01fa50191e4a"
+        "projectId": "c8e3eb81-ff4c-4d25-85de-1cc64946293d"
       }
     }
   }
